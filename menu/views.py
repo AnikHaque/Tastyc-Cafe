@@ -1,3 +1,6 @@
 from django.shortcuts import render
+from .models import Category
 
-# Create your views here.
+def menu_view(request):
+    categories = Category.objects.prefetch_related('foods')
+    return render(request, 'menu.html', {'categories': categories})
