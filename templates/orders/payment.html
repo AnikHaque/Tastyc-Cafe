@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Payment{% endblock %}
+
+{% block content %}
+<section class="py-5 mt-5">
+  <div class="container">
+    <h2>Pay ${{ order.total_price }}</h2>
+
+    <div id="card-element" class="mt-3"></div>
+    <button id="pay-btn" class="btn btn-warning mt-4">
+      Pay Now
+    </button>
+  </div>
+</section>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+fetch("{% url 'create_payment' order.id %}")
+  .then(res => res.json())
+  .then(data => {
+    const stripe = Stripe(data.public_key);
+    const elements = stripe.elements();
+    const card = elements.create("card");
+    card.mount("#card-element");
+
+    document.getElementById("pay-btn").onclick = async () => {
+      const result = await stripe.confirmCardPayment(
+        data.client_secret,
+        { payment_method: { card: card } }
+      );
+
+      if (result.paymentIntent.status === "succeeded") {
+        window.location.href = "/orders/success/";
+      }
+    };
+  });
+</script>
+{% endblock %}
