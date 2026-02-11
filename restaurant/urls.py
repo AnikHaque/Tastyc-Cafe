@@ -11,6 +11,8 @@ urlpatterns = [
     path('', home, name='home'),
     path('menu/', include('menu.urls')),
     path('accounts/', include('accounts.urls')),
+    path('cart/', include('cart.urls')),
+
 ]
 
 # 👇 THIS MUST BE AT THE BOTTOM
