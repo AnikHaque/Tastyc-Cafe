@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from .forms import CustomerRegisterForm, LoginForm
-from .decorators import staff_required, manager_required
+from .decorators import customer_required, staff_required, manager_required
 
 
 
@@ -61,17 +61,37 @@ def logout_view(request):
 
 
 @login_required
-def user_dashboard(request):
-    return render(request, 'accounts/user_dashboard.html')
+@customer_required
+def customer_dashboard(request):
+    return render(request, 'accounts/customer_dashboard.html')
 
-
+@login_required
 @staff_required
 def staff_dashboard(request):
-    return render(request, 'accounts/staff_dashboard.html')
+    # Example: show pending orders
+    from orders.models import Order
+    pending_orders = Order.objects.filter(status='PENDING')
+    return render(request, 'accounts/staff_dashboard.html', {'pending_orders': pending_orders})
 
-
+@login_required
 @manager_required
 def manager_dashboard(request):
-    return render(request, 'accounts/manager_dashboard.html')
+    # Example: show all orders + staff
+    from orders.models import Order
+    from django.contrib.auth.models import User
+    staff_users = User.objects.filter(role='STAFF')
+    all_orders = Order.objects.all()
+    return render(request, 'accounts/manager_dashboard.html', {
+        'all_orders': all_orders,
+        'staff_users': staff_users
+    })
 
-
+@login_required
+def login_redirect(request):
+    if request.user.role == 'CUSTOMER':
+        return redirect('customer_dashboard')
+    elif request.user.role == 'STAFF':
+        return redirect('staff_dashboard')
+    elif request.user.role == 'MANAGER':
+        return redirect('manager_dashboard')
+    return redirect('home')  # fallback
