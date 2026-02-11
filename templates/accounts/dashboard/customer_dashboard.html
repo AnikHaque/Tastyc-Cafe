@@ -1,42 +1,34 @@
 {% extends "accounts/dashboard/base_dashboard.html" %}
 
 {% block sidebar %}
-<a href="{% url 'staff_dashboard' %}">All Orders</a>
+<a href="{% url 'dashboard' %}">My Orders</a>
 <a href="{% url 'menu' %}">Menu</a>
 {% endblock %}
 
 {% block content %}
-<h2>All Orders</h2>
+<h2>My Orders</h2>
 {% if orders %}
 <table class="table table-striped">
     <thead>
         <tr>
             <th>ID</th>
-            <th>Customer</th>
-            <th>Total</th>
+            <th>Total Price</th>
             <th>Status</th>
             <th>Date</th>
-            <th>Action</th>
         </tr>
     </thead>
     <tbody>
         {% for order in orders %}
         <tr>
             <td>{{ order.id }}</td>
-            <td>{{ order.user.username }}</td>
             <td>${{ order.total_price }}</td>
             <td>{{ order.status }}</td>
             <td>{{ order.created_at|date:"M d, Y H:i" }}</td>
-            <td>
-                {% if order.status != "PAID" %}
-                <a href="{% url 'mark_paid' order.id %}" class="btn btn-success btn-sm">Mark Paid</a>
-                {% endif %}
-            </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
 {% else %}
-<p>No orders yet.</p>
+<p>You have no orders yet.</p>
 {% endif %}
 {% endblock %}

@@ -54,3 +54,17 @@ def my_orders(request):
     return render(request, 'orders/my_orders.html', {
         'orders': orders
     })
+
+
+@login_required
+def mark_paid(request, order_id):
+    if not request.user.is_staff:
+        messages.error(request, "You are not authorized.")
+        return redirect('dashboard')
+
+    order = get_object_or_404(Order, id=order_id)
+    order.status = 'PAID'
+    order.save()
+
+    messages.success(request, f"Order #{order.id} marked as PAID.")
+    return redirect('staff_dashboard')

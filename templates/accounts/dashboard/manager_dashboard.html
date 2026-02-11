@@ -1,12 +1,13 @@
 {% extends "accounts/dashboard/base_dashboard.html" %}
 
 {% block sidebar %}
-<a href="{% url 'staff_dashboard' %}">All Orders</a>
+<a href="{% url 'manager_dashboard' %}">All Orders</a>
 <a href="{% url 'menu' %}">Menu</a>
+<a href="{% url 'staff_dashboard' %}">Staff Dashboard</a>
 {% endblock %}
 
 {% block content %}
-<h2>All Orders</h2>
+<h2>All Orders (Manager View)</h2>
 {% if orders %}
 <table class="table table-striped">
     <thead>
