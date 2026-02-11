@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block title %}My Orders{% endblock %}
+
+{% block content %}
+<style>
+  .orders-wrapper {
+    padding: 50px 0;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .order-card {
+    background: #fffdf7;
+    border-radius: 16px;
+    padding: 20px 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .order-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+  }
+
+  .order-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .order-header h5 {
+    color: #ff9800;
+    font-weight: 700;
+  }
+
+  .order-header span {
+    font-size: 14px;
+    color: #555;
+  }
+
+  .order-item {
+    padding: 10px 0;
+    border-top: 1px solid #ffe0b2;
+  }
+
+  .order-item:first-child {
+    border-top: none;
+  }
+
+  .order-item p {
+    margin: 0;
+    font-size: 14px;
+    color: #333;
+  }
+
+  .order-total {
+    text-align: right;
+    margin-top: 10px;
+    font-weight: 700;
+    color: #ff9800;
+    font-size: 16px;
+  }
+
+  @media(max-width: 768px){
+    .order-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
+
+<section class="orders-wrapper container">
+  <h2 class="mb-4 text-center">My Orders</h2>
+
+  {% if orders %}
+    {% for order in orders %}
+      <div class="order-card">
+        <div class="order-header">
+          <h5>Order #{{ order.id }}</h5>
+          <span>{{ order.created_at|date:"M d, Y H:i" }}</span>
+        </div>
+
+        {% for item in order.items.all %}
+          <div class="order-item">
+            <p>{{ item.food_name }} × {{ item.quantity }} - ${{ item.price }}</p>
+          </div>
+        {% endfor %}
+
+        <div class="order-total">Total: ${{ order.total_price }}</div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="text-center">You have no orders yet.</p>
+  {% endif %}
+</section>
+{% endblock %}

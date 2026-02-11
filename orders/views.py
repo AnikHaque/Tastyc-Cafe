@@ -45,3 +45,12 @@ def payment_page(request, order_id):
 @login_required
 def payment_success(request):
     return render(request, 'orders/success.html')
+
+@login_required
+def my_orders(request):
+    # Logged-in user er sob orders
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+
+    return render(request, 'orders/my_orders.html', {
+        'orders': orders
+    })
