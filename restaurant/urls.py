@@ -14,7 +14,7 @@ urlpatterns = [
     path('cart/', include('cart.urls')),
     path('orders/', include('orders.urls')),
     path('payments/', include('payments.urls')),
-
+    path('reservations/', include('reservations.urls')),
 ]
 
 # 👇 THIS MUST BE AT THE BOTTOM

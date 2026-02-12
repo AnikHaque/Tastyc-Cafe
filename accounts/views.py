@@ -12,7 +12,7 @@ import json
 from datetime import date, timedelta,datetime
 from orders.models import OrderItem
 from django.shortcuts import render
-
+from reservations.models import Reservation
 # -------------------------------
 # Authentication Views
 # -------------------------------
@@ -213,3 +213,20 @@ def mark_paid(request, order_id):
     order.save()
     messages.success(request, f'Order #{order.id} marked as Paid')
     return redirect('staff_dashboard')
+
+
+@login_required
+def staff_reservations(request):
+    if not request.user.is_staff:
+        return redirect('dashboard')
+    reservations = Reservation.objects.all().order_by('date', 'time')
+    return render(request, 'accounts/dashboard/staff_reservations.html', {'reservations': reservations})
+
+@login_required
+def update_reservation_status(request, reservation_id, status):
+    if not request.user.is_staff:
+        return redirect('dashboard')
+    reservation = Reservation.objects.get(id=reservation_id)
+    reservation.status = status
+    reservation.save()
+    return redirect('staff_reservations')

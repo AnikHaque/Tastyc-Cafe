@@ -1,0 +1,44 @@
+{% extends "accounts/dashboard/base_dashboard.html" %}
+{% block sidebar %}
+<a href="{% url 'staff_reservations' %}">📅 Reservations</a>
+<a href="{% url 'staff_analytics' %}">📊 Analytics</a>
+<a href="{% url 'staff_inventory' %}">Inventory</a>
+<a href="{% url 'staff_top_selling' %}">Top Selling</a>
+{% endblock %}
+
+{% block content %}
+<h2>All Reservations</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Customer</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>People</th>
+            <th>Request</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for r in reservations %}
+        <tr>
+            <td>{{ r.name }}</td>
+            <td>{{ r.date }}</td>
+            <td>{{ r.time }}</td>
+            <td>{{ r.people_count }}</td>
+            <td>{{ r.special_request }}</td>
+            <td>{{ r.status }}</td>
+            <td>
+                {% if r.status == "PENDING" %}
+                <a href="{% url 'update_reservation_status' r.id 'APPROVED' %}" class="btn btn-success btn-sm">Approve</a>
+                <a href="{% url 'update_reservation_status' r.id 'REJECTED' %}" class="btn btn-danger btn-sm">Reject</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7">No reservations yet.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

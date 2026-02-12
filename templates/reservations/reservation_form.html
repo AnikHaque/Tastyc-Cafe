@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Reserve a Table</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Reserve</button>
+</form>
+{% endblock %}
