@@ -33,6 +33,7 @@ def home(request):
         "categories": categories,
         "top_selling": top_selling,
         'today_specials': today_specials,
+        'offers': offers,
     }
 
     return render(request, "home.html", context)

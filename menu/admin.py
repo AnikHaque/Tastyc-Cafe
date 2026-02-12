@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Food
+from .models import Category, Food, Offer
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -12,3 +12,9 @@ class FoodAdmin(admin.ModelAdmin):
     list_display = ('name', 'category', 'price', 'is_available')
     list_filter = ('category', 'is_available')
     search_fields = ('name',)
+
+@admin.register(Offer)
+class OfferAdmin(admin.ModelAdmin):
+    list_display = ('title', 'discount_percentage', 'start_date', 'end_date', 'is_active')
+    list_filter = ('is_active', 'start_date', 'end_date')
+    search_fields = ('title', 'description')
