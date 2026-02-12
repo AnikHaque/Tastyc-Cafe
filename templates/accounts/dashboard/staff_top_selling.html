@@ -2,17 +2,24 @@
 
 {% block sidebar %}
 <a href="{% url 'staff_analytics' %}">
-        📊 Analytics
-    </a>
-    <a href="{% url 'staff_inventory' %}">
-        Inventory
-    </a>
-    <a href="{% url 'staff_top_selling' %}">
-        Top Selling
-    </a>
-<a href="{% url 'staff_dashboard' %}">All Orders</a>
-<a href="{% url 'staff_dashboard' %}?status=PAID">Completed Orders</a>
-<a href="{% url 'staff_dashboard' %}?status=PENDING">Pending Orders</a>
+    📊 Analytics
+</a>
+<a href="{% url 'staff_inventory' %}">
+    📦 Inventory
+</a>
+<a href="{% url 'staff_top_selling' %}">
+    🍽️ Top Selling
+</a>
+<a href="{% url 'staff_dashboard' %}">
+    🧾 All Orders
+</a>
+<a href="{% url 'staff_dashboard' %}?status=PAID">
+    ✅ Completed Orders
+</a>
+<a href="{% url 'staff_dashboard' %}?status=PENDING">
+    ⏳ Pending Orders
+</a>
+
 {% endblock %}
 
 {% block content %}
