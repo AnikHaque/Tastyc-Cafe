@@ -15,6 +15,7 @@ class Food(models.Model):
     price = models.DecimalField(max_digits=8, decimal_places=2)
     image = models.ImageField(upload_to='foods/')
     is_available = models.BooleanField(default=True)
+    is_today_special = models.BooleanField(default=False)
     stock = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
