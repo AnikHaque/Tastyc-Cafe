@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -22,16 +23,22 @@ class Food(models.Model):
     def __str__(self):
         return self.name
 
-# menu/models.py
-
 class Offer(models.Model):
+    food = models.ForeignKey('Food', on_delete=models.CASCADE, related_name='offers')
     title = models.CharField(max_length=100)
-    description = models.TextField()
-    discount_percentage = models.PositiveIntegerField(default=0)  # e.g., 20 for 20%
-    image = models.ImageField(upload_to='offers/', blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    discount_percentage = models.PositiveIntegerField(default=0)
     start_date = models.DateField()
     end_date = models.DateField()
     is_active = models.BooleanField(default=True)
 
+    # ⭐ Calculated property
+    @property
+    def discounted_price(self):
+        if self.food.price and self.discount_percentage:
+            discount_amount = (self.food.price * self.discount_percentage) / 100
+            return round(self.food.price - discount_amount, 2)
+        return self.food.price
+
     def __str__(self):
-        return self.title
+        return f"{self.title} - {self.food.name}"

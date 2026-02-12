@@ -15,6 +15,9 @@ class FoodAdmin(admin.ModelAdmin):
 
 @admin.register(Offer)
 class OfferAdmin(admin.ModelAdmin):
-    list_display = ('title', 'discount_percentage', 'start_date', 'end_date', 'is_active')
+    list_display = ('title', 'food', 'food_price', 'discount_percentage', 'discounted_price', 'start_date', 'end_date', 'is_active')
     list_filter = ('is_active', 'start_date', 'end_date')
     search_fields = ('title', 'description')
+
+    def food_price(self, obj):
+        return obj.food.price
