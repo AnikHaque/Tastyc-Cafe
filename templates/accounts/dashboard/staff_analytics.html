@@ -1,0 +1,69 @@
+{% extends "accounts/dashboard/base_dashboard.html" %}
+
+{% block sidebar %}
+<a href="{% url 'staff_analytics' %}">📊 Analytics</a>
+<a href="{% url 'staff_dashboard' %}">All Orders</a>
+<a href="{% url 'staff_dashboard' %}?status=PAID">Completed Orders</a>
+<a href="{% url 'staff_dashboard' %}?status=PENDING">Pending Orders</a>
+{% endblock %}
+
+{% block content %}
+<h2>Analytics Dashboard</h2>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card p-3 text-center bg-light">
+            <h5>Total Orders</h5>
+            <h2>{{ total_orders }}</h2>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3 text-center bg-success text-white">
+            <h5>Completed Orders</h5>
+            <h2>{{ total_paid }}</h2>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3 text-center bg-warning text-dark">
+            <h5>Pending Orders</h5>
+            <h2>{{ total_pending }}</h2>
+        </div>
+    </div>
+</div>
+
+<div class="card p-3">
+    <h5>Revenue Last 7 Days</h5>
+    <canvas id="revenueChart"></canvas>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('revenueChart').getContext('2d');
+const revenueChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: {{ chart_labels|safe }},
+        datasets: [{
+            label: 'Revenue ($)',
+            data: {{ chart_data|safe }},
+            borderColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            tension: 0.3,
+            fill: true,
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: true, position: 'top' }
+        },
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

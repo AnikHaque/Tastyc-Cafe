@@ -103,47 +103,37 @@ def staff_dashboard(request):
 @login_required
 def staff_analytics(request):
     if not request.user.is_staff:
-        return redirect('dashboard')
+        return redirect('staff_dashboard')
 
-    # Orders per day
-    orders_per_day = (
-        Order.objects
-        .annotate(date=TruncDate('created_at'))
-        .values('date')
-        .annotate(count=Count('id'))
-        .order_by('date')
+    # Total orders
+    total_orders = Order.objects.count()
+    total_paid = Order.objects.filter(status='PAID').count()
+    total_pending = Order.objects.filter(status='PENDING').count()
+
+    # Revenue per day (last 7 days)
+    from django.utils import timezone
+    from datetime import timedelta
+
+    today = timezone.now().date()
+    last_week = today - timedelta(days=6)
+
+    revenue_data = (
+        Order.objects.filter(created_at__date__gte=last_week, status='PAID')
+        .values('created_at__date')
+        .annotate(revenue=Sum('total_price'))
+        .order_by('created_at__date')
     )
 
-    dates = [str(x['date']) for x in orders_per_day]
-    counts = [x['count'] for x in orders_per_day]
-
-    # Revenue per day
-    revenue = (
-        Order.objects
-        .annotate(date=TruncDate('created_at'))
-        .values('date')
-        .annotate(total=Sum('total_price'))
-        .order_by('date')
-    )
-
-    revenue_totals = [float(x['total'] or 0) for x in revenue]
-
-    # Status distribution
-    status_data = (
-        Order.objects
-        .values('status')
-        .annotate(count=Count('id'))
-    )
-
-    status_labels = [x['status'] for x in status_data]
-    status_counts = [x['count'] for x in status_data]
+    # Prepare data for chart.js
+    chart_labels = [d['created_at__date'].strftime("%b %d") for d in revenue_data]
+    chart_data = [float(d['revenue']) for d in revenue_data]
 
     context = {
-        'dates': json.dumps(dates),
-        'counts': json.dumps(counts),
-        'revenue': json.dumps(revenue_totals),
-        'status_labels': json.dumps(status_labels),
-        'status_counts': json.dumps(status_counts),
+        'total_orders': total_orders,
+        'total_paid': total_paid,
+        'total_pending': total_pending,
+        'chart_labels': chart_labels,
+        'chart_data': chart_data,
     }
 
     return render(request, 'accounts/dashboard/staff_analytics.html', context)
