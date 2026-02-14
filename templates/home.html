@@ -163,38 +163,87 @@
     </div>
   </div>
 </section>
-
-
 <section class="offers-section py-5">
   <div class="container">
+
     <div class="text-center mb-4">
-      <h2>Current Offers</h2>
+      <h2>🔥 Current Offers</h2>
       <p class="text-muted">Grab these deals before they’re gone!</p>
     </div>
 
     <div class="row g-4">
+
       {% for offer in offers %}
-      <div class="col-md-4 col-sm-6">
-        <div class="card shadow-sm border-0 h-100">
-          {% if offer.image %}
-          <img src="{{ offer.image.url }}" class="card-img-top" style="height:180px; object-fit:cover;">
+      <div class="col-md-3 col-sm-6">
+
+        <div class="card shadow-sm border-0 h-100 position-relative offer-card">
+
+          <!-- Offer Badge -->
+          <span class="badge bg-danger position-absolute m-2">
+            {{ offer.discount_percentage }}% OFF
+          </span>
+
+          <!-- Food Image -->
+          {% if offer.food.image %}
+          <img src="{{ offer.food.image.url }}"
+               class="card-img-top"
+               style="height:200px; object-fit:cover;">
           {% endif %}
+
           <div class="card-body text-center">
+
+            <!-- Offer Title -->
             <h5>{{ offer.title }}</h5>
-            <p class="text-warning fw-bold mb-1">
-              {{ offer.discount_percentage }}% OFF
+
+            <!-- Food Name -->
+            <h6 class="text-muted mb-2">
+              {{ offer.food.name }}
+            </h6>
+
+            <!-- Price Section -->
+            <p class="mb-1">
+              <del class="text-muted">৳ {{ offer.food.price }}</del>
             </p>
-            <p class="text-muted" style="font-size:0.85rem;">{{ offer.description|truncatechars:80 }}</p>
-            <small class="text-muted">Valid until {{ offer.end_date|date:"d M Y" }}</small>
+
+            <p class="text-danger fw-bold fs-5">
+              ৳ {{ offer.discounted_price }}
+            </p>
+
+            <!-- Description -->
+            <p class="text-muted small">
+              {{ offer.description|truncatechars:60 }}
+            </p>
+
+            <!-- Expiry -->
+            <small class="text-muted d-block mb-3">
+              Valid until {{ offer.end_date|date:"d M Y" }}
+            </small>
+
+            <!-- ⭐ Add To Cart Button -->
+            {% if offer.food.stock > 0 %}
+            <a href="{% url 'add_to_cart' offer.food.id %}"
+               class="btn btn-danger w-100">
+               🛒 Add To Cart
+            </a>
+            {% else %}
+            <button class="btn btn-secondary w-100" disabled>
+              Out of Stock
+            </button>
+            {% endif %}
+
           </div>
         </div>
+
       </div>
       {% empty %}
       <p class="text-center">No offers at the moment. Check back later!</p>
       {% endfor %}
+
     </div>
   </div>
 </section>
+
+
 
 
 {% endblock %}

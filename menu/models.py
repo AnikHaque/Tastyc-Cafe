@@ -22,9 +22,15 @@ class Food(models.Model):
 
     def __str__(self):
         return self.name
+
+
+from django.db import models
+from django.utils import timezone
+
+
 class Offer(models.Model):
     food = models.ForeignKey(
-        Food,
+        'Food',
         on_delete=models.CASCADE,
         null=True,
         blank=True
@@ -39,14 +45,24 @@ class Offer(models.Model):
 
     is_active = models.BooleanField(default=True)
 
+    def __str__(self):
+        if self.food:
+            return f"{self.title} - {self.food.name}"
+        return self.title
+
+    # ⭐ Discounted Price Safe
     @property
     def discounted_price(self):
-        if not self.food or not self.discount_percentage:
-            return self.food.price if self.food else 0
+        if not self.food:
+            return 0
+
+        if not self.discount_percentage:
+            return self.food.price
 
         discount = (self.food.price * self.discount_percentage) / 100
         return self.food.price - discount
 
+    # ⭐ Offer Valid Check
     @property
     def is_valid(self):
         today = timezone.now().date()
