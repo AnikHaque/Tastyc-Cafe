@@ -1,171 +1,221 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+
 <style>
-  body {
+    :root {
+        --primary: #ff4757; /* Your Website Red */
+        --deep-dark: #0f141e; /* Your Footer/Hero Dark */
+        --soft-bg: #fdfdfd;
+    }
 
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Poppins', sans-serif;
-  }
+    body {
+        background-color: var(--soft-bg);
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
 
-  .auth-wrapper {
-    width: 100%;
-    max-width: 1100px;
-    padding: 20px;
-  }
+    .auth-wrapper {
+        min-height: 90vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+    }
 
-  .auth-box {
-    display: flex;
-    border-radius: 20px;
-    overflow: hidden;
-    background: #ffffff;
-   
-  }
-
-  /* LEFT IMAGE SIDE */
-  .auth-left {
-    flex: 1;
-    background: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f') center/cover no-repeat;
-    position: relative;
-  }
-
-  .auth-left::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(255,193,7,0.85), rgba(255,160,0,0.85));
-  }
-
-  .auth-left-content {
-    position: absolute;
-    bottom: 40px;
-    left: 40px;
-    color: white;
-    z-index: 2;
-  }
-
-  .auth-left-content h2 {
-    font-size: 34px;
-    font-weight: 700;
-  }
-
-  .auth-left-content p {
-    font-size: 16px;
-    opacity: 0.9;
-  }
-
-  /* RIGHT FORM SIDE */
-  .auth-right {
-    flex: 1;
-    padding: 60px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
-  .auth-right h3 {
-    font-weight: 700;
-    margin-bottom: 30px;
-    color: #ff9800;
-  }
-
-  /* Gorgeous Inputs */
-  .auth-right input {
-    width: 100%;
-    padding: 14px 16px;
-    border-radius: 12px;
-    border: 2px solid #ffe0b2;
-    background: #fffdf7;
-    transition: all 0.3s ease;
-    font-size: 15px;
-  }
-
-  .auth-right input:focus {
-    border-color: #ff9800;
-    background: #fff8e1;
-    box-shadow: 0 0 0 4px rgba(255,152,0,0.2);
-    outline: none;
-  }
-
-  .mb-3 {
-    margin-bottom: 20px;
-  }
-
-  /* Button */
-  .btn-warning {
-    background: linear-gradient(135deg, #ffc107, #ff9800);
-    border: none;
-    padding: 14px;
-    font-weight: 600;
-    border-radius: 12px;
-    transition: 0.3s;
-    color: #fff;
-  }
-
-  .btn-warning:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 25px rgba(255, 152, 0, 0.4);
-  }
-
-  .errorlist {
-    color: red;
-    font-size: 13px;
-    margin-top: 6px;
-    list-style: none;
-    padding: 0;
-  }
-
-  @media(max-width: 900px) {
     .auth-box {
-      flex-direction: column;
+        width: 100%;
+        max-width: 1000px;
+        display: flex;
+        border-radius: 30px;
+        overflow: hidden;
+        background: #ffffff;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+        border: 1px solid rgba(0,0,0,0.02);
     }
 
+    /* --- LEFT SIDE (Visual) --- */
     .auth-left {
-      height: 250px;
+        flex: 1.2;
+        background: linear-gradient(rgba(15, 20, 30, 0.7), rgba(15, 20, 30, 0.8)), 
+                    url('https://images.unsplash.com/photo-1550966841-3ee3ad359051?auto=format&fit=crop&w=800&q=80') center/cover no-repeat;
+        position: relative;
+        display: flex;
+        align-items: flex-end;
+        padding: 60px;
     }
 
-    .auth-right {
-      padding: 40px;
+    .auth-left-content {
+        color: white;
+        z-index: 2;
     }
-  }
+
+    .auth-left-content h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 3.5rem;
+        font-weight: 900;
+        line-height: 1.1;
+        margin-bottom: 20px;
+    }
+
+    .auth-left-content h2 span {
+        color: var(--primary);
+    }
+
+    .auth-left-content p {
+        font-size: 1.1rem;
+        opacity: 0.8;
+        letter-spacing: 0.5px;
+    }
+
+    /* --- RIGHT SIDE (Form) --- */
+    .auth-right {
+        flex: 1;
+        padding: 60px;
+        background: #ffffff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .auth-right h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+        color: var(--deep-dark);
+    }
+
+    .subtitle {
+        color: #7f8c8d;
+        margin-bottom: 40px;
+        font-size: 0.95rem;
+    }
+
+    /* Modern Form Inputs */
+    .auth-right input {
+        width: 100%;
+        padding: 16px 20px;
+        border-radius: 15px;
+        border: 1.5px solid #eee;
+        background: #fcfcfc;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-size: 15px;
+        color: var(--deep-dark);
+        font-weight: 500;
+    }
+
+    .auth-right input:focus {
+        border-color: var(--primary);
+        background: #ffffff;
+        box-shadow: 0 10px 20px rgba(255, 71, 87, 0.1);
+        outline: none;
+    }
+
+    .mb-3 {
+        margin-bottom: 25px;
+        position: relative;
+    }
+
+    /* Button Styling */
+    .btn-login {
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        padding: 16px;
+        font-weight: 700;
+        font-size: 1rem;
+        border-radius: 15px;
+        transition: 0.4s;
+        box-shadow: 0 10px 25px rgba(255, 71, 87, 0.2);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .btn-login:hover {
+        background: var(--deep-dark);
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(15, 20, 30, 0.2);
+    }
+
+    .errorlist {
+        color: #ff4757;
+        font-size: 13px;
+        margin-top: 8px;
+        list-style: none;
+        padding-left: 5px;
+        font-weight: 600;
+    }
+
+    .signup-link {
+        text-align: center;
+        margin-top: 30px;
+        font-size: 0.9rem;
+        color: #7f8c8d;
+    }
+
+    .signup-link a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 700;
+    }
+
+    @media(max-width: 992px) {
+        .auth-box {
+            flex-direction: column;
+            border-radius: 20px;
+        }
+        .auth-left {
+            height: 300px;
+            padding: 40px;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+        }
+        .auth-left-content h2 {
+            font-size: 2.2rem;
+        }
+        .auth-right {
+            padding: 40px 30px;
+        }
+    }
 </style>
 
 <section class="auth-wrapper">
-  <div class="auth-box">
+    <div class="auth-box">
 
-    <!-- LEFT IMAGE -->
-    <div class="auth-left">
-      <div class="auth-left-content">
-        <h2>Welcome Back 👋</h2>
-        <p>Login to continue ordering your favorite items.</p>
-      </div>
+        <div class="auth-left">
+            <div class="auth-left-content">
+                <p class="text-uppercase small fw-bold mb-2">Exclusive Access</p>
+                <h2>Royal<span>Dine</span> <br>Experience.</h2>
+                <p>Login to savor the finest dishes crafted by experts.</p>
+            </div>
+        </div>
+
+        <div class="auth-right">
+            <h3>Welcome Back</h3>
+            <p class="subtitle">Please enter your details to continue</p>
+
+            <form method="post">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+
+                {% for field in form %}
+                    <div class="mb-3">
+                        {{ field }}
+                        {{ field.errors }}
+                    </div>
+                {% endfor %}
+
+                <button class="btn btn-login w-100 mt-2">
+                    Sign In
+                </button>
+            </form>
+
+            <div class="signup-link">
+                Don't have an account? <a href="#">Join the Club</a>
+            </div>
+        </div>
+
     </div>
-
-    <!-- RIGHT FORM -->
-    <div class="auth-right">
-      <h3>Login to Your Account</h3>
-
-      <form method="post">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-
-        {% for field in form %}
-          <div class="mb-3">
-            {{ field }}
-            {{ field.errors }}
-          </div>
-        {% endfor %}
-
-        <button class="btn btn-warning w-100">
-          Login
-        </button>
-      </form>
-    </div>
-
-  </div>
 </section>
 
 {% endblock %}
