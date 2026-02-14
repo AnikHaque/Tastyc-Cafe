@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Food, Offer
+from .models import Category, Food, Offer,ComboDeal
 from django.utils.html import format_html
 
 @admin.register(Category)
@@ -66,3 +66,29 @@ class OfferAdmin(admin.ModelAdmin):
         )
 
     status_badge.short_description = "Status"
+
+
+    @admin.register(ComboDeal)
+
+    class ComboDealAdmin(admin.ModelAdmin):
+        list_display = ('title', 'discount_percentage', 'discounted_price_display', 'status_badge', 'start_date', 'end_date')
+        filter_horizontal = ('foods',)
+
+        def discounted_price_display(self, obj):
+            return obj.discounted_price
+        discounted_price_display.short_description = "Discounted Price"
+
+        def status_badge(self, obj):
+            if obj.is_valid:
+                color = "green"
+                text = "Active"
+            else:
+                color = "red"
+                text = "Expired"
+            from django.utils.html import format_html
+            return format_html(
+                '<span style="color:white;background:{};padding:3px 6px;border-radius:5px;">{}</span>',
+                color,
+                text,
+            )
+        status_badge.short_description = "Status"

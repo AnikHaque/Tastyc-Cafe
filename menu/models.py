@@ -91,3 +91,5 @@ class ComboDeal(models.Model):
         from django.utils import timezone
         today = timezone.now().date()
         return self.is_active and self.start_date <= today <= self.end_date
+
+
