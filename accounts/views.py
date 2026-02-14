@@ -176,13 +176,16 @@ def staff_top_selling(request):
     # Top selling dishes last 30 days
     top_selling_qs = (
         OrderItem.objects.filter(order__created_at__gte=last_month)
-        .values('food_name')
+        .values('food__name')   # ✅ FIX HERE
         .annotate(sales_count=Count('id'))
         .order_by('-sales_count')[:10]
     )
 
     # Context er jonno list of dict
-    top_selling = [{'food_name': item['food_name'], 'sales_count': item['sales_count']} for item in top_selling_qs]
+    top_selling = [
+        {'food_name': item['food__name'], 'sales_count': item['sales_count']}
+        for item in top_selling_qs
+    ]
 
     context = {
         'top_selling': top_selling,

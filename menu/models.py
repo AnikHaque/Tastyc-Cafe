@@ -24,7 +24,12 @@ class Food(models.Model):
         return self.name
 
 class Offer(models.Model):
-    food = models.ForeignKey('Food', on_delete=models.CASCADE, related_name='offers')
+    food = models.ForeignKey(
+    Food,
+    on_delete=models.CASCADE,
+    null=True,
+    blank=True
+)
     title = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
     discount_percentage = models.PositiveIntegerField(default=0)
@@ -35,10 +40,9 @@ class Offer(models.Model):
     # ⭐ Calculated property
     @property
     def discounted_price(self):
-        if self.food.price and self.discount_percentage:
-            discount_amount = (self.food.price * self.discount_percentage) / 100
-            return round(self.food.price - discount_amount, 2)
-        return self.food.price
+        if not self.food or not self.discount_percent:
+            return self.food.price if self.food else 0
 
-    def __str__(self):
-        return f"{self.title} - {self.food.name}"
+        discount = (self.food.price * self.discount_percent) / 100
+        return self.food.price - discount
+
