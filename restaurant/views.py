@@ -3,6 +3,7 @@ from django.db.models import Count, Sum, Q
 from django.utils import timezone
 from menu.forms import TestimonialForm
 from menu.models import Category, Food, Offer,ComboDeal, Testimonial
+from blog.models import Blog
 from orders.models import OrderItem
 from django.contrib import messages
 
@@ -60,6 +61,7 @@ def home(request):
         combo.total_price = sum([food.price for food in combo.foods.all()])
 
     testimonials = Testimonial.objects.all().order_by('-created_at')
+    blogs = Blog.objects.filter(is_published=True).order_by('-created_at')[:6]
     context = {
         "categories": categories,
         "top_selling": top_selling,
@@ -67,6 +69,7 @@ def home(request):
         "offers": offers,
         'combo_deals': combo_deals,
         'testimonials': testimonials,
+        'blogs': blogs
        
     }
 

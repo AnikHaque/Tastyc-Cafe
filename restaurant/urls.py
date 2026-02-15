@@ -17,6 +17,7 @@ urlpatterns = [
     path('payments/', include('payments.urls')),
     path('reservations/', include('reservations.urls')),
     path('add-review/', views.add_review, name='add_review'),
+    path('blogs/', include('blog.urls')),
 ]
 
 # 👇 THIS MUST BE AT THE BOTTOM

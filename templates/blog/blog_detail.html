@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<article class="blog-details py-5 mt-5">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'blog_list' %}" class="text-primary">Journal</a></li>
+                        <li class="breadcrumb-item active">{{ blog.category }}</li>
+                    </ol>
+                </nav>
+
+                <h1 class="playfair display-3 fw-bold mb-4">{{ blog.title }}</h1>
+                
+                <div class="d-flex align-items-center gap-3 mb-5">
+                    <div class="author-img" style="width: 50px; height: 50px; border-radius: 50%; background: #eee; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-user text-muted"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-0 fw-bold">{{ blog.author.username }}</h6>
+                        <small class="text-muted">{{ blog.created_at|date:"F d, Y" }}</small>
+                    </div>
+                </div>
+
+                <div class="featured-img-wrap mb-5 shadow-lg" style="border-radius: 30px; overflow: hidden; height: 500px;">
+                    <img src="{{ blog.thumbnail.url }}" class="w-100 h-100 object-fit-cover" alt="{{ blog.title }}">
+                </div>
+
+                <div class="blog-main-content fs-5 line-height-lg text-dark">
+                    {{ blog.content|safe|linebreaks }}
+                </div>
+
+                <hr class="my-5">
+
+                <div class="related-posts py-4">
+                    <h3 class="playfair mb-4">You Might Also Like</h3>
+                    <div class="row g-4">
+                        {% for r_blog in related_blogs %}
+                        <div class="col-md-4">
+                            <a href="{% url 'blog_detail' r_blog.slug %}" class="text-decoration-none">
+                                <div class="card border-0">
+                                    <img src="{{ r_blog.thumbnail.url }}" class="rounded-4 mb-2" height="150" style="object-fit: cover;">
+                                    <h6 class="text-dark fw-bold">{{ r_blog.title }}</h6>
+                                </div>
+                            </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+
+<style>
+    .line-height-lg { line-height: 1.8; }
+    .playfair { font-family: 'Playfair Display', serif; }
+    .blog-main-content { color: #2d3436; text-align: justify; }
+</style>
+
+{% endblock %}
