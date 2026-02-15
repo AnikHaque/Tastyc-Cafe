@@ -1,6 +1,6 @@
 {% extends 'accounts/dashboard/base_dashboard.html' %}
 
-{% block title %}Dashboard Analytics | Customer Dashboard{% endblock %}
+{% block title %}Dashboard | Welcome {{ request.user.username }}{% endblock %}
 
 {% block sidebar %}
     <a href="{% url 'customer_dashboard' %}" class="active"><i class="fas fa-chart-line me-2"></i> Analytics</a>
@@ -14,149 +14,111 @@
 {% block content %}
 <div class="container-fluid px-4 py-4">
     <div class="mb-4">
-        <h2 class="fw-bold text-dark">Welcome back, {{ request.user.first_name|default:request.user.username }}! 👋</h2>
-        <p class="text-muted">Here's what's happening with your account today.</p>
+        <h2 class="fw-bold">Welcome, {{ request.user.first_name|default:request.user.username }}!</h2>
+        <p class="text-muted">Here's your activity overview at a glance.</p>
     </div>
 
     <div class="row mb-4">
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card stat-card border-0 shadow-sm border-start border-primary border-5">
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm border-start border-primary border-5 rounded-3 h-100">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Orders</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_orders|default:"0" }}</div>
-                        </div>
-                        <div class="icon-shape bg-light-primary rounded-circle p-3">
-                            <i class="fas fa-shopping-cart text-primary"></i>
-                        </div>
-                    </div>
+                    <div class="small fw-bold text-primary text-uppercase">Total Orders</div>
+                    <div class="h4 mb-0 fw-bold">{{ total_orders|default:0 }}</div>
                 </div>
             </div>
         </div>
-
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card stat-card border-0 shadow-sm border-start border-success border-5">
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm border-start border-success border-5 rounded-3 h-100">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Total Spent</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">৳{{ total_spent|default:"0" }}</div>
-                        </div>
-                        <div class="icon-shape bg-light-success rounded-circle p-3">
-                            <i class="fas fa-wallet text-success"></i>
-                        </div>
-                    </div>
+                    <div class="small fw-bold text-success text-uppercase">Total Spent</div>
+                    <div class="h4 mb-0 fw-bold">৳{{ total_spent|default:0 }}</div>
                 </div>
             </div>
         </div>
-
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card stat-card border-0 shadow-sm border-start border-info border-5">
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm border-start border-info border-5 rounded-3 h-100">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Reservations</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_reservations|default:"0" }}</div>
-                        </div>
-                        <div class="icon-shape bg-light-info rounded-circle p-3">
-                            <i class="fas fa-calendar-check text-info"></i>
-                        </div>
-                    </div>
+                    <div class="small fw-bold text-info text-uppercase">Reservations</div>
+                    <div class="h4 mb-0 fw-bold">{{ total_reservations|default:0 }}</div>
                 </div>
             </div>
         </div>
-
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card stat-card border-0 shadow-sm border-start border-warning border-5">
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm border-start border-warning border-5 rounded-3 h-100">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Reviews</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_reviews|default:"0" }}</div>
-                        </div>
-                        <div class="icon-shape bg-light-warning rounded-circle p-3">
-                            <i class="fas fa-star text-warning"></i>
-                        </div>
-                    </div>
+                    <div class="small fw-bold text-warning text-uppercase">My Reviews</div>
+                    <div class="h4 mb-0 fw-bold">{{ total_reviews|default:0 }}</div>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-xl-8 col-lg-7">
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-header bg-white py-3">
-                    <h6 class="m-0 font-weight-bold text-dark"><i class="fas fa-chart-area me-2"></i>Spending Overview (Monthly)</h6>
-                </div>
+        <div class="col-lg-8 mb-4">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-header bg-white border-0 py-3 fw-bold">Spending Activity</div>
                 <div class="card-body">
-                    <canvas id="spendingChart" height="300"></canvas>
+                    <div style="height: 300px; width: 100%;">
+                        <canvas id="spendingChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <div class="col-xl-4 col-lg-5">
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-header bg-white py-3">
-                    <h6 class="m-0 font-weight-bold text-dark"><i class="fas fa-chart-pie me-2"></i>Order Status</h6>
-                </div>
+        <div class="col-lg-4 mb-4">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-header bg-white border-0 py-3 fw-bold">Order Status</div>
                 <div class="card-body">
-                    <canvas id="orderStatusChart" height="300"></canvas>
+                    <div style="height: 300px; width: 100%;">
+                        <canvas id="orderStatusChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-{% endblock %}
 
-{% block extra_css %}
-<style>
-    .stat-card { transition: transform 0.2s; }
-    .stat-card:hover { transform: translateY(-5px); }
-    .bg-light-primary { background-color: #eef2ff; }
-    .bg-light-success { background-color: #f0fdf4; }
-    .bg-light-info { background-color: #ecfeff; }
-    .bg-light-warning { background-color: #fffbeb; }
-    canvas { width: 100% !important; }
-</style>
-{% endblock %}
-
-{% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <script>
-    // 1. Spending Overview Chart (Line Chart)
-    const ctx1 = document.getElementById('spendingChart').getContext('2d');
-    new Chart(ctx1, {
-        type: 'line',
-        data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], // আপনি চাইলে এগুলো ডাটাবেজ থেকে আনতে পারেন
-            datasets: [{
-                label: 'Spent Amount (৳)',
-                data: [1200, 1900, 3000, 2500, 4200, 3500],
-                borderColor: '#4e73df',
-                backgroundColor: 'rgba(78, 115, 223, 0.05)',
-                fill: true,
-                tension: 0.3
-            }]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
-    });
+    document.addEventListener("DOMContentLoaded", function() {
+        const orderValues = {{ chart_data|default:"[0, 0, 0]"|safe }};
+        const totalSpentValue = {{ total_spent|default:0 }};
 
-    // 2. Order Status Chart (Doughnut Chart)
-    const ctx2 = document.getElementById('orderStatusChart').getContext('2d');
-    new Chart(ctx2, {
-        type: 'doughnut',
-        data: {
-            labels: ['Completed', 'Pending', 'Cancelled'],
-            datasets: [{
-                data: [65, 20, 15],
-                backgroundColor: ['#1cc88a', '#f6c23e', '#e74a3b'],
-                hoverOffset: 4
-            }]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
+        // ১. Order Status Chart
+        const statusCtx = document.getElementById('orderStatusChart');
+        if (statusCtx) {
+            new Chart(statusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Completed', 'Pending', 'Cancelled'],
+                    datasets: [{
+                        data: orderValues,
+                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+                        borderWidth: 0
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+
+        // ২. Spending Chart
+        const spendingCtx = document.getElementById('spendingChart');
+        if (spendingCtx) {
+            new Chart(spendingCtx, {
+                type: 'line',
+                data: {
+                    labels: ['W1', 'W2', 'W3', 'W4'],
+                    datasets: [{
+                        label: 'Spent (৳)',
+                        data: [0, 0, (totalSpentValue * 0.5), totalSpentValue],
+                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
     });
 </script>
 {% endblock %}

@@ -84,36 +84,23 @@ def customer_dashboard(request):
     if request.user.is_staff:
         return redirect('staff_dashboard')
 
+    # ইউজার ভিত্তিক অর্ডার ডাটা
     user_orders = Order.objects.filter(user=request.user)
     total_orders = user_orders.count()
     
-    # --- স্পেশাল চেক: সব স্ট্যাটাস চেক করে টাকা যোগ করা ---
-    # ১. প্রথমে শুধু 'Completed' ট্রাই করবে (Case Insensitive)
-    total_spent = user_orders.filter(
-        status__iexact='Completed' 
-    ).aggregate(Sum('total_price'))['total_price__sum'] or 0
+    # Total Spent ক্যালকুলেশন (স্ট্যাটাস নির্বিশেষে ডাটা নিশ্চিত করতে)
+    total_spent_data = user_orders.aggregate(Sum('total_price'))
+    total_spent = total_spent_data['total_price__sum'] or 0
     
-    # ২. যদি ০ আসে, তবে 'Delivered' ট্রাই করবে (অনেকে এটা ব্যবহার করেন)
-    if total_spent == 0:
-        total_spent = user_orders.filter(
-            status__iexact='Delivered'
-        ).aggregate(Sum('total_price'))['total_price__sum'] or 0
-        
-    # ৩. যদি তাও ০ আসে, তবে স্ট্যাটাস যাই হোক, সব অর্ডারের টাকা যোগ করবে 
-    # (অন্তত ০ যাতে না দেখায়)
-    if total_spent == 0:
-        total_spent = user_orders.aggregate(Sum('total_price'))['total_price__sum'] or 0
-    
-    # ৪. টার্মিনালে চেক করার জন্য (সার্ভার লগ-এ দেখবেন ডাটা আসে কি না)
-    print(f"User: {request.user.username} | Total Orders: {total_orders} | Total Spent: {total_spent}")
-
-    # রিভিউ এবং রিজার্ভেশন
+    # অন্যান্য স্ট্যাটাস
     total_reviews = Testimonial.objects.filter(user=request.user).count()
-    total_reservations = 0
+    
     if Reservation:
         total_reservations = Reservation.objects.filter(user=request.user).count()
+    else:
+        total_reservations = 0
 
-    # গ্রাফ ডাটা
+    # গ্রাফের জন্য ডাটা (Status Breakdown)
     completed = user_orders.filter(status__iexact='Completed').count()
     pending = user_orders.filter(status__iexact='Pending').count()
     cancelled = user_orders.filter(status__iexact='Cancelled').count()
@@ -125,7 +112,9 @@ def customer_dashboard(request):
         'total_reservations': total_reservations,
         'chart_data': [completed, pending, cancelled],
     }
+    
     return render(request, 'accounts/dashboard/customer_dashboard.html', context)
+
     
 @login_required
 def staff_dashboard(request):
