@@ -1,17 +1,16 @@
 {% extends 'accounts/dashboard/base_dashboard.html' %}
 
-{% block title %}Customer Dashboard{% endblock %}
+{% block title %}Dashboard | Welcome {{ request.user.username }}{% endblock %}
 
 {% block sidebar %}
-
-    <a href="{% url 'my_orders' %}">My Orders</a>
-    <a href="{% url 'create_reservation' %}">Book Table</a>
-    <a href="{% url 'reservation_list' %}">My Reservations</a>
-    <a href="{% url 'add_review' %}">Create Review</a>
-    <a href="{% url 'my_testimonials' %}">My Reviews</a>
-    
-
+    <a href="{% url 'customer_dashboard' %}" class="active"><i class="fas fa-chart-line me-2"></i> Analytics</a>
+    <a href="{% url 'my_orders' %}"><i class="fas fa-shopping-bag me-2"></i> My Orders</a>
+    <a href="{% url 'create_reservation' %}"><i class="fas fa-calendar-plus me-2"></i> Book Table</a>
+    <a href="{% url 'reservation_list' %}"><i class="fas fa-list-ul me-2"></i> My Reservations</a>
+    <a href="{% url 'add_review' %}"><i class="fas fa-pen-fancy me-2"></i> Create Review</a>
+    <a href="{% url 'my_testimonials' %}"><i class="fas fa-star me-2"></i> My Reviews</a>
 {% endblock %}
+
 {% block content %}
 <div class="">
     <h2 class="mb-4">My Testimonials</h2>

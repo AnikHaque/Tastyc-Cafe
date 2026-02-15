@@ -1,11 +1,14 @@
 {% extends 'accounts/dashboard/base_dashboard.html' %}
 
-{% block title %}My Reservations{% endblock %}
+{% block title %}Dashboard | Welcome {{ request.user.username }}{% endblock %}
 
 {% block sidebar %}
-    <a href="{% url 'customer_dashboard' %}">My Orders</a>
-    <a href="{% url 'create_reservation' %}">Book Table</a>
-    <a href="{% url 'reservation_list' %}" class="active">My Reservations</a>
+    <a href="{% url 'customer_dashboard' %}" class="active"><i class="fas fa-chart-line me-2"></i> Analytics</a>
+    <a href="{% url 'my_orders' %}"><i class="fas fa-shopping-bag me-2"></i> My Orders</a>
+    <a href="{% url 'create_reservation' %}"><i class="fas fa-calendar-plus me-2"></i> Book Table</a>
+    <a href="{% url 'reservation_list' %}"><i class="fas fa-list-ul me-2"></i> My Reservations</a>
+    <a href="{% url 'add_review' %}"><i class="fas fa-pen-fancy me-2"></i> Create Review</a>
+    <a href="{% url 'my_testimonials' %}"><i class="fas fa-star me-2"></i> My Reviews</a>
 {% endblock %}
 
 {% block content %}
@@ -14,8 +17,8 @@
     <a href="{% url 'create_reservation' %}" class="btn btn-danger btn-sm rounded-pill px-3">+ New Booking</a>
 </div>
 
-<div class="table-responsive">
-    <table class="table table-hover align-middle">
+<div class="table-responsive bg-white shadow-sm rounded-3">
+    <table class="table table-hover align-middle mb-0">
         <thead class="table-light">
             <tr>
                 <th>Date</th>
@@ -23,14 +26,15 @@
                 <th>People</th>
                 <th>Status</th>
                 <th>Special Request</th>
-                <th class="text-center">Action</th> </tr>
+                <th class="text-center">Action</th>
+            </tr>
         </thead>
         <tbody>
             {% for r in reservations %}
             <tr>
                 <td>{{ r.date }}</td>
                 <td>{{ r.time }}</td>
-                <td>{{ r.people_count }}</td>
+                <td><i class="fa-solid fa-users me-1 text-muted"></i> {{ r.people_count }}</td>
                 <td>
                     {% if r.status == 'Confirmed' %}
                         <span class="badge bg-success">{{ r.status }}</span>
@@ -40,41 +44,45 @@
                         <span class="badge bg-secondary">{{ r.status }}</span>
                     {% endif %}
                 </td>
-                <td>{{ r.special_request|truncatechars:20|default:"-" }}</td>
+                <td class="text-muted italic small">{{ r.special_request|truncatechars:20|default:"-" }}</td>
                 
                 <td class="text-center">
                     <div class="btn-group" role="group">
                         <a href="{% url 'edit_reservation' r.id %}" class="btn btn-outline-primary btn-sm" title="Edit">
-                            <i class="fas fa-edit"></i>
+                            <i class="fa-solid fa-pen-to-square"></i>
                         </a>
                         
-                        <form action="{% url 'delete_reservation' r.id %}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to cancel this reservation?');">
+                        <form action="{% url 'delete_reservation' r.id %}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to cancel?');">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-outline-danger btn-sm" title="Cancel">
-                                <i class="fas fa-trash"></i>
+                                <i class="fa-solid fa-trash-can"></i>
                             </button>
                         </form>
                     </div>
                 </td>
             </tr>
             {% empty %}
-            <tr><td colspan="6" class="text-center py-4">No reservations yet.</td></tr>
+            <tr><td colspan="6" class="text-center py-5 text-muted">No reservations yet.</td></tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
 <style>
     .btn-group .btn {
-        padding: 5px 10px;
+        padding: 5px 12px;
         border-radius: 8px;
+        margin: 0 2px;
     }
     .badge {
         font-weight: 500;
-        padding: 6px 12px;
+        padding: 6px 14px;
         border-radius: 20px;
+    }
+    /* আইকনগুলো যাতে একই লাইনে থাকে */
+    .fa-fw {
+        width: 1.25em;
+        text-align: center;
     }
 </style>
 {% endblock %}
