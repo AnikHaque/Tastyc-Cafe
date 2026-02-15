@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from menu.models import Food
+from menu.models import Food,Testimonial
 from .forms import CustomerRegisterForm, LoginForm
 from .decorators import customer_required, staff_required, manager_required
 from orders.models import Order
@@ -12,12 +12,16 @@ import json
 from datetime import date, timedelta,datetime
 from orders.models import OrderItem
 from django.shortcuts import render
-from reservations.models import Reservation
 from blog.models import Blog 
 from django.utils.text import slugify
 # -------------------------------
 # Authentication Views
 # -------------------------------
+# রিজার্ভেশন মডেল ইম্পোর্ট
+try:
+    from reservations.models import Reservation
+except (ImportError, ModuleNotFoundError):
+    Reservation = None  # অ্যাপ না থাকলে যাতে ক্র্যাশ না করে
 
 def register_view(request):
     if request.user.is_authenticated:
@@ -76,21 +80,53 @@ def logout_view(request):
 # -------------------------------
 
 @login_required
-def dashboard(request):
+def customer_dashboard(request):
     if request.user.is_staff:
         return redirect('staff_dashboard')
-    # normal customer
-    orders = Order.objects.filter(user=request.user).order_by('-created_at')
-    return render(request, 'accounts/dashboard/customer_dashboard.html', {'orders': orders})
 
-@login_required
-def customer_dashboard(request):
-    # Normal user orders
-    orders = Order.objects.filter(user=request.user).order_by('-created_at')
-    return render(request, 'accounts/dashboard/customer_dashboard.html', {
-        'orders': orders
-    })
+    user_orders = Order.objects.filter(user=request.user)
+    total_orders = user_orders.count()
+    
+    # --- স্পেশাল চেক: সব স্ট্যাটাস চেক করে টাকা যোগ করা ---
+    # ১. প্রথমে শুধু 'Completed' ট্রাই করবে (Case Insensitive)
+    total_spent = user_orders.filter(
+        status__iexact='Completed' 
+    ).aggregate(Sum('total_price'))['total_price__sum'] or 0
+    
+    # ২. যদি ০ আসে, তবে 'Delivered' ট্রাই করবে (অনেকে এটা ব্যবহার করেন)
+    if total_spent == 0:
+        total_spent = user_orders.filter(
+            status__iexact='Delivered'
+        ).aggregate(Sum('total_price'))['total_price__sum'] or 0
+        
+    # ৩. যদি তাও ০ আসে, তবে স্ট্যাটাস যাই হোক, সব অর্ডারের টাকা যোগ করবে 
+    # (অন্তত ০ যাতে না দেখায়)
+    if total_spent == 0:
+        total_spent = user_orders.aggregate(Sum('total_price'))['total_price__sum'] or 0
+    
+    # ৪. টার্মিনালে চেক করার জন্য (সার্ভার লগ-এ দেখবেন ডাটা আসে কি না)
+    print(f"User: {request.user.username} | Total Orders: {total_orders} | Total Spent: {total_spent}")
 
+    # রিভিউ এবং রিজার্ভেশন
+    total_reviews = Testimonial.objects.filter(user=request.user).count()
+    total_reservations = 0
+    if Reservation:
+        total_reservations = Reservation.objects.filter(user=request.user).count()
+
+    # গ্রাফ ডাটা
+    completed = user_orders.filter(status__iexact='Completed').count()
+    pending = user_orders.filter(status__iexact='Pending').count()
+    cancelled = user_orders.filter(status__iexact='Cancelled').count()
+
+    context = {
+        'total_orders': total_orders,
+        'total_spent': total_spent,
+        'total_reviews': total_reviews,
+        'total_reservations': total_reservations,
+        'chart_data': [completed, pending, cancelled],
+    }
+    return render(request, 'accounts/dashboard/customer_dashboard.html', context)
+    
 @login_required
 def staff_dashboard(request):
     if not request.user.is_staff:
