@@ -56,10 +56,10 @@
             </li>
           {% endif %}
 <li class="nav-item">
-    <a class="nav-link position-relative mx-lg-2">
+    <a href="{% url 'cart' %}" class="nav-link position-relative mx-2">
         <i class="fa-solid fa-bag-shopping fs-4 text-warning"></i>
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cart-count">
-            {{ request.session.cart|length|default:0 }}
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.7rem;">
+            {{ request.session.cart|length }}
         </span>
     </a>
 </li>

@@ -41,7 +41,7 @@ def add_to_cart(request, food_id):
 
     request.session['cart'] = cart
     request.session.modified = True
-    return redirect('cart')
+    return redirect(request.META.get('HTTP_REFERER', 'menu'))
 
 def remove_from_cart(request, food_id):
     cart = request.session.get('cart', {})
