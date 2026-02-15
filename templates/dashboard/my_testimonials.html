@@ -1,0 +1,44 @@
+{% extends 'accounts/dashboard/base_dashboard.html' %}
+
+{% block title %}Customer Dashboard{% endblock %}
+
+{% block sidebar %}
+
+    <a href="{% url 'my_orders' %}">My Orders</a>
+    <a href="{% url 'create_reservation' %}">Book Table</a>
+    <a href="{% url 'reservation_list' %}">My Reservations</a>
+    <a href="{% url 'add_review' %}">Create Review</a>
+    <a href="{% url 'my_testimonials' %}">My Reviews</a>
+    
+
+{% endblock %}
+{% block content %}
+<div class="">
+    <h2 class="mb-4">My Testimonials</h2>
+    
+    {% if my_testimonials %}
+        <div class="row">
+            {% for t in my_testimonials %}
+                <div class="col-md-3 mb-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <p>"{{ t.review_text }}"</p>
+                            <small class="text-muted">- Rating: {{ t.rating }}/5</small>
+                            <br>
+                            <form action="{% url 'delete_testimonial' t.id %}" method="POST" class="mt-2">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Sotti ki delete korben?')">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            Apni ekhono kono testimonial add koren ni. 
+            <a href="{% url 'add_review' %}" class="alert-link">Ekhan theke add korun</a>.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

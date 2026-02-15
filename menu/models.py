@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.contrib.auth.models import User
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -71,15 +72,17 @@ class Offer(models.Model):
 
 
 class Testimonial(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    # আপনার বাকি ফিল্ডগুলো এখানে থাকবে...
     name = models.CharField(max_length=100)
-    designation = models.CharField(max_length=100, help_text="Example: Food Blogger")
-    image = models.ImageField(upload_to='testimonials/')
+    designation = models.CharField(max_length=100)
     review_text = models.TextField()
-    rating = models.IntegerField(default=5, validators=[MinValueValidator(1), MaxValueValidator(5)])
+    rating = models.IntegerField()
+    image = models.ImageField(upload_to='testimonials/')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.name
+        return f"{self.name}'s review"
     
 
 class ComboDeal(models.Model):

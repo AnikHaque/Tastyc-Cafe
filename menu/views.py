@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404,redirect
-from .models import Category, ComboDeal
+from .models import Category, ComboDeal, Testimonial
 from django.contrib import messages
 # আগের ইমপোর্টের সাথে শুধু ComboDeal টা কমা দিয়ে যোগ করে দিন
 
@@ -46,3 +46,27 @@ def add_combo_to_cart(request, combo_id):
     messages.success(request, f"{combo.name} কার্টে যোগ করা হয়েছে!")
     
     return redirect('cart') # আপনার কার্ট ইউআরএল এর নাম নিশ্চিত করুন
+
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def my_testimonials(request):
+    # শুধুমাত্র লগইন করা ইউজারের টেস্টোমনিয়ালগুলো ফিল্টার করবে
+    # আপনার মডেলের ফিল্ডের নাম 'user' না হয়ে অন্য কিছু হলে সেটি এখানে দিন
+    user_testimonials = Testimonial.objects.filter(user=request.user).order_by('-created_at')
+    
+    context = {
+        'my_testimonials': user_testimonials
+    }
+    return render(request, 'dashboard/my_testimonials.html', context)
+
+@login_required
+def delete_testimonial(request, pk):
+    testimonial = get_object_or_404(Testimonial, id=pk, user=request.user)
+    if request.method == 'POST':
+        testimonial.delete()
+        messages.success(request, "Testimonial-ti successfully delete kora hoyeche.")
+        return redirect('my_testimonials')
+    return render(request, 'dashboard/confirm_delete.html', {'testimonial': testimonial})
+
+

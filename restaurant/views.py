@@ -6,6 +6,7 @@ from menu.models import Category, ComboDeal, Food, Offer, Testimonial
 from blog.models import Blog
 from orders.models import OrderItem
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 def home(request):
     # Categories with available food count
@@ -30,6 +31,7 @@ def home(request):
         top_selling = sorted(top_selling, key=lambda t: list(top_food_ids).index(t.id))
     else:
         top_selling = Food.objects.filter(is_available=True)[:8]
+
     # Today Specials
     today_specials = Food.objects.filter(is_today_special=True, is_available=True)[:5]
 
@@ -58,16 +60,26 @@ def home(request):
 
     return render(request, "home.html", context)
 
+@login_required
 def add_review(request):
     if request.method == "POST":
         form = TestimonialForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            messages.success(request, "Dhonyobad! Apnar review-ti home-page-e show korbe.")
-            return redirect('home') # Review dewar por home-e niye jabe
+            testimonial = form.save(commit=False)
+            testimonial.user = request.user  # বর্তমান লগইন করা ইউজারকে সেট করা হলো
+            # যদি আপনি চান ইউজারের নাম এবং ডেজিগনেশন প্রোফাইল থেকে অটো আসবে:
+            testimonial.name = request.user.get_full_name() or request.user.username
+            testimonial.save()
+            messages.success(request, "Review add hoyeche!")
+            return redirect('my_testimonials')
     else:
         form = TestimonialForm()
-    
     return render(request, 'add_review.html', {'form': form})
+
+@login_required
+def my_testimonials(request):
+    # এখন এই লাইনটি আর এরর দিবে না
+    user_testimonials = Testimonial.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'my_testimonials.html', {'my_testimonials': user_testimonials})
 
 
