@@ -1,63 +1,102 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<article class="blog-details py-5 mt-5">
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <nav aria-label="breadcrumb" class="mb-4">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{% url 'blog_list' %}" class="text-primary">Journal</a></li>
-                        <li class="breadcrumb-item active">{{ blog.category }}</li>
-                    </ol>
-                </nav>
+<section class="blog-detail-wrapper py-5 mt-5 bg-light">
+    <div class="container py-4">
+        <div class="row g-5">
+            <div class="col-lg-8">
+                <article class="bg-white p-4 p-md-5 shadow-sm rounded-4">
+                    <nav aria-label="breadcrumb" class="mb-4">
+                        <span class="badge bg-danger mb-2">{{ blog.category }}</span>
+                        <h1 class="playfair display-4 fw-bold mb-3">{{ blog.title }}</h1>
+                        <div class="d-flex align-items-center gap-3 text-muted small">
+                            <span><i class="far fa-user"></i> By {{ blog.author.username }}</span>
+                            <span><i class="far fa-calendar-alt"></i> {{ blog.created_at|date:"M d, Y" }}</span>
+                            <span><i class="far fa-clock"></i> {{ blog.read_time }} min read</span>
+                        </div>
+                    </nav>
 
-                <h1 class="playfair display-3 fw-bold mb-4">{{ blog.title }}</h1>
-                
-                <div class="d-flex align-items-center gap-3 mb-5">
-                    <div class="author-img" style="width: 50px; height: 50px; border-radius: 50%; background: #eee; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-user text-muted"></i>
+                    <img src="{{ blog.thumbnail.url }}" class="img-fluid rounded-4 mb-5 shadow-sm w-100" alt="Cover">
+
+                    <div class="blog-body fs-5 text-dark lh-base mb-5" style="text-align: justify;">
+                        {{ blog.content|safe|linebreaks }}
                     </div>
-                    <div>
-                        <h6 class="mb-0 fw-bold">{{ blog.author.username }}</h6>
-                        <small class="text-muted">{{ blog.created_at|date:"F d, Y" }}</small>
+
+                    <div class="tags-box py-3 border-top">
+                        <span class="fw-bold me-2">Tags:</span>
+                        {% for tag in blog.tags.split %}
+                            <span class="badge bg-secondary opacity-75 fw-normal">#{{ tag }}</span>
+                        {% endfor %}
                     </div>
-                </div>
 
-                <div class="featured-img-wrap mb-5 shadow-lg" style="border-radius: 30px; overflow: hidden; height: 500px;">
-                    <img src="{{ blog.thumbnail.url }}" class="w-100 h-100 object-fit-cover" alt="{{ blog.title }}">
-                </div>
+                    <div class="comments-section mt-5 pt-5 border-top">
+                        <h3 class="playfair fw-bold mb-4">Thoughts ({{ blog.comments.count }})</h3>
+                        
+                        <form action="" method="POST" class="mb-5 bg-light p-4 rounded-4">
+                            {% csrf_token %}
+                            <textarea name="comment" class="form-control mb-3 border-0 shadow-sm" rows="3" placeholder="Join the discussion..."></textarea>
+                            <button class="btn btn-danger px-4 fw-bold">Post Comment</button>
+                        </form>
 
-                <div class="blog-main-content fs-5 line-height-lg text-dark">
-                    {{ blog.content|safe|linebreaks }}
-                </div>
-
-                <hr class="my-5">
-
-                <div class="related-posts py-4">
-                    <h3 class="playfair mb-4">You Might Also Like</h3>
-                    <div class="row g-4">
-                        {% for r_blog in related_blogs %}
-                        <div class="col-md-4">
-                            <a href="{% url 'blog_detail' r_blog.slug %}" class="text-decoration-none">
-                                <div class="card border-0">
-                                    <img src="{{ r_blog.thumbnail.url }}" class="rounded-4 mb-2" height="150" style="object-fit: cover;">
-                                    <h6 class="text-dark fw-bold">{{ r_blog.title }}</h6>
+                        <div class="comment-list">
+                            {% for comment in blog.comments.all %}
+                                <div class="d-flex gap-3 mb-4">
+                                    <div class="avatar" style="width: 50px; height: 50px; background: #ddd; border-radius: 50%; flex-shrink: 0;"></div>
+                                    <div>
+                                        <h6 class="mb-0 fw-bold">{{ comment.user.username }} <small class="text-muted fw-normal ms-2">{{ comment.created_at|timesince }} ago</small></h6>
+                                        <p class="text-muted mt-1">{{ comment.text }}</p>
+                                        <button class="btn btn-sm text-primary p-0 fw-bold">Reply</button>
+                                    </div>
                                 </div>
-                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <div class="col-lg-4">
+                <aside class="sidebar sticky-top" style="top: 100px; z-index: 1;">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 text-center">
+                        <div class="author-img mx-auto mb-3" style="width: 80px; height: 80px; background: #ff4757; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;">
+                            {{ blog.author.username.0 }}
+                        </div>
+                        <h5 class="fw-bold">About Author</h5>
+                        <p class="text-muted small">Chef at RoyalDine. Passionate about spices and traditional culinary arts.</p>
+                        <div class="social-links d-flex justify-content-center gap-2">
+                            <a href="#" class="btn btn-sm btn-outline-dark rounded-circle"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="btn btn-sm btn-outline-dark rounded-circle"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                        <h5 class="fw-bold mb-3 border-bottom pb-2">Recent Stories</h5>
+                        {% for r_blog in related_blogs %}
+                        <div class="d-flex gap-3 mb-3 pb-3 border-bottom">
+                            <img src="{{ r_blog.thumbnail.url }}" style="width: 70px; height: 70px; object-fit: cover; border-radius: 10px;">
+                            <div>
+                                <h6 class="mb-1"><a href="{% url 'blog_detail' r_blog.slug %}" class="text-dark text-decoration-none small fw-bold">{{ r_blog.title|truncatechars:40 }}</a></h6>
+                                <small class="text-muted">{{ r_blog.created_at|date:"M d" }}</small>
+                            </div>
                         </div>
                         {% endfor %}
                     </div>
-                </div>
+
+                    <div class="card border-0 shadow-sm rounded-4 p-4 bg-dark text-white text-center">
+                        <h5>Join Our Newsletter</h5>
+                        <p class="small opacity-75">Get the latest recipes in your inbox.</p>
+                        <input type="email" class="form-control form-control-sm mb-2" placeholder="Email Address">
+                        <button class="btn btn-danger btn-sm w-100 fw-bold">Subscribe</button>
+                    </div>
+                </aside>
             </div>
         </div>
     </div>
-</article>
+</section>
 
 <style>
-    .line-height-lg { line-height: 1.8; }
     .playfair { font-family: 'Playfair Display', serif; }
-    .blog-main-content { color: #2d3436; text-align: justify; }
+    .blog-body p { margin-bottom: 1.5rem; line-height: 1.8; color: #333; }
+    .lh-base { line-height: 1.8 !important; }
+    .bg-light { background-color: #f8f9fa !important; }
 </style>
-
 {% endblock %}
