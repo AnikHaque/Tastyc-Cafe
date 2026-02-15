@@ -8,14 +8,13 @@ from orders.models import OrderItem
 from django.contrib import messages
 
 def home(request):
-   
     # Categories with available food count
     categories = Category.objects.annotate(
         item_count=Count('foods', filter=Q(foods__is_available=True))
     )
 
-    # Top Selling Foods
-    top_selling = (
+    # Top Selling Foods - লজিক আপডেট
+    top_selling_data = (
         OrderItem.objects
         .filter(food__is_available=True)
         .values(
@@ -28,6 +27,14 @@ def home(request):
         .order_by('-total_sold')[:8]
     )
 
+    # যদি অর্ডার না থাকে, তবে সাধারণ খাবার দেখাবে
+    if not top_selling_data:
+        top_selling = Food.objects.filter(is_available=True)[:8]
+        is_dict = False
+    else:
+        top_selling = top_selling_data
+        is_dict = True
+
     # Today Specials
     today_specials = Food.objects.filter(
         is_today_special=True,
@@ -36,9 +43,6 @@ def home(request):
 
     # Active Offers
     today = timezone.now().date()
-
-    
-
     offers = (
         Offer.objects
         .filter(
@@ -53,15 +57,16 @@ def home(request):
     combos = ComboDeal.objects.filter(is_active=True)
     testimonials = Testimonial.objects.all().order_by('-created_at')
     blogs = Blog.objects.filter(is_published=True).order_by('-created_at')[:6]
+
     context = {
         "categories": categories,
         "top_selling": top_selling,
+        "is_dict": is_dict, # এটি টেমপ্লেটের জন্য জরুরি
         "today_specials": today_specials,
         "offers": offers,
         'testimonials': testimonials,
         'blogs': blogs,
         'combos': combos,
-       
     }
 
     return render(request, "home.html", context)
