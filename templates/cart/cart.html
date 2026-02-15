@@ -1,175 +1,137 @@
 {% extends 'base.html' %}
-{% block title %}Your Cart{% endblock %}
+{% block title %}My Gourmet Cart{% endblock %}
 
 {% block content %}
 <style>
-  .cart-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #fff9f0;
-    border-radius: 12px;
-    padding: 15px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-    transition: transform 0.3s;
-    position: relative;
-  }
-
-  .cart-item:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 25px rgba(0,0,0,0.12);
-  }
-
-  .cart-item img {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 12px;
-    margin-right: 15px;
-  }
-
-  .cart-info h5 {
-    font-weight: 700;
-    margin-bottom: 5px;
-    color: #ff9800;
-  }
-
-  .cart-info p {
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 10px;
-  }
-
-  .qty-control {
-    display: flex;
-    align-items: center;
-    border: 1px solid #ffe0b2;
-    border-radius: 12px;
-    overflow: hidden;
-    width: max-content;
-  }
-
-  .qty-control a {
-    display: inline-block;
-    width: 32px;
-    height: 32px;
-    line-height: 32px;
-    text-align: center;
-    cursor: pointer;
-    font-weight: bold;
-    color: #ff9800;
-    background: #fff7e6;
-    transition: 0.2s;
-  }
-
-  .qty-control a:hover {
-    background: #ffecb3;
-  }
-
-  .qty-control span {
-    width: 40px;
-    text-align: center;
-    font-weight: 600;
-  }
-
-  .cart-item .remove {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    color: #d32f2f;
-    font-size: 18px;
-    text-decoration: none;
-    font-weight: bold;
-  }
-
-  .cart-item .remove:hover {
-    color: #b71c1c;
-  }
-
-  .cart-summary {
-    background: #fff9f0;
-    border-radius: 12px;
-    padding: 25px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-  }
-
-  .cart-summary h4 {
-    font-weight: 700;
-    margin-bottom: 15px;
-    color: #ff9800;
-  }
-
-  .cart-summary h3 {
-    font-weight: 700;
-    font-size: 28px;
-    margin-bottom: 20px;
-  }
-
-  .btn-warning {
-    background: linear-gradient(135deg, #ffc107, #ff9800);
-    border: none;
-    padding: 14px;
-    font-weight: 600;
-    border-radius: 12px;
-    transition: 0.3s;
-    color: #fff;
-  }
-
-  .btn-warning:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 25px rgba(255, 152, 0, 0.4);
-  }
-
-  @media(max-width: 900px) {
-    .cart-item {
-      flex-direction: column;
-      align-items: flex-start;
+    :root {
+        --primary-color: #ff4757;
+        --secondary-color: #2f3542;
+        --accent-color: #ffa502;
+        --bg-light: #f1f2f6;
     }
 
-    .qty-control {
-      margin-top: 10px;
+    body { background-color: #f8f9fa; font-family: 'Poppins', sans-serif; }
+
+    .cart-header {
+        background: linear-gradient(135deg, var(--secondary-color), #000);
+        padding: 60px 0;
+        border-radius: 0 0 50px 50px;
+        margin-bottom: -50px;
+        color: white;
     }
-  }
+
+    .cart-container { position: relative; z-index: 10; }
+
+    .cart-item-card {
+        background: white; border: none; border-radius: 20px;
+        padding: 20px; margin-bottom: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        display: flex; align-items: center; transition: 0.3s;
+    }
+
+    .cart-item-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
+
+    .item-img-wrapper { width: 100px; height: 100px; border-radius: 15px; overflow: hidden; flex-shrink: 0; }
+    .item-img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+
+    .item-details { flex-grow: 1; padding-left: 20px; }
+    .item-name { font-weight: 700; font-size: 1.1rem; color: var(--secondary-color); margin-bottom: 5px; }
+    .item-price { color: var(--primary-color); font-weight: 700; }
+
+    .modern-qty {
+        display: flex; align-items: center; background: var(--bg-light);
+        border-radius: 50px; padding: 5px 15px; width: fit-content;
+    }
+
+    .modern-qty a { text-decoration: none; color: var(--secondary-color); font-weight: bold; padding: 0 10px; }
+    .modern-qty span { font-weight: 700; padding: 0 10px; }
+
+    .summary-card {
+        background: white; border-radius: 25px; padding: 30px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.1); position: sticky; top: 100px;
+    }
+
+    .btn-checkout {
+        background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+        border: none; color: white; padding: 15px; border-radius: 50px;
+        font-weight: 700; width: 100%; transition: 0.3s;
+    }
+
+    .btn-checkout:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(255, 71, 87, 0.4); color: white; }
+
+    .remove-btn { color: #ff4757; font-size: 1.2rem; transition: 0.3s; }
+    .remove-btn:hover { color: #ff6b81; transform: scale(1.2); }
 </style>
 
-<section class="py-5 mt-5">
-  <div class="container">
-    <h2 class="mb-4">Your Cart</h2>
+<header class="cart-header">
+    <div class="container text-center">
+        <h1 class="display-5 fw-bold text-white">আপনার ঝুড়ি</h1>
+        <p class="text-white-50">সেরা স্বাদের খাবারগুলো এখন আপনার হাতের কাছে</p>
+    </div>
+</header>
 
-    {% if cart %}
-      <div class="row g-4">
-        <div class="col-lg-8">
-          {% for id, item in cart.items %}
-            <div class="cart-item mb-3">
-              <img src="{{ item.image }}" alt="{{ item.name }}">
-              <div class="cart-info">
-                <h5>{{ item.name }}</h5>
-                <p>${{ item.price }}</p>
-                <div class="qty-control">
-                  <a href="{% url 'update_cart' id 'decrease' %}">−</a>
-                  <span>{{ item.qty }}</span>
-                  <a href="{% url 'update_cart' id 'increase' %}">+</a>
+<section class="pb-5 cart-container">
+    <div class="container">
+        {% if cart %}
+        <div class="row g-4">
+            <div class="col-lg-8">
+                {% for id, item in cart.items %}
+                <div class="cart-item-card">
+                    <div class="item-img-wrapper">
+                        <img src="{{ item.image }}" alt="{{ item.name }}">
+                    </div>
+                    <div class="item-details">
+                        <h5 class="item-name">{{ item.name }}</h5>
+                        <p class="item-price">৳ {{ item.price }}</p>
+                        <div class="modern-qty">
+                            <a href="{% url 'update_cart' id 'decrease' %}"><i class="fas fa-minus"></i></a>
+                            <span>{{ item.qty }}</span>
+                            <a href="{% url 'update_cart' id 'increase' %}"><i class="fas fa-plus"></i></a>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <p class="fw-bold mb-3">৳ {{ item.total_item_price }}</p>
+                        <a href="{% url 'remove_from_cart' id %}" class="remove-btn">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </div>
                 </div>
-              </div>
-              <a href="{% url 'remove_from_cart' id %}" class="remove">✕</a>
+                {% endfor %}
             </div>
-          {% endfor %}
-        </div>
 
-        <div class="col-lg-4">
-          <div class="cart-summary">
-            <h4>Total</h4>
-            <h3>${{ total }}</h3>
-            <a href="{% url 'checkout' %}" class="btn btn-warning w-100 mt-3">
-              Proceed to Checkout
-            </a>
-            
-          </div>
+            <div class="col-lg-4">
+                <div class="summary-card">
+                    <h4 class="fw-bold mb-4">অর্ডারের বিবরণ</h4>
+                    <div class="d-flex justify-content-between mb-3 text-muted">
+                        <span>মোট আইটেম</span>
+                        <span>{{ cart|length }}টি</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3 text-muted">
+                        <span>ডেলিভারি চার্জ</span>
+                        <span class="text-success">ফ্রি</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <span class="fw-bold h5">সর্বমোট</span>
+                        <span class="h3 fw-bold">৳ {{ total }}</span>
+                    </div>
+                    <a href="{% url 'checkout' %}" class="btn btn-checkout">
+                        চেকআউট করুন <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
         </div>
-      </div>
-    {% else %}
-      <p>Your cart is empty.</p>
-    {% endif %}
-  </div>
+        {% else %}
+        <div class="text-center py-5 bg-white rounded-5 shadow-sm">
+            <i class="fas fa-shopping-basket fa-4x text-light mb-4"></i>
+            <h3>আপনার ঝুড়ি খালি!</h3>
+            <p class="text-muted mb-4">এখনই কিছু সুস্বাদু খাবার যোগ করুন।</p>
+            <a href="{% url 'menu' %}" class="btn btn-checkout px-5 w-auto">মেনু দেখুন</a>
+        </div>
+        {% endif %}
+    </div>
 </section>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 {% endblock %}
