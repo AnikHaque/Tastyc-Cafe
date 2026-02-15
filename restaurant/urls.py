@@ -10,6 +10,7 @@ from .views import home
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
+    path('about/', views.about_view, name='about'),
     path('menu/', include('menu.urls')),
     path('accounts/', include('accounts.urls')),
     path('cart/', include('cart.urls')),

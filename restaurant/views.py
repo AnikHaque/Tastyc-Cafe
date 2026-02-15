@@ -83,3 +83,7 @@ def my_testimonials(request):
     return render(request, 'my_testimonials.html', {'my_testimonials': user_testimonials})
 
 
+# views.py তে
+def about_view(request):
+    return render(request, 'about.html') # আপনার ফাইলটির নাম যা দিয়েছেন
+

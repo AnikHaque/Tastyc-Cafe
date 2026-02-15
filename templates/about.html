@@ -1,0 +1,405 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us | Gemini's Culinary Story{% endblock %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --primary: #ff4757;
+        --dark: #2f3542;
+        --gold: #ffa502;
+        --light: #f8f9fa;
+        --font-heading: 'Playfair Display', serif;
+        --font-body: 'Poppins', sans-serif;
+    }
+
+    body {
+        font-family: var(--font-body);
+        color: var(--dark);
+        line-height: 1.6;
+    }
+
+    /* --- Universal Header (Matching Menu Page) --- */
+    .page-header {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                    url('https://savory.qodeinteractive.com/wp-content/uploads/2016/10/pages13-aboutus-img2.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        padding: 140px 0 80px;
+        text-align: center;
+        color: white;
+        clip-path: ellipse(100% 100% at 50% 0%); /* Modern Curve */
+    }
+
+    .page-header h1 {
+        font-family: var(--font-heading);
+        font-size: 4rem;
+        font-weight: 900;
+        margin-bottom: 10px;
+    }
+
+    .page-header p {
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        color: var(--gold);
+        font-weight: 600;
+    }
+
+    /* --- Story Section --- */
+    .section-padding { padding: 100px 0; }
+
+    .img-stack {
+        position: relative;
+        padding: 20px;
+    }
+
+    .img-stack img {
+        border-radius: 30px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+    }
+
+    .experience-box {
+        position: absolute;
+        bottom: -20px;
+        left: -20px;
+        background: var(--primary);
+        color: white;
+        padding: 30px;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(255, 71, 87, 0.3);
+        border: 5px solid white;
+    }
+
+    .experience-box h2 { font-size: 3rem; font-weight: 900; margin: 0; }
+
+    /* --- Feature Cards (Organized) --- */
+    .feature-box {
+        background: white;
+        padding: 40px;
+        border-radius: 30px;
+        border: 1px solid #f0f0f0;
+        transition: 0.3s;
+        height: 100%;
+    }
+
+    .feature-box:hover {
+        border-color: var(--primary);
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+    }
+
+    .icon-circle {
+        width: 80px;
+        height: 80px;
+        background: var(--light);
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        border-radius: 50%;
+        margin-bottom: 25px;
+        transition: 0.3s;
+    }
+
+    .feature-box:hover .icon-circle {
+        background: var(--primary);
+        color: white;
+    }
+
+    /* --- Team/Chef Section --- */
+    .chef-card {
+        border: none;
+        border-radius: 30px;
+        overflow: hidden;
+        background: none;
+    }
+
+    .chef-img-box {
+        position: relative;
+        border-radius: 30px;
+        overflow: hidden;
+    }
+
+    .chef-img-box img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        transition: 0.5s;
+    }
+
+    .chef-card:hover img { transform: scale(1.1); }
+
+    .chef-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 30px;
+        background: linear-gradient(transparent, var(--dark));
+        color: white;
+        text-align: center;
+    }
+
+    /* --- CTA Section --- */
+    .cta-banner {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                    url('https://savory.qodeinteractive.com/wp-content/uploads/2016/10/pages13-aboutus-img2.jpg');
+        color: white;
+        padding: 80px 0;
+        border-radius: 50px 50px 0 0;
+    }
+</style>
+
+<header class="page-header">
+    <div class="container">
+        <p>A Journey of Taste</p>
+        <h1>Our Story</h1>
+    </div>
+</header>
+
+<section class="section-padding">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6 animate__animated animate__fadeInLeft">
+                <div class="img-stack">
+                    <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=800&q=80" class="img-fluid" alt="Kitchen">
+                    <div class="experience-box">
+                        <h2>15+</h2>
+                        <p class="m-0">Years of Service</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 ps-lg-5">
+                <h6 class="text-danger fw-bold text-uppercase">High Quality Food</h6>
+                <h2 class="display-5 fw-bold mb-4" style="font-family: var(--font-heading);">Authentic Flavors, <br>Traditional Recipes.</h2>
+                <p class="text-muted mb-4">Since 2011, Gemini Restaurant has been committed to providing an exceptional dining experience. We believe that the best meals are made from fresh, locally sourced ingredients and a whole lot of passion.</p>
+                
+                <div class="row g-4 mb-5">
+                    <div class="col-6">
+                        <h5 class="fw-bold"><i class="fa-solid fa-check-circle text-success me-2"></i>100% Fresh</h5>
+                        <p class="small text-muted">Daily organic supplies.</p>
+                    </div>
+                    <div class="col-6">
+                        <h5 class="fw-bold"><i class="fa-solid fa-check-circle text-success me-2"></i>Expert Chefs</h5>
+                        <p class="small text-muted">Top culinary masters.</p>
+                    </div>
+                </div>
+                
+                <a href="{% url 'menu' %}" class="btn btn-danger btn-lg px-5 rounded-pill shadow-sm">Explore Our Menu</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding bg-light">
+    <div class="container">
+        <div class="row g-4 text-center">
+            <div class="col-md-4">
+                <div class="feature-box">
+                    <div class="icon-circle mx-auto"><i class="fa-solid fa-leaf"></i></div>
+                    <h4 class="fw-bold">Pure Organic</h4>
+                    <p class="text-muted">Directly from our farms to your plate, ensuring the highest health standards.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-box">
+                    <div class="icon-circle mx-auto"><i class="fa-solid fa-fire-burner"></i></div>
+                    <h4 class="fw-bold">Master Cooking</h4>
+                    <p class="text-muted">Our cooking process maintains the perfect balance of nutrition and taste.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-box">
+                    <div class="icon-circle mx-auto"><i class="fa-solid fa-moped"></i></div>
+                    <h4 class="fw-bold">Swift Delivery</h4>
+                    <p class="text-muted">We value your time. Get your favorite meals delivered hot within 30 mins.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding">
+    <div class="container text-center mb-5">
+        <h6 class="text-danger fw-bold">OUR TEAM</h6>
+        <h2 class="display-6 fw-bold" style="font-family: var(--font-heading);">The Faces Behind the Taste</h2>
+    </div>
+    <div class="container">
+        <div class="row g-4">
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="chef-card">
+                    <div class="chef-img-box">
+                        <img src="https://img.freepik.com/free-photo/chef-cooking-kitchen-while-wearing-professional-attire_23-2151208316.jpg?w=740" alt="Chef">
+                        <div class="chef-overlay">
+                            <h4 class="m-0">Chef Sarah</h4>
+                            <p class="text-warning small m-0">Executive Chef</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="chef-card">
+                    <div class="chef-img-box">
+                        <img src="https://img.freepik.com/free-photo/chef-cooking-kitchen-while-wearing-professional-attire_23-2151208316.jpg?w=740" alt="Chef">
+                        <div class="chef-overlay">
+                            <h4 class="m-0">Chef Marco</h4>
+                            <p class="text-warning small m-0">Master of Grill</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="chef-card">
+                    <div class="chef-img-box">
+                        <img src="https://img.freepik.com/free-photo/chef-cooking-kitchen-while-wearing-professional-attire_23-2151208316.jpg?w=740" alt="Chef">
+                        <div class="chef-overlay">
+                            <h4 class="m-0">Chef Julian</h4>
+                            <p class="text-warning small m-0">Pastry Specialist</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            </div> </div>
+</section>
+
+<section class="cta-banner text-center">
+    <div class="container">
+        <h2 class="display-5 fw-bold mb-4" style="font-family: var(--font-heading);">Ready to experience the taste?</h2>
+        <p class="mb-5 opacity-75">Book a table or order online today and get 10% discount!</p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'menu' %}" class="btn btn-danger btn-lg px-5 rounded-pill">Order Online</a>
+            <a href="{% url 'menu' %}" class="btn btn-outline-light btn-lg px-5 rounded-pill">Contact Us</a>
+        </div>
+    </div>
+</section>
+<br>
+<footer class="footer-wrap">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-4 col-md-6">
+                <div class="footer-brand">
+                    <h2 class="playfair">Royal<span>Dine</span></h2>
+                    <p class="mt-4 opacity-75">অসাধারণ স্বাদ আর আভিজাত্যের এক অনন্য মেলবন্ধন। ২০১২ সাল থেকে আমরা আপনাদের দিচ্ছি সেরা ডাইনিং অভিজ্ঞতা।</p>
+                    <div class="social-links mt-4">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-6">
+                <h5 class="fw-bold mb-4">Quick Links</h5>
+                <ul class="footer-links">
+                    <li><a href="{% url 'menu' %}">Our Menu</a></li>
+                    <li><a href="#about">Our Story</a></li>
+                    <li><a href="#">Combo Deals</a></li>
+                    <li><a href="#">Reservations</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <h5 class="fw-bold mb-4">Contact Us</h5>
+                <p class="small mb-2"><i class="fas fa-map-marker-alt text-primary me-2"></i> বনানী ১১, ঢাকা, বাংলাদেশ</p>
+                <p class="small mb-2"><i class="fas fa-phone-alt text-primary me-2"></i> +৮৮০ ১৭০০-০০০০০০</p>
+                <p class="small"><i class="fas fa-envelope text-primary me-2"></i> hello@royaldine.com</p>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <h5 class="fw-bold mb-4">Opening Hours</h5>
+                <div class="d-flex justify-content-between border-bottom border-secondary pb-2 mb-2">
+                    <span class="opacity-75 small">Sat - Thu</span>
+                    <span class="small fw-bold">10 AM - 11 PM</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span class="opacity-75 small">Friday</span>
+                    <span class="text-primary small fw-bold">02 PM - 11 PM</span>
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-5 opacity-25">
+        
+        <div class="footer-bottom d-flex flex-wrap justify-content-between align-items-center">
+            <p class="small mb-0 opacity-50">&copy; 2026 RoyalDine. All rights reserved.</p>
+            <div class="payment-methods opacity-50">
+                <i class="fab fa-cc-visa fa-2x mx-2"></i>
+                <i class="fab fa-cc-mastercard fa-2x mx-2"></i>
+                <i class="fab fa-cc-apple-pay fa-2x mx-2"></i>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<style>
+    .footer-wrap {
+        background: #0f141e; /* Deep dark blue-black */
+        color: #ffffff;
+        padding: 80px 0 30px;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .footer-brand h2 {
+        font-size: 2.5rem;
+        font-weight: 900;
+    }
+
+    .footer-brand h2 span {
+        color: #ff4757; /* Your primary red */
+    }
+
+    .footer-links {
+        list-style: none;
+        padding: 0;
+    }
+
+    .footer-links li {
+        margin-bottom: 12px;
+    }
+
+    .footer-links a {
+        color: rgba(255, 255, 255, 0.6);
+        text-decoration: none;
+        transition: 0.3s;
+        font-size: 0.9rem;
+    }
+
+    .footer-links a:hover {
+        color: #ff4757;
+        padding-left: 8px;
+    }
+
+    .social-links a {
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.05);
+        color: white;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin-right: 10px;
+        transition: 0.4s;
+        text-decoration: none;
+    }
+
+    .social-links a:hover {
+        background: #ff4757;
+        transform: translateY(-5px);
+    }
+
+    .footer-wrap hr {
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+</style>
+{% endblock %}
