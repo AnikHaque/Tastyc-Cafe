@@ -13,46 +13,34 @@ def home(request):
         item_count=Count('foods', filter=Q(foods__is_available=True))
     )
 
-    # Top Selling Foods - লজিক আপডেট
-    top_selling_data = (
+  # ১. প্রথমে টপ সেলিং ফুড আইডিগুলো বের করি
+    top_food_ids = (
         OrderItem.objects
         .filter(food__is_available=True)
-        .values(
-            'food__id',
-            'food__name',
-            'food__image',
-            'food__price'
-        )
+        .values('food')
         .annotate(total_sold=Sum('quantity'))
-        .order_by('-total_sold')[:8]
+        .order_by('-total_sold')
+        .values_list('food', flat=True)[:8]
     )
 
-    # যদি অর্ডার না থাকে, তবে সাধারণ খাবার দেখাবে
-    if not top_selling_data:
-        top_selling = Food.objects.filter(is_available=True)[:8]
-        is_dict = False
+    # ২. ওই আইডিগুলো দিয়ে সরাসরি Food অবজেক্ট নিয়ে আসি
+    if top_food_ids:
+        top_selling = Food.objects.filter(id__in=top_food_ids)
+        # এখানে অর্ডারিং ঠিক রাখার জন্য (যাতে টপ সেলিংটা আগে থাকে)
+        top_selling = sorted(top_selling, key=lambda t: list(top_food_ids).index(t.id))
     else:
-        top_selling = top_selling_data
-        is_dict = True
-
+        top_selling = Food.objects.filter(is_available=True)[:8]
     # Today Specials
-    today_specials = Food.objects.filter(
-        is_today_special=True,
-        is_available=True
-    )[:5]
+    today_specials = Food.objects.filter(is_today_special=True, is_available=True)[:5]
 
     # Active Offers
     today = timezone.now().date()
-    offers = (
-        Offer.objects
-        .filter(
-            is_active=True,
-            start_date__lte=today,
-            end_date__gte=today,
-            food__is_available=True
-        )
-        .select_related('food')
-    )
+    offers = Offer.objects.filter(
+        is_active=True,
+        start_date__lte=today,
+        end_date__gte=today,
+        food__is_available=True
+    ).select_related('food')
 
     combos = ComboDeal.objects.filter(is_active=True)
     testimonials = Testimonial.objects.all().order_by('-created_at')
@@ -61,7 +49,6 @@ def home(request):
     context = {
         "categories": categories,
         "top_selling": top_selling,
-        "is_dict": is_dict, # এটি টেমপ্লেটের জন্য জরুরি
         "today_specials": today_specials,
         "offers": offers,
         'testimonials': testimonials,
