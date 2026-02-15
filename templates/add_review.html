@@ -1,11 +1,24 @@
-{% extends 'base.html' %}
+{% extends 'accounts/dashboard/base_dashboard.html' %}
+
+{% block title %}Customer Dashboard{% endblock %}
+
+{% block sidebar %}
+
+    <a href="{% url 'my_orders' %}">My Orders</a>
+    <a href="{% url 'create_reservation' %}">Book Table</a>
+    <a href="{% url 'reservation_list' %}">My Reservations</a>
+    <a href="{% url 'create_blog' %}">Create Review</a>
+    <a href="{% url 'reservation_list' %}">My Reviews</a>
+    
+
+{% endblock %}
 
 {% block content %}
-<section class="py-5" style="background: #fdfdfd; min-height: 80vh; display:flex; align-items:center;">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-7">
-                <div class="card border-0 shadow-lg p-4 p-md-5" style="border-radius: 35px;">
+<section class="" style="background: #fdfdfd; min-height: 80vh; display:flex; align-items:center;">
+    <div class="">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card border-0  p-4 p-md-5" style="border-radius: 35px;">
                     <div class="text-center mb-5">
                         <span class="badge bg-soft-danger text-danger px-3 py-2 rounded-pill mb-3">Feedback</span>
                         <h2 class="fw-bold" style="font-family: 'Playfair Display'; font-size: 2.5rem;">Give Us Your Feedback</h2>
@@ -38,7 +51,7 @@
                                 {{ form.review_text }}
                             </div>
                             <div class="col-12 mt-4">
-                                <button type="submit" class="btn btn-main w-100 py-3 rounded-pill shadow">
+                                <button type="submit" class="btn btn-danger w-100 py-3 rounded-pill shadow">
                                     Submit My Review <i class="fas fa-paper-plane ms-2"></i>
                                 </button>
                                 <a href="{% url 'home' %}" class="btn btn-link w-100 text-muted mt-2 text-decoration-none">Cancel</a>
