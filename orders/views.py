@@ -126,3 +126,16 @@ def delete_order(request, order_id):
         messages.success(request, f"Order #{order_id} has been deleted.")
     
     return redirect('customer_dashboard')
+
+@login_required
+def track_order(request, order_id):
+    # কাস্টমার যেন শুধু তার নিজের অর্ডারই ট্র্যাক করতে পারে
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    
+    # ডেলিভারি ম্যানের তথ্যসহ অর্ডার আইটেমগুলোও নিচ্ছি
+    items = OrderItem.objects.filter(order=order)
+    
+    return render(request, 'orders/track_order.html', {
+        'order': order,
+        'items': items
+    })
