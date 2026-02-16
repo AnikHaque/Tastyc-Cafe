@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}Delivery Dashboard | RoyalDine{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold playfair">Delivery <span class="text-danger">Panel</span></h2>
+            <p class="text-muted small">স্বাগতম, {{ request.user.username }}! আপনার আজকের ডেলিভারিগুলো এখানে দেখুন।</p>
+        </div>
+        <div class="badge bg-dark p-3 rounded-pill shadow-sm">
+            <i class="fas fa-motorcycle me-2 text-warning"></i> Active Deliveries
+        </div>
+    </div>
+
+    <div class="row g-4">
+        {% for order in orders %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-3 h-100" style="background: white;">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <span class="badge bg-light text-dark border">Order #{{ order.id }}</span>
+                    <span class="badge {% if order.status == 'PENDING' %}bg-warning{% else %}bg-info{% endif %} text-dark">
+                        {{ order.get_status_display }}
+                    </span>
+                </div>
+                
+                <h5 class="fw-bold mb-1"><i class="fas fa-user-circle me-2"></i>{{ order.full_name }}</h5>
+                <p class="mb-2 text-muted small"><i class="fas fa-map-marker-alt me-2 text-danger"></i>{{ order.address }}</p>
+                <p class="mb-3"><i class="fas fa-phone-alt me-2 text-success"></i><strong>{{ order.phone }}</strong></p>
+                
+                <div class="mt-auto pt-3 border-top">
+                    <div class="d-grid gap-2">
+                        {% if order.status == 'PREPARING' or order.status == 'PENDING' %}
+                            <a href="{% url 'update_delivery_status' order.id 'ON_THE_WAY' %}" class="btn btn-primary rounded-pill fw-bold">
+                                Start Delivery (On Way)
+                            </a>
+                        {% elif order.status == 'ON_THE_WAY' %}
+                            <a href="{% url 'update_delivery_status' order.id 'DELIVERED' %}" class="btn btn-success rounded-pill fw-bold">
+                                Mark as Delivered <i class="fas fa-check-circle ms-1"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <div class="card card-custom p-5 d-inline-block">
+                <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+                <h4 class="text-muted">বর্তমানে আপনার জন্য কোনো অর্ডার নেই।</h4>
+                <p class="small text-secondary">অ্যাডমিন থেকে অর্ডার অ্যাসাইন হওয়ার পর এখানে দেখা যাবে।</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
