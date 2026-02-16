@@ -576,22 +576,149 @@
         box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
     }
 </style>
+
 <section class="py-5">
     <div class="container">
-        <div class="newsletter-section text-center shadow-lg">
-            <h2 class="playfair display-5 mb-3">Join the Elite Taste Club</h2>
-            <p class="opacity-75 mb-5 mx-auto" style="max-width: 600px;">Subscribe to receive member-only invites to tasting events and exclusive seasonal offers.</p>
-            <div class="row justify-content-center">
-                <div class="col-md-7">
-                    <div class="input-group mb-3 bg-white p-2 rounded-pill shadow">
-                        <input type="email" class="form-control border-0 rounded-pill px-4" placeholder="Enter your email address">
-                        <button class="btn btn-primary rounded-pill px-5 fw-bold" type="button">Subscribe Now</button>
+        <div class="flash-deal-card p-4 p-md-5 shadow-lg position-relative overflow-hidden" 
+             style="background: linear-gradient(135deg, #111 0%, #222 100%); border-radius: 40px; border-left: 8px solid #ff4757;">
+            
+            <div class="row align-items-center">
+                <div class="col-lg-7 text-white">
+                    <div class="d-flex align-items-center mb-3">
+                        <span class="live-badge">LIVE</span>
+                        <span class="text-warning fw-bold text-uppercase ms-3" style="letter-spacing: 2px; font-size: 0.8rem;">Flash Deal of the Day</span>
+                    </div>
+                    
+                    <h2 class="display-4 fw-bold mb-3" style="font-family: 'Playfair Display', serif;">The "Gemini" Mega Combo</h2>
+                    <p class="lead opacity-75 mb-4">Get 2 Burgers, 1 Large Fries, and 2 Shakes at a massive <span class="text-danger fw-bold">40% Discount</span>. Limited time only!</p>
+                    
+                    <div class="d-flex gap-3 mb-4">
+                        <div class="timer-box">
+                            <span id="hours-box" class="timer-val">17</span>
+                            <span class="timer-label">Hours</span>
+                        </div>
+                        <div class="timer-box">
+                            <span id="mins-box" class="timer-val">11</span>
+                            <span class="timer-label">Mins</span>
+                        </div>
+                        <div class="timer-box">
+                            <span id="secs-box" class="timer-val">04</span>
+                            <span class="timer-label">Secs</span>
+                        </div>
+                    </div>
+                    
+                    <a href="{% url 'menu' %}" class="btn btn-danger btn-lg px-5 rounded-pill fw-bold shadow">Grab Deal Now</a>
+                </div>
+                
+                <div class="col-lg-5 text-center mt-5 mt-lg-0">
+                    <div class="image-stack position-relative">
+                        <img src="https://img.freepik.com/free-photo/gourmet-burger-with-fries-drink_23-2150770335.jpg" 
+                             class="img-fluid rounded-4 shadow-lg border border-5 border-dark" 
+                             style="max-height: 300px; transform: rotate(2deg);" alt="Mega Combo">
+                        <div class="discount-tag">40% OFF</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<style>
+    /* টাইমার বক্স ডিজাইন */
+    .timer-box { 
+        background: rgba(255,255,255,0.05); 
+        padding: 15px; 
+        border-radius: 20px; 
+        min-width: 85px; 
+        text-align: center; 
+        border: 1px solid rgba(255,71,87,0.2); 
+    }
+    .timer-val { display: block; font-size: 2rem; font-weight: 800; color: #ff4757; line-height: 1; }
+    .timer-label { font-size: 0.6rem; text-transform: uppercase; opacity: 0.6; letter-spacing: 1px; }
+
+    /* লাইভ ব্যাজ এনিমেশন */
+    .live-badge {
+        background: #ff4757;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 50px;
+        font-size: 0.7rem;
+        font-weight: bold;
+        animation: blink 1s infinite;
+    }
+    @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+    /* ডিসকাউন্ট ট্যাগ */
+    .discount-tag {
+        position: absolute;
+        top: -20px;
+        right: 0;
+        background: #ffa502;
+        color: #000;
+        padding: 15px;
+        border-radius: 50%;
+        font-weight: 900;
+        transform: rotate(15deg);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+</style>
+
+<script>
+    // Countdown Timer Logic
+    // এখানে তুমি যে সময়টা চেয়েছো (১৭ ঘণ্টা ১১ মিনিট ০৪ সেকেন্ড), সেটাকে এখন থেকে যোগ করে টাইমার শুরু হবে।
+    let hours = 17, minutes = 11, seconds = 4;
+
+    const timerInterval = setInterval(function() {
+        if (seconds > 0) {
+            seconds--;
+        } else {
+            if (minutes > 0) {
+                minutes--;
+                seconds = 59;
+            } else {
+                if (hours > 0) {
+                    hours--;
+                    minutes = 59;
+                    seconds = 59;
+                } else {
+                    clearInterval(timerInterval);
+                }
+            }
+        }
+
+        document.getElementById("hours-box").innerHTML = hours.toString().padStart(2, '0');
+        document.getElementById("mins-box").innerHTML = minutes.toString().padStart(2, '0');
+        document.getElementById("secs-box").innerHTML = seconds.toString().padStart(2, '0');
+    }, 1000);
+</script>
+
+<style>
+    .t-box { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 20px; min-width: 90px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
+    .t-val { display: block; font-size: 2.2rem; font-weight: 900; color: #ff4757; line-height: 1; }
+    .t-lbl { font-size: 0.65rem; text-transform: uppercase; opacity: 0.6; letter-spacing: 1px; }
+    .pulse-red-dot { width: 12px; height: 12px; background: #ff4757; border-radius: 50%; margin-right: 15px; animation: pulse-red 2s infinite; }
+    @keyframes pulse-red {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7); }
+        70% { transform: scale(1.1); box-shadow: 0 0 0 12px rgba(255, 71, 87, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); }
+    }
+</style>
+
+<script>
+    // Timer Logic
+    const dealEnd = new Date();
+    dealEnd.setHours(23, 59, 59); // আজকের রাত ১২টা পর্যন্ত
+
+    setInterval(() => {
+        const now = new Date().getTime();
+        const diff = dealEnd - now;
+        document.getElementById('h').innerText = Math.floor((diff / (1000 * 60 * 60)) % 24).toString().padStart(2, '0');
+        document.getElementById('m').innerText = Math.floor((diff / 1000 / 60) % 60).toString().padStart(2, '0');
+        document.getElementById('s').innerText = Math.floor((diff / 1000) % 60).toString().padStart(2, '0');
+    }, 1000);
+</script>
+
+
 
 <section class="py-5">
     <div class="container">
@@ -762,125 +889,145 @@
     }
 </style>
 
-<footer class="footer-wrap">
-    <div class="container">
-        <div class="row g-5">
-            <div class="col-lg-4 col-md-6">
-                <div class="footer-brand">
-                    <h2 class="playfair">Royal<span>Dine</span></h2>
-                    <p class="mt-4 opacity-75">অসাধারণ স্বাদ আর আভিজাত্যের এক অনন্য মেলবন্ধন। ২০১২ সাল থেকে আমরা আপনাদের দিচ্ছি সেরা ডাইনিং অভিজ্ঞতা।</p>
-                    <div class="social-links mt-4">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-whatsapp"></i></a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-2 col-md-6">
-                <h5 class="fw-bold mb-4">Quick Links</h5>
-                <ul class="footer-links">
-                    <li><a href="{% url 'menu' %}">Our Menu</a></li>
-                    <li><a href="#about">Our Story</a></li>
-                    <li><a href="#">Combo Deals</a></li>
-                    <li><a href="#">Reservations</a></li>
-                </ul>
-            </div>
-
-            <div class="col-lg-3 col-md-6">
-                <h5 class="fw-bold mb-4">Contact Us</h5>
-                <p class="small mb-2"><i class="fas fa-map-marker-alt text-primary me-2"></i> বনানী ১১, ঢাকা, বাংলাদেশ</p>
-                <p class="small mb-2"><i class="fas fa-phone-alt text-primary me-2"></i> +৮৮০ ১৭০০-০০০০০০</p>
-                <p class="small"><i class="fas fa-envelope text-primary me-2"></i> hello@royaldine.com</p>
-            </div>
-
-            <div class="col-lg-3 col-md-6">
-                <h5 class="fw-bold mb-4">Opening Hours</h5>
-                <div class="d-flex justify-content-between border-bottom border-secondary pb-2 mb-2">
-                    <span class="opacity-75 small">Sat - Thu</span>
-                    <span class="small fw-bold">10 AM - 11 PM</span>
-                </div>
-                <div class="d-flex justify-content-between">
-                    <span class="opacity-75 small">Friday</span>
-                    <span class="text-primary small fw-bold">02 PM - 11 PM</span>
-                </div>
-            </div>
-        </div>
-
-        <hr class="my-5 opacity-25">
-        
-        <div class="footer-bottom d-flex flex-wrap justify-content-between align-items-center">
-            <p class="small mb-0 opacity-50">&copy; 2026 RoyalDine. All rights reserved.</p>
-            <div class="payment-methods opacity-50">
-                <i class="fab fa-cc-visa fa-2x mx-2"></i>
-                <i class="fab fa-cc-mastercard fa-2x mx-2"></i>
-                <i class="fab fa-cc-apple-pay fa-2x mx-2"></i>
-            </div>
-        </div>
-    </div>
-</footer>
-
 <style>
-    .footer-wrap {
-        background: #0f141e; /* Deep dark blue-black */
-        color: #ffffff;
-        padding: 80px 0 30px;
-        font-family: 'Plus Jakarta Sans', sans-serif;
+    /* ১. এলিট ক্লাব সেকশন - যা ফুটারের সাথে মিশে যাবে */
+    .elite-club-join {
+        background: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%);
+        border-radius: 30px;
+        padding: 40px;
+        margin-bottom: -60px; /* গর্জিয়াস ফুটারের উপরে ঝুলে থাকবে */
+        position: relative;
+        z-index: 5;
+        box-shadow: 0 15px 35px rgba(255, 71, 87, 0.4);
     }
 
-    .footer-brand h2 {
-        font-size: 2.5rem;
-        font-weight: 900;
+    /* ২. গর্জিয়াস ফুটার স্টাইল */
+    .gorgeous-footer {
+        background: #111;
+        padding-top: 120px; /* এলিট বক্সের জন্য উপরে জায়গা রাখা */
+        padding-bottom: 40px;
+        color: #eee;
     }
 
-    .footer-brand h2 span {
-        color: #ff4757; /* Your primary red */
+    .footer-title {
+        font-family: 'Playfair Display', serif;
+        color: white;
+        font-weight: 700;
+        margin-bottom: 25px;
+        position: relative;
     }
 
-    .footer-links {
-        list-style: none;
-        padding: 0;
+    .footer-title::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -8px;
+        width: 40px;
+        height: 2px;
+        background: #ff4757;
     }
 
-    .footer-links li {
-        margin-bottom: 12px;
-    }
-
-    .footer-links a {
-        color: rgba(255, 255, 255, 0.6);
+    .footer-link {
+        color: #bbb;
         text-decoration: none;
+        display: block;
+        margin-bottom: 12px;
         transition: 0.3s;
-        font-size: 0.9rem;
     }
 
-    .footer-links a:hover {
+    .footer-link:hover {
         color: #ff4757;
-        padding-left: 8px;
+        transform: translateX(5px);
     }
 
-    .social-links a {
+    .social-btn {
         width: 40px;
         height: 40px;
-        background: rgba(255, 255, 255, 0.05);
-        color: white;
+        background: rgba(255,255,255,0.05);
         display: inline-flex;
         align-items: center;
         justify-content: center;
         border-radius: 50%;
+        color: white;
         margin-right: 10px;
-        transition: 0.4s;
-        text-decoration: none;
+        transition: 0.3s;
     }
 
-    .social-links a:hover {
+    .social-btn:hover {
         background: #ff4757;
+        color: white;
         transform: translateY(-5px);
     }
-
-    .footer-wrap hr {
-        border-color: rgba(255, 255, 255, 0.1);
-    }
 </style>
+
+<div class="container">
+    <div class="elite-club-join text-center text-white">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-lg-5 text-lg-start mb-3 mb-lg-0">
+                <h3 class="fw-bold mb-1">Join Our Elite Club</h3>
+                <p class="mb-0 opacity-75">Sign up today and get 20% off your first meal!</p>
+            </div>
+            <div class="col-lg-6">
+                <form class="d-flex gap-2">
+                    <input type="email" class="form-control rounded-pill border-0 px-4" placeholder="Your Email Address">
+                    <button class="btn btn-dark rounded-pill px-4 fw-bold shadow-sm">Join Now</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="gorgeous-footer">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-4 col-md-6">
+                <h2 class="footer-title fs-1">GEMINI<span class="text-danger">.</span></h2>
+                <p class="text-muted pe-lg-5">Experience the art of culinary perfection. We bring the finest flavors from our kitchen to your table with love and passion.</p>
+                <div class="mt-4">
+                    <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-btn"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-6">
+                <h5 class="footer-title">Explore</h5>
+                <a href="#" class="footer-link">Our Menu</a>
+                <a href="#" class="footer-link">Special Offers</a>
+                <a href="#" class="footer-link">About Us</a>
+                <a href="#" class="footer-link">Contact</a>
+            </div>
+
+            <div class="col-lg-2 col-md-6">
+                <h5 class="footer-title">Support</h5>
+                <a href="#" class="footer-link">Help Center</a>
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Order Tracking</a>
+                <a href="#" class="footer-link">Terms of Service</a>
+            </div>
+
+            <div class="col-lg-4 col-md-6 text-lg-end">
+                <h5 class="footer-title">Get In Touch</h5>
+                <p class="mb-2"><i class="fas fa-phone-alt text-danger me-2"></i> +880 123 456 789</p>
+                <p class="mb-2"><i class="fas fa-envelope text-danger me-2"></i> hello@geminifood.com</p>
+                <p><i class="fas fa-map-marker-alt text-danger me-2"></i> Dhanmondi, Dhaka, Bangladesh</p>
+            </div>
+        </div>
+
+        <hr class="my-5 border-secondary opacity-25">
+
+        <div class="row align-items-center">
+            <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                <p class="small text-muted mb-0">&copy; 2026 Gemini Restaurant. All Rights Reserved.</p>
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" height="20" class="me-3 grayscale opacity-50" alt="">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" height="12" class="me-3 grayscale opacity-50" alt="">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" height="20" class="grayscale opacity-50" alt="">
+            </div>
+        </div>
+    </div>
+</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
