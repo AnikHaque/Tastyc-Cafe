@@ -44,7 +44,28 @@ INSTALLED_APPS = [
     'payments',
     'reservations',
     'blog'
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
+
+# ২. সাইট আইডি (জ্যাঙ্গো সাইট ফ্রেমওয়ার্কের জন্য)
+SITE_ID = 1
+
+# ৩. অথেনটিকেশন ব্যাকএন্ড (পাইথন যেন সোশ্যাল লগইন চিনতে পারে)
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+# ৪. মিনিমাল কনফিগারেশন (যাতে ইউজারকে বারবার ফর্ম ফিলাপ করতে না হয়)
+SOCIALACCOUNT_AUTO_SIGNUP = True # সরাসরি লগইন হবে, কোনো অতিরিক্ত ফর্ম ছাড়াই
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False # ইউজারনেম লাগবে না
+ACCOUNT_AUTHENTICATION_METHOD = 'email' # ইমেইল দিয়ে লগইন হবে
+LOGIN_REDIRECT_URL = '/' # লগইন শেষে হোম পেজে যাবে
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
