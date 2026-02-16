@@ -192,17 +192,31 @@
             {% for food in category.foods.all %}
                 {% if food.is_available %}
                 <div class="col-xl-3 col-lg-3 col-md-6 food-item {{ category.name|slugify }}">
-                    <div class="food-card">
+                    <div class="food-card h-100 d-flex flex-column">
                         <div class="image-holder">
                             <img src="{{ food.image.url }}" alt="{{ food.name }}">
                             <div class="price-circle">৳{{ food.price }}</div>
                         </div>
-                        <div class="content-box">
-                            <h5>{{ food.name }}</h5>
-                            <p>{{ food.description|truncatechars:80 }}</p>
-                            <a href="{% url 'add_to_cart' food.id %}" class="add-to-cart-btn">
-                                <i class="fa-solid fa-basket-shopping"></i> ADD TO CART
-                            </a>
+
+                        <div class="content-box flex-grow-1 d-flex flex-column">
+                            <h5 class="fw-bold">{{ food.name }}</h5>
+                            <p class="text-muted small mb-3">{{ food.description|truncatechars:80 }}</p>
+                            
+                            <div class="mt-auto">
+                                <a href="{% url 'toggle_wishlist' food.id %}" class="wishlist-text-btn mb-2">
+                                    {% if food.id|stringformat:"s" in request.session.wishlist %}
+                                        <i class="fa-solid fa-heart text-danger"></i> 
+                                        <span class="text-danger">Saved in Wishlist</span>
+                                    {% else %}
+                                        <i class="fa-regular fa-heart"></i> 
+                                        <span>Add to Wishlist</span>
+                                    {% endif %}
+                                </a>
+
+                                <a href="{% url 'add_to_cart' food.id %}" class="add-to-cart-btn">
+                                    <i class="fa-solid fa-basket-shopping"></i> ADD TO CART
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -211,6 +225,69 @@
         {% endfor %}
     </div>
 </div>
+
+<style>
+    /* Option 2: Wishlist Text Button Style */
+    .wishlist-text-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #666;
+        background: #f8f9fa;
+        padding: 8px 15px;
+        border-radius: 12px;
+        border: 1px solid #eee;
+        transition: all 0.3s ease;
+    }
+
+    .wishlist-text-btn:hover {
+        background: #fff;
+        border-color: #ff4757;
+        color: #ff4757;
+        box-shadow: 0 4px 10px rgba(255, 71, 87, 0.1);
+    }
+
+    /* Add to Cart Button Styling (Ensure it matches your theme) */
+    .add-to-cart-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: #ff4757;
+        color: white;
+        text-decoration: none;
+        padding: 12px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        transition: 0.3s;
+        width: 100%;
+    }
+
+    .add-to-cart-btn:hover {
+        background: #e84118;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 71, 87, 0.3);
+        color: white;
+    }
+
+    /* Flexbox adjustment for uniform card height */
+    .food-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        transition: 0.3s;
+    }
+
+    .food-card:hover {
+        transform: translateY(-5px);
+    }
+</style>
 
 <script>
     function filterMenu(category, button) {

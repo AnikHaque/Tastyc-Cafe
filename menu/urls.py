@@ -9,4 +9,6 @@ urlpatterns = [
    path('dashboard/my-testimonials/', views.my_testimonials, name='my_testimonials'),
     path('dashboard/testimonial/delete/<int:pk>/', views.delete_testimonial, name='delete_testimonial'),
     path('add-deal-to-cart/<int:deal_id>/', views.add_deal_to_cart, name='add_deal_to_cart'),
+    path('wishlist/', views.wishlist_page, name='wishlist'),
+    path('wishlist/toggle/<int:food_id>/', views.toggle_wishlist, name='toggle_wishlist'),
 ]

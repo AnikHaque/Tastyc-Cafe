@@ -63,6 +63,15 @@
         </span>
     </a>
 </li>
+
+<a href="{% url 'wishlist' %}" class="nav-link position-relative">
+    <i class="fa-regular fa-heart fs-4"></i>
+    {% if request.session.wishlist %}
+    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+        {{ request.session.wishlist|length }}
+    </span>
+    {% endif %}
+</a>
           <li class="nav-item ms-lg-3">
             <a class="btn btn-order" href="{% url 'menu' %}">Order Now</a>
           </li>

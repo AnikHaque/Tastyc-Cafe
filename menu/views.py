@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404,redirect
-from .models import Category, ComboDeal, FlashDeal, Testimonial
+from .models import Category, ComboDeal, FlashDeal, Food, Testimonial
 from django.contrib import messages
 # আগের ইমপোর্টের সাথে শুধু ComboDeal টা কমা দিয়ে যোগ করে দিন
 
@@ -102,3 +102,19 @@ def wishlist_page(request):
     wishlist_items = Food.objects.filter(id__in=wishlist_ids)
     
     return render(request, 'wishlist.html', {'wishlist_items': wishlist_items})
+
+def toggle_wishlist(request, food_id):
+    # সেশন থেকে বর্তমান উইশলিস্ট লিস্টটি নাও, না থাকলে খালি লিস্ট [] নাও
+    wishlist = request.session.get('wishlist', [])
+    food_id_str = str(food_id)
+    
+    if food_id_str in wishlist:
+        wishlist.remove(food_id_str) # অলরেডি থাকলে রিমুভ করবে
+    else:
+        wishlist.append(food_id_str) # না থাকলে অ্যাড করবে
+    
+    request.session['wishlist'] = wishlist
+    request.session.modified = True
+    
+    # ইউজার যে পেজ থেকে ক্লিক করেছে তাকে সেখানেই ফেরত পাঠাও
+    return redirect(request.META.get('HTTP_REFERER', 'menu'))
