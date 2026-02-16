@@ -9,6 +9,7 @@ from .views import home
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('social-auth/', include('allauth.urls')),
     path('', home, name='home'),
     path('about/', views.about_view, name='about'),
     path('menu/', include('menu.urls')),

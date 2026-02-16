@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'orders',
     'payments',
     'reservations',
-    'blog'
+    'blog',
     'django.contrib.sites',
     'allauth',
     'allauth.account',
@@ -75,6 +75,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # এই লাইনটি যোগ করুন (সবচেয়ে গুরুত্বপূর্ণ)
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'restaurant.urls'
@@ -156,5 +158,9 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# settings.py এর শেষে
+SOCIALACCOUNT_ADAPTER = 'allauth.socialaccount.adapter.DefaultSocialAccountAdapter'
 
+# এটি দিলে সরাসরি গুগল লগইন শুরু হবে, কনফার্মেশন পেজ আসবে না
+SOCIALACCOUNT_LOGIN_ON_GET = True
    
