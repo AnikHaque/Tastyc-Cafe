@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from menu.models import Food, ComboDeal
+from django.db.models import Sum, Count
 
 class Order(models.Model):
     STATUS_CHOICES = (
@@ -42,3 +43,14 @@ class OrderItem(models.Model): # <--- এই নামটা চেক করু
 
     def __str__(self):
         return f"Item for Order #{self.order.id}"
+    
+class OrderQuerySet(models.QuerySet):
+    def total_revenue(self):
+        return self.filter(status='DELIVERED').aggregate(total=Sum('total_price'))['total'] or 0
+
+    def delivery_man_performance(self, user):
+        return self.filter(delivery_man=user, status='DELIVERED').count()
+
+class Order(models.Model):
+    # আপনার ফিল্ডগুলো...
+    objects = OrderQuerySet.as_manager()

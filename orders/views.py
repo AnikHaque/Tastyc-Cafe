@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Order, OrderItem
 from menu.models import Food
+from django.contrib.auth.models import User, Group
 
 
 @login_required
@@ -139,3 +140,27 @@ def track_order(request, order_id):
         'order': order,
         'items': items
     })
+
+
+def auto_assign_delivery_man(order):
+    """
+    পাইথন লজিক যা সবচেয়ে কম কাজ থাকা ডেলিভারি ম্যানকে খুঁজে বের করে
+    """
+    delivery_group = Group.objects.get(name='Delivery Man')
+    delivery_men = User.objects.filter(groups=delivery_group)
+    
+    # পাইথন লিস্ট কমপ্রিহেনশন এবং সর্টিং লজিক
+    worker_loads = [
+        {
+            'user': man, 
+            'count': Order.objects.filter(delivery_man=man, status='ON_THE_WAY').count()
+        } 
+        for man in delivery_men
+    ]
+    
+    # যার কাজ সবচেয়ে কম তাকেই অ্যাসাইন করবে
+    best_man = min(worker_loads, key=lambda x: x['count'])
+    
+    order.delivery_man = best_man['user']
+    order.save()
+    return best_man['user']
