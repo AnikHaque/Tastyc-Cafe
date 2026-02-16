@@ -31,7 +31,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -136,86 +135,5 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-JAZZMIN_SETTINGS = {
-    "site_title": "RoyalDine",
-    "site_header": "RoyalDine",
-    "site_brand": "RoyalDine",
-    "site_logo": None, # এখানে আপনার লোগোর পাথ দিতে পারেন
-    "login_logo": None,
-    "welcome_sign": "RoyalDine Dashboard",
-    "copyright": "RoyalDine Restaurant",
-    "search_model": ["menu.Food", "menu.Offer"],
-    "user_avatar": None,
-    
-    # --- Top Menu (Logout সহ) ---
-    "topmenu_links": [
-        {"name": "Home",  "url": "admin:index", "permissions": ["auth.view_user"]},
-        {"name": "Live Site", "url": "/", "new_window": True},
-        {"model": "auth.User"},
-    ],
 
-    # --- User Menu (Logout অপশন এখানে থাকে) ---
-    "usermenu_links": [
-        {"name": "Support", "url": "https://facebook.com/yourpage", "new_window": True},
-        {"model": "auth.user"},
-    ],
-
-    "show_sidebar": True,
-    "navigation_expanded": True,
-
-    "custom_links": {
-        "menu": [  # এখানে 'menu' হলো আপনার অ্যাপের নাম
-            {
-                "name": "Logout From System", 
-                "url": "admin:logout", 
-                "icon": "fas fa-sign-out-alt", # লগআউট আইকন
-                "permissions": ["auth.view_user"]
-            },
-        ],
-    },
-    
-    # --- Icons (FontAwesome) ---
-    "icons": {
-        "auth": "fas fa-users-cog",
-        "auth.user": "fas fa-user",
-        "menu.Category": "fas fa-layer-group",
-        "menu.Food": "fas fa-hamburger",
-        "menu.Offer": "fas fa-percentage",
-        "menu.ComboDeal": "fas fa-box-open",
-    },
-    
-    # --- Theme Customization ---
-    "show_ui_builder": True, # এটি অন থাকলে আপনি লাইভ কালার চেঞ্জ করতে পারবেন
-}
-
-JAZZMIN_UI_TWEAKS = {
-    "navbar_small_text": False,
-    "footer_small_text": False,
-    "body_small_text": False,
-    "brand_small_text": False,
-    "brand_colour": "navbar-danger", # আপনার রেড থিমের সাথে মিল রেখে
-    "accent": "accent-primary",
-    "navbar": "navbar-dark",
-    "no_navbar_border": False,
-    "navbar_fixed": True,
-    "layout_boxed": False,
-    "footer_fixed": False,
-    "sidebar_fixed": True,
-    "sidebar": "sidebar-dark-danger", # সাইডবারে রেড হাইলাইট
-    "sidebar_nav_small_text": False,
-    "sidebar_disable_expand": False,
-    "sidebar_nav_child_indent": True,
-    "sidebar_nav_compact_style": False,
-    "sidebar_nav_legacy_style": False,
-    "sidebar_nav_flat_style": False,
-    "theme": "darkly", # অস্থির ডার্ক মোড
-    "dark_mode_theme": None,
-    "button_classes": {
-        "primary": "btn-primary",
-        "secondary": "btn-secondary",
-        "info": "btn-info",
-        "warning": "btn-warning",
-        "danger": "btn-danger",
-        "success": "btn-success"
-    }
-}
+   
