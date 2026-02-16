@@ -88,45 +88,81 @@
     <div class="container">
         <form method="post">
             {% csrf_token %}
-           <div class="row g-4">
-    <div class="col-lg-7">
-        <div class="card-custom">
-            <h4 class="fw-bold mb-4"><i class="fas fa-map-marker-alt text-danger me-2"></i> ডেলিভারি ঠিকানা</h4>
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <label class="small fw-bold">আপনার নাম</label>
-                    <input type="text" name="full_name" class="form-control" value="{{ request.user.get_full_name }}" placeholder="নাম লিখুন" required>
-                </div>
-                <div class="col-md-6">
-                    <label class="small fw-bold">ফোন নম্বর</label>
-                    <input type="text" name="phone" class="form-control" placeholder="017xxxxxxxx" required>
-                </div>
-                <div class="col-12">
-                    <label class="small fw-bold">পুরো ঠিকানা</label>
-                    <textarea name="address" class="form-control" rows="3" placeholder="বাসা নম্বর, রোড নম্বর, এলাকা..." required></textarea>
-                </div>
-            </div>
-        </div>
+            <div class="row g-4">
+                <div class="col-lg-7">
+                    <div class="card-custom">
+                        <h4 class="fw-bold mb-4"><i class="fas fa-map-marker-alt text-danger me-2"></i> ডেলিভারি ঠিকানা</h4>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="small fw-bold">আপনার নাম</label>
+                                <input type="text" name="full_name" class="form-control" value="{{ request.user.get_full_name }}" placeholder="নাম লিখুন" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small fw-bold">ফোন নম্বর</label>
+                                <input type="text" name="phone" class="form-control" placeholder="017xxxxxxxx" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="small fw-bold">পুরো ঠিকানা</label>
+                                <textarea name="address" class="form-control" rows="3" placeholder="বাসা নম্বর, রোড নম্বর, এলাকা..." required></textarea>
+                            </div>
+                        </div>
+                    </div>
 
-        <div class="card-custom">
-            <h4 class="fw-bold mb-4"><i class="fas fa-credit-card text-primary me-2"></i> পেমেন্ট মেথড</h4>
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <div class="payment-option">
-                        <input type="radio" name="payment_method" id="cod" value="cod" checked>
-                        <label for="cod" class="ms-2 fw-bold mb-0">ক্যাশ অন ডেলিভারি</label>
+                    <div class="card-custom">
+                        <h4 class="fw-bold mb-4"><i class="fas fa-credit-card text-primary me-2"></i> পেমেন্ট মেথড</h4>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="payment-option">
+                                    <input type="radio" name="payment_method" id="cod" value="cod" checked>
+                                    <label for="cod" class="ms-2 fw-bold mb-0">ক্যাশ অন ডেলিভারি</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="payment-option">
+                                    <input type="radio" name="payment_method" id="online" value="online">
+                                    <label for="online" class="ms-2 fw-bold mb-0">অনলাইন পেমেন্ট (বিকাশ/কার্ড)</label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="payment-option">
-                        <input type="radio" name="payment_method" id="online" value="online">
-                        <label for="online" class="ms-2 fw-bold mb-0">অনলাইন পেমেন্ট (বিকাশ/কার্ড)</label>
+
+                <div class="col-lg-5">
+                    <div class="card-custom sticky-top" style="top: 100px;">
+                        <h4 class="fw-bold mb-4">অর্ডার রিভিউ</h4>
+                        <div class="order-items-list mb-4">
+                            {% for item in cart.values %}
+                            <div class="order-item-mini">
+                                <span>{{ item.name }} <strong>× {{ item.qty }}</strong></span>
+                                <span class="fw-bold">৳ {{ item.price }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>সাবটোটাল</span>
+                            <span>৳ {{ total }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>ডেলিভারি চার্জ</span>
+                            <span class="text-success">ফ্রি</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <span class="h5 fw-bold">মোট দেয় পরিমাণ</span>
+                            <span class="h4 fw-bold text-dark">৳ {{ total }}</span>
+                        </div>
+
+                        <button type="submit" class="btn-place-order">
+                            অর্ডার সম্পন্ন করুন <i class="fas fa-check-circle ms-2"></i>
+                        </button>
+                        
+                        <p class="text-center text-muted small mt-3">
+                            <i class="fas fa-shield-alt me-1"></i> আপনার ডাটা আমাদের কাছে নিরাপদ
+                        </p>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    </div>
         </form>
     </div>
 </section>

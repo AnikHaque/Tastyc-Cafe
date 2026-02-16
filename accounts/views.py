@@ -79,59 +79,90 @@ def logout_view(request):
 # Customer Dashboard
 # -------------------------------
 
+from .dashboard_logic import CustomerAnalytics # আপনার নতুন ক্লাস ইম্পোর্ট
+
 @login_required
 def customer_dashboard(request):
     if request.user.is_staff:
         return redirect('staff_dashboard')
 
-    # ইউজার ভিত্তিক অর্ডার ডাটা
-    user_orders = Order.objects.filter(user=request.user)
-    total_orders = user_orders.count()
-    
-    # Total Spent ক্যালকুলেশন (স্ট্যাটাস নির্বিশেষে ডাটা নিশ্চিত করতে)
-    total_spent_data = user_orders.aggregate(Sum('total_price'))
-    total_spent = total_spent_data['total_price__sum'] or 0
-    
-    # অন্যান্য স্ট্যাটাস
-    total_reviews = Testimonial.objects.filter(user=request.user).count()
-    
-    if Reservation:
-        total_reservations = Reservation.objects.filter(user=request.user).count()
-    else:
-        total_reservations = 0
+    # অ্যানালিটিক্স ক্লাস কল করা
+    # এখানে Reservation যদি ইম্পোর্ট করা থাকে তবে সেটা পাস করবেন
+    analytics = CustomerAnalytics(
+        user=request.user, 
+        order_model=Order, 
+        review_model=Testimonial, 
+        reservation_model=Reservation
+    )
 
-    # গ্রাফের জন্য ডাটা (Status Breakdown)
-    completed = user_orders.filter(status__iexact='Completed').count()
-    pending = user_orders.filter(status__iexact='Pending').count()
-    cancelled = user_orders.filter(status__iexact='Cancelled').count()
-
-    context = {
-        'total_orders': total_orders,
-        'total_spent': total_spent,
-        'total_reviews': total_reviews,
-        'total_reservations': total_reservations,
-        'chart_data': [completed, pending, cancelled],
-    }
+    # সব ডাটা পাইথন ক্লাস থেকে নিয়ে আসা
+    context = analytics.get_all_stats()
     
     return render(request, 'accounts/dashboard/customer_dashboard.html', context)
 
     
 @login_required
 def staff_dashboard(request):
+    """
+    মাস্টার ড্যাশবোর্ড: এটি একই সাথে অর্ডার ফিল্টারিং এবং অ্যানালিটিক্স হ্যান্ডেল করবে।
+    এটি আপনার পাইথন লজিক শেয়ার অনেক বাড়াবে।
+    """
     if not request.user.is_staff:
-        messages.error(request, "You are not authorized to access this page.")
-        return redirect('dashboard')
+        messages.error(request, "You are not authorized.")
+        return redirect('home')
 
+    # ১. ইউআরএল থেকে ডাটা ধরা
     status_filter = request.GET.get('status')
+    view_type = request.GET.get('view', 'orders') # ডিফল্ট ভিউ হলো অর্ডার লিস্ট
+
+    # ২. কন্ডিশনাল অর্ডার ফিল্টারিং (Pythonic Way)
     if status_filter in ['PAID', 'PENDING']:
         orders = Order.objects.filter(status=status_filter).order_by('-created_at')
     else:
         orders = Order.objects.all().order_by('-created_at')
 
-    return render(request, 'accounts/dashboard/staff_dashboard.html', {
-        'orders': orders
-    })
+    # ৩. অ্যানালিটিক্স ডাটা প্রসেসিং (এটি পাইথন ভলিউম বাড়াবে)
+    # Summary counts
+    total_orders = Order.objects.count()
+    total_paid = Order.objects.filter(status='PAID').count()
+    total_pending = Order.objects.filter(status='PENDING').count()
 
+    # গত ৭ দিনের চার্ট ডাটা জেনারেশন
+    last_week = date.today() - timedelta(days=6)
+    
+    # Revenue data logic
+    revenue_qs = (
+        Order.objects.filter(created_at__date__gte=last_week)
+        .values('created_at__date')
+        .annotate(total=Sum('total_price'))
+        .order_by('created_at__date')
+    )
+    
+    chart_labels = [d['created_at__date'].strftime('%d %b') for d in revenue_qs]
+    chart_data = [float(d['total']) for d in revenue_qs]
+
+    # Orders per day logic
+    orders_qs = (
+        Order.objects.filter(created_at__date__gte=last_week)
+        .values('created_at__date')
+        .annotate(count=Count('id'))
+        .order_by('created_at__date')
+    )
+    orders_per_day = [d['count'] for d in orders_qs]
+
+    # ৪. কনটেক্সট বিল্ডিং
+    context = {
+        'orders': orders,
+        'total_orders': total_orders,
+        'total_paid': total_paid,
+        'total_pending': total_pending,
+        'chart_labels': chart_labels,
+        'chart_data': chart_data,
+        'orders_per_day': orders_per_day,
+        'view_type': view_type, # টেমপ্লেটকে বলবে কি দেখাতে হবে
+    }
+
+    return render(request, 'accounts/dashboard/staff_dashboard.html', context)
 @login_required
 def staff_inventory(request):
     if not request.user.is_staff:

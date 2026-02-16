@@ -34,101 +34,160 @@
 {% endblock %}
 
 {% block content %}
-<h2 style="font-size:1.5rem; margin-bottom:20px;">Analytics Dashboard</h2>
+<h2 style="font-size:1.5rem; margin-bottom:20px;">
+    {% if request.resolver_match.url_name == 'staff_analytics' %}
+        <i class="fa-solid fa-chart-line me-2"></i> Analytics Dashboard
+    {% else %}
+        <i class="fa-solid fa-list-check me-2"></i> Order Management {% if request.GET.status %}({{ request.GET.status }}){% endif %}
+    {% endif %}
+</h2>
 
-<!-- Top Stats Cards -->
 <div class="row mb-3">
     <div class="col-md-4 mb-2">
-        <div class="card p-2 text-center bg-light" style="font-size:0.9rem;">
-            <h6>Total Orders</h6>
-            <h4>{{ total_orders }}</h4>
+        <div class="card p-3 text-center bg-light border-0 shadow-sm" style="font-size:0.9rem;">
+            <h6 class="text-muted">Total Orders</h6>
+            <h4 class="fw-bold">{{ total_orders }}</h4>
         </div>
     </div>
     <div class="col-md-4 mb-2">
-        <div class="card p-2 text-center bg-success text-white" style="font-size:0.9rem;">
-            <h6>Completed Orders</h6>
-            <h4>{{ total_paid }}</h4>
+        <div class="card p-3 text-center bg-success text-white border-0 shadow-sm" style="font-size:0.9rem;">
+            <h6 class="opacity-75">Completed Orders</h6>
+            <h4 class="fw-bold">{{ total_paid }}</h4>
         </div>
     </div>
     <div class="col-md-4 mb-2">
-        <div class="card p-2 text-center bg-warning text-dark" style="font-size:0.9rem;">
-            <h6>Pending Orders</h6>
-            <h4>{{ total_pending }}</h4>
+        <div class="card p-3 text-center bg-warning text-dark border-0 shadow-sm" style="font-size:0.9rem;">
+            <h6 class="opacity-75">Pending Orders</h6>
+            <h4 class="fw-bold">{{ total_pending }}</h4>
         </div>
     </div>
 </div>
 
-<!-- Revenue Chart -->
-<div class="card p-3 mb-3" style="font-size:0.85rem;">
-    <h6>Revenue Last 7 Days</h6>
-    <canvas id="revenueChart" height="150"></canvas>
-</div>
+<hr class="my-4">
 
-<!-- Orders per Day Chart -->
-<div class="card p-3 mb-3" style="font-size:0.85rem;">
-    <h6>Orders Last 7 Days</h6>
-    <canvas id="ordersChart" height="150"></canvas>
-</div>
+{% if request.resolver_match.url_name == 'staff_analytics' %}
+    <div class="card p-3 mb-3 shadow-sm border-0">
+        <h6 class="fw-bold mb-3">Revenue Last 7 Days</h6>
+        <canvas id="revenueChart" height="120"></canvas>
+    </div>
 
-<!-- Status Distribution Pie Chart -->
-<div class="card p-3 mb-3" style="font-size:0.85rem; max-width:400px; margin:auto;">
-    <h6 class="text-center">Order Status Distribution</h6>
-    <canvas id="statusChart" height="200" width="200"></canvas>
-</div>
+    <div class="row">
+        <div class="col-md-7">
+            <div class="card p-3 mb-3 shadow-sm border-0">
+                <h6 class="fw-bold mb-3">Orders Last 7 Days</h6>
+                <canvas id="ordersChart" height="150"></canvas>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="card p-3 mb-3 shadow-sm border-0">
+                <h6 class="fw-bold mb-3 text-center">Status Distribution</h6>
+                <canvas id="statusChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+    new Chart(revenueCtx, {
+        type: 'line',
+        data: {
+            labels: {{ chart_labels|safe }},
+            datasets: [{
+                label: 'Revenue (৳)',
+                data: {{ chart_data|safe }},
+                borderColor: '#4e73df',
+                backgroundColor: 'rgba(78, 115, 223, 0.1)',
+                tension: 0.3,
+                fill: true,
+            }]
+        },
+        options: { responsive: true, plugins: { legend: { display: true } } }
+    });
 
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-const revenueCtx = document.getElementById('revenueChart').getContext('2d');
-const revenueChart = new Chart(revenueCtx, {
-    type: 'line',
-    data: {
-        labels: {{ chart_labels|safe }},
-        datasets: [{
-            label: 'Revenue ($)',
-            data: {{ chart_data|safe }},
-            borderColor: 'rgba(75, 192, 192, 1)',
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            tension: 0.3,
-            fill: true,
-        }]
-    },
-    options: { responsive: true, plugins: { legend: { display: true } }, scales: { y: { beginAtZero: true } } }
-});
+    const ordersCtx = document.getElementById('ordersChart').getContext('2d');
+    new Chart(ordersCtx, {
+        type: 'bar',
+        data: {
+            labels: {{ chart_labels|safe }},
+            datasets: [{
+                label: 'Orders',
+                data: {{ orders_per_day|safe }},
+                backgroundColor: '#1cc88a',
+            }]
+        },
+        options: { responsive: true }
+    });
 
-// Example: Orders per day (reuse chart_labels, or create new data in view)
-const ordersCtx = document.getElementById('ordersChart').getContext('2d');
-const ordersChart = new Chart(ordersCtx, {
-    type: 'bar',
-    data: {
-        labels: {{ chart_labels|safe }},
-        datasets: [{
-            label: 'Orders',
-            data: {{ orders_per_day|safe }},
-            backgroundColor: 'rgba(54, 162, 235, 0.7)',
-            borderColor: 'rgba(54, 162, 235, 1)',
-            borderWidth: 1
-        }]
-    },
-    options: { responsive: true, plugins: { legend: { display: true } }, scales: { y: { beginAtZero: true } } }
-});
+    const statusCtx = document.getElementById('statusChart').getContext('2d');
+    new Chart(statusCtx, {
+        type: 'pie',
+        data: {
+            labels: ['PAID', 'PENDING'],
+            datasets: [{
+                data: [{{ total_paid }}, {{ total_pending }}],
+                backgroundColor: ['#1cc88a', '#f6c23e'],
+            }]
+        }
+    });
+    </script>
 
-// Example: Status pie chart
-const statusCtx = document.getElementById('statusChart').getContext('2d');
-const statusChart = new Chart(statusCtx, {
-    type: 'pie',
-    data: {
-        labels: ['PAID', 'PENDING'],
-        datasets: [{
-            label: 'Orders Status',
-            data: [{{ total_paid }}, {{ total_pending }}],
-            backgroundColor: ['rgba(40, 167, 69, 0.7)', 'rgba(255, 193, 7, 0.7)'],
-            borderColor: ['rgba(40, 167, 69, 1)', 'rgba(255, 193, 7, 1)'],
-            borderWidth: 1
-        }]
-    },
-    options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
-});
-</script>
+{% else %}
+    <div class="card shadow-sm border-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="ps-3">Order ID</th>
+                        <th>Customer</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th class="text-end pe-3">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td class="ps-3 fw-bold text-primary">#{{ order.id }}</td>
+                        <td>
+                            <div class="fw-bold">{{ order.full_name }}</div>
+                            <small class="text-muted">{{ order.phone }}</small>
+                        </td>
+                        <td>৳ {{ order.total_price }}</td>
+                        <td>
+                            {% if order.status == 'PAID' %}
+                                <span class="badge bg-success-light text-success px-3 py-2">Paid</span>
+                            {% else %}
+                                <span class="badge bg-warning-light text-warning px-3 py-2">Pending</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ order.created_at|date:"d M, Y" }}</td>
+                        <td class="text-end pe-3">
+                            {% if order.status == 'PENDING' %}
+                            <a href="{% url 'mark_paid' order.id %}" class="btn btn-sm btn-success shadow-sm">
+                                <i class="fas fa-check"></i> Complete
+                            </a>
+                            {% endif %}
+                            <a href="{% url 'track_order' order.id %}" class="btn btn-sm btn-outline-info shadow-sm">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="6" class="text-center py-5 text-muted">No orders found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}
+
+<style>
+    .bg-success-light { background-color: #d1e7dd; }
+    .bg-warning-light { background-color: #fff3cd; }
+    .badge { border-radius: 6px; font-weight: 600; }
+    .card { border-radius: 12px; }
+    .table thead th { border-top: 0; border-bottom: 2px solid #f8f9fa; }
+</style>
 {% endblock %}

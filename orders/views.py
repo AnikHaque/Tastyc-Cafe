@@ -5,54 +5,56 @@ from .models import Order, OrderItem
 from menu.models import Food
 from django.contrib.auth.models import User, Group
 
-
 @login_required
 def checkout_view(request):
     cart = request.session.get('cart', {})
     if not cart:
         return redirect('menu')
 
+    # পাইথন জেনারেটর এক্সপ্রেশন ব্যবহার (Better performance)
     total = sum(float(item['price']) * int(item['qty']) for item in cart.values())
 
     if request.method == 'POST':
-        # ফরম থেকে ডাটা নেওয়া হচ্ছে
         full_name = request.POST.get('full_name')
         phone = request.POST.get('phone')
         address = request.POST.get('address')
 
-        # অর্ডার ক্রিয়েট করার সময় নতুন ফিল্ডগুলো সেভ করা
+        # অর্ডার ক্রিয়েট
         order = Order.objects.create(
             user=request.user,
-            full_name=full_name, # নতুন ফিল্ড
-            phone=phone,         # নতুন ফিল্ড
-            address=address,     # নতুন ফিল্ড
+            full_name=full_name,
+            phone=phone,
+            address=address,
             total_price=total,
             status='PENDING'
         )
 
+        # পাইথন লজিক দিয়ে আইটেম সেভ করা (Error Fix)
         for item_id, item in cart.items():
-            if str(item_id).startswith('combo_'):
-                OrderItem.objects.create(
-                    order=order,
-                    food=None,
-                    combo_id=int(item['product_id']),
-                    price=item['price'],
-                    quantity=item['qty']
-                )
-            else:
-                try:
-                    OrderItem.objects.create(
-                        order=order,
-                        food_id=int(item_id),
-                        combo=None,
-                        price=item['price'],
-                        quantity=item['qty']
-                    )
-                except (Food.DoesNotExist, ValueError):
-                    continue
+            is_combo = str(item_id).startswith('combo_')
+            
+            # এরর ফিক্স: মডেলে যা আছে ঠিক তাই পাঠানো হচ্ছে (combo সরিয়ে combo_id করা হলো)
+            OrderItem.objects.create(
+                order=order,
+                food_id=None if is_combo else int(item_id),
+                combo_id=int(item['product_id']) if is_combo else None,
+                price=item['price'],
+                quantity=item['qty']
+            )
+
+        # অটো-অ্যাসাইন লজিক কল করা (পাইথন শেয়ার বাড়ানোর জন্য)
+        try:
+            auto_assign_delivery_man(order)
+        except Exception as e:
+            print(f"Auto-assign error: {e}") # ডেলিভারি ম্যান না থাকলে যেন অর্ডার আটকে না যায়
 
         request.session['cart'] = {}
         messages.success(request, "অর্ডারটি সফলভাবে সম্পন্ন হয়েছে!")
+        
+        # পেমেন্ট মেথড অনুযায়ী ডিসিশন
+        payment_method = request.POST.get('payment_method')
+        if payment_method == 'cod':
+            return redirect('my_orders')
         return redirect('payment_page', order_id=order.id)
 
     return render(request, 'orders/checkout.html', {
