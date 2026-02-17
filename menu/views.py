@@ -1,4 +1,6 @@
 from django.shortcuts import render, get_object_or_404,redirect
+
+from menu.utils import get_ai_recommendations
 from .models import Category, ComboDeal, FlashDeal, Food, Testimonial
 from django.contrib import messages
 # আগের ইমপোর্টের সাথে শুধু ComboDeal টা কমা দিয়ে যোগ করে দিন
@@ -145,3 +147,18 @@ def toggle_wishlist(request, food_id):
     
     # ইউজার যে পেজ থেকে ক্লিক করেছে তাকে সেখানেই ফেরত পাঠাও
     return redirect(request.META.get('HTTP_REFERER', 'menu'))
+
+
+def menu_home(request):
+    # এআই রিকমেন্ডেশন নিয়ে আসা
+    recommendations = get_ai_recommendations(request.user)
+    
+    categories = Category.objects.all()
+    foods = Food.objects.filter(is_available=True)
+    
+    context = {
+        'recommendations': recommendations,
+        'categories': categories,
+        'foods': foods,
+    }
+    return render(request, 'menu/menu_home.html', context)
