@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    .res-card {
+        background: white; border-radius: 30px; box-shadow: 0 30px 60px rgba(0,0,0,0.1);
+        overflow: hidden; margin-top: -50px; position: relative; z-index: 10;
+    }
+    .res-header { background: #ff4757; color: white; padding: 40px; text-align: center; }
+    .form-control { border-radius: 15px; padding: 12px 20px; border: 1.5px solid #eee; }
+</style>
+
+<div style="background: #1e272e; padding: 120px 0 100px; text-align: center; color: white;">
+    <h1 style="font-family: 'Playfair Display', serif; font-size: 3.5rem;">Secure Your Table</h1>
+</div>
+
+<div class="container pb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 res-card p-0">
+            <div class="res-header">
+                <h3>Experience Fine Dining</h3>
+                <p class="m-0">Book your slot and skip the queue</p>
+            </div>
+            <div class="p-5">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} rounded-pill">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label class="fw-bold mb-2">Date</label>
+                            <input type="date" name="date" class="form-control" required min="{{ today|date:'Y-m-d' }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="fw-bold mb-2">Shift</label>
+                            <select name="shift" class="form-control" required>
+                                <option value="Lunch">Lunch (12PM-4PM)</option>
+                                <option value="Dinner">Dinner (7PM-11PM)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" name="name" class="form-control" placeholder="Full Name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="number" name="guests" class="form-control" placeholder="Number of Guests" required>
+                        </div>
+                        <div class="mb-3">
+    <label>Phone Number</label>
+    <input type="text" name="phone" class="form-control" placeholder="017XXXXXXXX" required>
+</div>
+                        <div class="col-12 text-center">
+                            <button type="submit" class="btn btn-danger btn-lg px-5 rounded-pill shadow">Confirm Booking</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

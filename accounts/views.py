@@ -13,11 +13,7 @@ from datetime import date, timedelta, datetime
 from blog.models import Blog 
 from django.utils.text import slugify
 
-# রিজার্ভেশন মডেল ইম্পোর্ট
-try:
-    from reservations.models import Reservation
-except (ImportError, ModuleNotFoundError):
-    Reservation = None
+
 
 # -------------------------------
 # Authentication Views
@@ -67,7 +63,7 @@ from .dashboard_logic import CustomerAnalytics
 def customer_dashboard(request):
     if request.user.is_staff:
         return redirect('staff_dashboard')
-    analytics = CustomerAnalytics(user=request.user, order_model=Order, review_model=Testimonial, reservation_model=Reservation)
+    analytics = CustomerAnalytics(user=request.user, order_model=Order, review_model=Testimonial)
     context = analytics.get_all_stats()
     return render(request, 'accounts/dashboard/customer_dashboard.html', context)
 
@@ -153,21 +149,8 @@ def staff_top_selling(request):
 # Reservations & Actions
 # -------------------------------
 
-@login_required
-def staff_reservations(request):
-    if not request.user.is_staff:
-        return redirect('dashboard')
-    reservations = Reservation.objects.all().order_by('date', 'time') if Reservation else []
-    return render(request, 'accounts/dashboard/staff_reservations.html', {'reservations': reservations})
 
-@login_required
-def update_reservation_status(request, reservation_id, status):
-    if not request.user.is_staff or not Reservation:
-        return redirect('dashboard')
-    reservation = get_object_or_404(Reservation, id=reservation_id)
-    reservation.status = status
-    reservation.save()
-    return redirect('staff_reservations')
+
 
 @login_required
 @staff_required
@@ -222,6 +205,6 @@ def staff_delete_blog(request, blog_id):
         blog.delete()
     return redirect('staff_blog_list')
 
-from .models import AboutStory, AboutFeature, Chef
+
 
 

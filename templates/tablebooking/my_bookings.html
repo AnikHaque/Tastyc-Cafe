@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5 mb-5">
+    <h2 class="mb-4 fw-bold"><i class="fas fa-calendar-alt text-primary me-2"></i>My Bookings</h2>
+    
+    {% if bookings %}
+    <div class="row">
+        {% for booking in bookings %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-0" style="border-radius: 15px;">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="badge {% if booking.status == 'Confirmed' %}bg-success{% else %}bg-secondary{% endif %}">
+                            {{ booking.status }}
+                        </span>
+                        <small class="text-muted">#{{ booking.booking_id }}</small>
+                    </div>
+                    <h5 class="card-title fw-bold">{{ booking.date }}</h5>
+                    <p class="card-text text-muted mb-1"><i class="far fa-clock me-2"></i>{{ booking.shift }}</p>
+                    <p class="card-text text-muted mb-3"><i class="fas fa-users me-2"></i>{{ booking.guest_count }} Guests</p>
+                    
+                    <div class="d-grid">
+                        <a href="{% url 'reservation_success' booking.booking_id %}" class="btn btn-outline-primary btn-sm rounded-pill">
+                            View Ticket & QR
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5 shadow-sm bg-white rounded">
+        <p class="text-muted">You have no bookings yet.</p>
+        <a href="{% url 'book_table' %}" class="btn btn-primary rounded-pill">Book a Table Now</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

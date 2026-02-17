@@ -18,9 +18,9 @@ urlpatterns = [
     path('cart/', include('cart.urls')),
     path('orders/', include('orders.urls')),
     path('payments/', include('payments.urls')),
-    path('reservations/', include('reservations.urls')),
     path('add-review/', views.add_review, name='add_review'),
     path('blogs/', include('blog.urls')),
+    path('booking/', include('tablebooking.urls')),
 ]
 
 # 👇 THIS MUST BE AT THE BOTTOM

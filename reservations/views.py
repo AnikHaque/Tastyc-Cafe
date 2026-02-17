@@ -1,42 +1,40 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
-from .forms import ReservationForm
-from .models import Reservation
+from .models import Reservation, TableCapacity
 
-@login_required
-def create_reservation(request):
+def book_table(request):
     if request.method == 'POST':
-        form = ReservationForm(request.POST)
-        if form.is_valid():
-            reservation = form.save(commit=False)
-            reservation.user = request.user
-            reservation.save()
-            messages.success(request, 'Your table has been reserved successfully!')
-            return redirect('reservation_list')
-    else:
-        form = ReservationForm()
-    return render(request, 'reservations/reservation_form.html', {'form': form})
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        guests = int(request.POST.get('guests'))
+        date = request.POST.get('date')
+        shift = request.POST.get('shift')
 
-@login_required
-def reservation_list(request):
-    reservations = Reservation.objects.filter(user=request.user).order_by('-date', '-time')
-    return render(request, 'reservations/reservation_list.html', {'reservations': reservations})
+        # লজিক: ওই দিনের ওই শিফটের ক্যাপাসিটি চেক করা
+        capacity, created = TableCapacity.objects.get_or_create(
+            date=date, shift=shift, defaults={'total_tables': 10}
+        )
 
-def edit_reservation(request, pk):
-    reservation = get_object_or_404(Reservation, pk=pk, user=request.user)
-    if request.method == "POST":
-        form = ReservationForm(request.POST, instance=reservation)
-        if form.is_valid():
-            form.save()
-            return redirect('reservation_list')
-    else:
-        form = ReservationForm(instance=reservation)
-    return render(request, 'reservations/reservation_form.html', {'form': form})
+        if capacity.available_tables > 0:
+            # বুকিং সেভ করা
+            res = Reservation.objects.create(
+                user=request.user, name=name, email=email, 
+                phone=phone, guest_count=guests, date=date, shift=shift
+            )
+            # টেবিল কাউন্ট আপডেট করা
+            capacity.booked_tables += 1
+            capacity.save()
+            
+            messages.success(request, f"Table booked! Your ID: {res.booking_id}")
+            return redirect('reservation_success', booking_id=res.booking_id)
+        else:
+            messages.error(request, "Sorry! No tables available for this slot.")
+    
+    return render(request, 'reservation.html')
 
-# ডিলিট ভিউ
-def delete_reservation(request, pk):
-    reservation = get_object_or_404(Reservation, pk=pk, user=request.user)
-    if request.method == "POST":
-        reservation.delete()
-    return redirect('reservation_list')
+
+# --- এই ফাংশনটি মিসিং ছিল, এটি যোগ করুন ---
+def reservation_success(request, booking_id):
+    reservation = get_object_or_404(Reservation, booking_id=booking_id)
+    return render(request, 'reservation_success.html', {'reservation': reservation})

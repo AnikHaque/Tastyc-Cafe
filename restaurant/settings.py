@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'cart',
     'orders',
     'payments',
-    'reservations',
+    'tablebooking',
     'blog',
     'django.contrib.sites',
     'allauth',
