@@ -10,7 +10,26 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;400;500&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/base.css' %}">
-
+  
+  <style>
+    /* ডেলিভারি প্যানেলের জন্য স্পেশাল স্টাইল */
+    .delivery-link {
+        color: #ffc107 !important; /* Golden/Warning Color */
+        font-weight: 600;
+        border: 1px solid #ffc107;
+        border-radius: 20px;
+        padding: 5px 15px !important;
+        margin-right: 10px;
+        transition: 0.3s;
+    }
+    .delivery-link:hover {
+        background: #ffc107;
+        color: #000 !important;
+    }
+    .logout-link {
+        color: #ff4d4d !important;
+    }
+  </style>
 </head>
 
 <body>
@@ -38,11 +57,23 @@
           <li class="nav-item"><a class="nav-link" href="{% url 'menu' %}">Menu</a></li>
 
           {% if user.is_authenticated %}
-              {% if user.is_staff %}
+              {# ১. ডেলিভারি ম্যান চেক (গ্রুপের নাম: Delivery Man) #}
+              {% if user.groups.all.0.name == "Delivery Man" %}
+                  <li class="nav-item">
+                    <a class="nav-link delivery-link" href="{% url 'delivery_dashboard' %}">
+                        <i class="fas fa-truck-ramp-box me-1"></i> Delivery Panel
+                    </a>
+                  </li>
+
+              {# ২. অ্যাডমিন বা স্টাফ চেক #}
+              {% elif user.is_staff %}
                   <li class="nav-item"><a class="nav-link" href="{% url 'staff_analytics' %}">Dashboard</a></li>
+              
+              {# ৩. সাধারণ কাস্টমার চেক #}
               {% else %}
                   <li class="nav-item"><a class="nav-link" href="{% url 'customer_dashboard' %}">My Account</a></li>
               {% endif %}
+
               <li class="nav-item"><a class="nav-link logout-link" href="{% url 'logout' %}">Logout</a></li>
           {% else %}
               <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>

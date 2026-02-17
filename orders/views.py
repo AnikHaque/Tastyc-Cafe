@@ -1,3 +1,4 @@
+
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
@@ -154,10 +155,46 @@ def auto_assign_delivery_man(order):
     except:
         pass
 
+from django.utils import timezone  # এই ইমপোর্টটি ফাইলের একদম উপরে নিশ্চিত করুন
+
 @login_required
 def delivery_dashboard(request):
-    orders = Order.objects.filter(delivery_man=request.user).exclude(status='DELIVERED').order_by('-created_at')
-    return render(request, 'delivery/dashboard.html', {'orders': orders})
+    # শুধুমাত্র এই ডেলিভারি ম্যানের কাছে থাকা একটিভ অর্ডার (Preparing বা On the way)
+    orders = Order.objects.filter(
+        delivery_man=request.user, 
+        status__in=['PREPARING', 'ON_THE_WAY']
+    ).order_by('-created_at')
+    
+    # আজকের তারিখ বের করার সঠিক উপায়
+    today = timezone.now().date()
+    
+    # আজকের সাকসেসফুল ডেলিভারি সংখ্যা
+    completed_today = Order.objects.filter(
+        delivery_man=request.user, 
+        status='DELIVERED', 
+        updated_at__date=today
+    )
+    
+    # ইনকাম ক্যালকুলেশন (প্রতি ডেলিভারি ৫০ টাকা হিসেবে)
+    total_earnings = completed_today.count() * 50
+
+    return render(request, 'delivery/dashboard.html', {
+        'orders': orders,
+        'completed_count': completed_today.count(),
+        'total_earnings': total_earnings
+    })
+
+@login_required
+def update_order_status(request, order_id, status):
+    """ডেলিভারি ম্যান অর্ডারের স্ট্যাটাস আপডেট করবে"""
+    # নিরাপত্তা নিশ্চিত করা: অর্ডারটি যেন এই ডেলিভারি ম্যানেরই হয়
+    order = get_object_or_404(Order, id=order_id, delivery_man=request.user)
+    
+    if status in ['ON_THE_WAY', 'DELIVERED']:
+        order.status = status
+        order.save()
+        
+    return redirect('delivery_dashboard')
 
 @login_required
 def payment_page(request, order_id):
@@ -194,3 +231,4 @@ def mark_paid(request, order_id):
     
     # কাজ শেষ করে আবার স্টাফ ড্যাশবোর্ডেই ফেরত পাঠানো
     return redirect('staff_dashboard')
+
