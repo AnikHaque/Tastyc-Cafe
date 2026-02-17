@@ -1,0 +1,59 @@
+
+    :root {
+        --primary-color: #ff4757;
+        --secondary-color: #2f3542;
+        --accent-color: #ffa502;
+        --bg-light: #f1f2f6;
+    }
+
+    body { background-color: #f8f9fa; font-family: 'Poppins', sans-serif; }
+
+    .cart-header {
+        background: linear-gradient(135deg, var(--secondary-color), #000);
+        padding: 60px 0;
+        border-radius: 0 0 50px 50px;
+        margin-bottom: -50px;
+        color: white;
+    }
+
+    .cart-container { position: relative; z-index: 10; }
+
+    .cart-item-card {
+        background: white; border: none; border-radius: 20px;
+        padding: 20px; margin-bottom: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        display: flex; align-items: center; transition: 0.3s;
+    }
+
+    .cart-item-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
+
+    .item-img-wrapper { width: 100px; height: 100px; border-radius: 15px; overflow: hidden; flex-shrink: 0; }
+    .item-img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+
+    .item-details { flex-grow: 1; padding-left: 20px; }
+    .item-name { font-weight: 700; font-size: 1.1rem; color: var(--secondary-color); margin-bottom: 5px; }
+    .item-price { color: var(--primary-color); font-weight: 700; }
+
+    .modern-qty {
+        display: flex; align-items: center; background: var(--bg-light);
+        border-radius: 50px; padding: 5px 15px; width: fit-content;
+    }
+
+    .modern-qty a { text-decoration: none; color: var(--secondary-color); font-weight: bold; padding: 0 10px; }
+    .modern-qty span { font-weight: 700; padding: 0 10px; }
+
+    .summary-card {
+        background: white; border-radius: 25px; padding: 30px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.1); position: sticky; top: 100px;
+    }
+
+    .btn-checkout {
+        background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+        border: none; color: white; padding: 15px; border-radius: 50px;
+        font-weight: 700; width: 100%; transition: 0.3s;
+    }
+
+    .btn-checkout:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(255, 71, 87, 0.4); color: white; }
+
+    .remove-btn { color: #ff4757; font-size: 1.2rem; transition: 0.3s; }
+    .remove-btn:hover { color: #ff6b81; transform: scale(1.2); }

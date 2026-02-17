@@ -1,0 +1,96 @@
+
+    :root {
+      --primary: #ff4757;
+      --deep-dark: #0f141e;
+    }
+
+    /* --- Premium Navbar Styling --- */
+    .custom-nav {
+      background: rgba(15, 20, 30, 0.95);
+      backdrop-filter: blur(15px);
+      padding: 18px 0;
+      transition: all 0.4s ease;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-scrolled {
+      padding: 8px 0;
+      background: #0f141e;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .navbar-brand {
+      font-size: 24px;
+      font-weight: 800;
+      color: #fff !important;
+      font-family: 'Playfair Display', serif;
+      white-space: nowrap;
+    }
+
+    .navbar-brand span { color: var(--primary); }
+
+    /* টেক্সট যেন না ভাঙে সেটার মেইন ফিক্স */
+    .nav-link {
+      color: rgba(255, 255, 255, 0.85) !important;
+      font-size: 13px;
+      font-weight: 600;
+      margin: 0 5px;
+      transition: 0.3s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap; /* My Account এক লাইনে থাকবেই */
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-link:hover { color: var(--primary) !important; }
+
+    .nav-icon-link {
+        padding: 0 8px !important;
+    }
+
+    .btn-order {
+      background: var(--primary);
+      color: white !important;
+      padding: 10px 22px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 12px;
+      text-transform: uppercase;
+      transition: 0.4s;
+      border: none;
+      box-shadow: 0 8px 20px rgba(255, 71, 87, 0.25);
+      white-space: nowrap;
+    }
+
+    .btn-order:hover {
+      background: #fff;
+      color: var(--primary) !important;
+      transform: translateY(-2px);
+    }
+
+    .logout-link { color: var(--primary) !important; opacity: 0.9; }
+    
+    .content-wrapper { margin-top: 80px; }
+
+    /* Mobile Improvements */
+    @media (max-width: 991px) {
+      .navbar-collapse {
+        background: #161c27;
+        margin-top: 15px;
+        padding: 20px;
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.05);
+      }
+      .nav-link {
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        margin: 0;
+        font-size: 14px;
+      }
+      .nav-icon-link {
+          display: inline-flex !important;
+          margin-right: 15px;
+      }
+    }
+  
