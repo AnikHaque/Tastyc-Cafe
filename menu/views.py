@@ -148,21 +148,6 @@ def toggle_wishlist(request, food_id):
     return redirect(request.META.get('HTTP_REFERER', 'menu'))
 
 
-def menu_home(request):
-    # এআই রিকমেন্ডেশন নিয়ে আসা
-    recommendations = get_ai_recommendations(request.user)
-    
-    categories = Category.objects.all()
-    foods = Food.objects.filter(is_available=True)
-    
-    context = {
-        'recommendations': recommendations,
-        'categories': categories,
-        'foods': foods,
-    }
-    return render(request, 'menu/menu_home.html', context)
-
-
 def food_detail(request, food_id):
     food = get_object_or_404(Food, id=food_id)
     
