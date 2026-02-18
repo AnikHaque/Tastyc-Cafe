@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ food.name }} - RoyalDine{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-5">
+    <div class="row g-5">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <img src="{{ food.image.url }}" class="img-fluid" style="height: 500px; object-fit: cover;" alt="{{ food.name }}">
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#">{{ food.category.name }}</a></li>
+                    <li class="breadcrumb-item active">{{ food.name }}</li>
+                </ol>
+            </nav>
+
+            <h1 class="display-5 fw-bold mb-3">{{ food.name }}</h1>
+            <h2 class="text-success fw-bold mb-4">৳{{ food.price }}</h2>
+            
+            <div class="mb-4">
+                <span class="badge bg-light text-dark border px-3 py-2 rounded-pill">
+                    <i class="fas fa-utensils me-1"></i> {{ food.category.name }}
+                </span>
+                <span class="badge bg-light text-dark border px-3 py-2 rounded-pill ms-2">
+                    <i class="fas fa-clock me-1"></i> 20-30 Min
+                </span>
+            </div>
+
+            <p class="text-muted fs-5 mb-5" style="line-height: 1.8;">
+                {{ food.description }}
+            </p>
+
+            <form action="{% url 'add_to_cart' food.id %}" method="POST" class="d-flex align-items-center gap-3">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow-lg">
+                    <i class="fas fa-shopping-cart me-2"></i> Add to Cart
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <hr class="my-5">
+
+    {% if recommendations %}
+    <div class="recommendation-section mb-5">
+        <div class="d-flex align-items-center mb-4">
+            <h3 class="fw-bold mb-0">Frequently Bought Together</h3>
+            <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill ms-3 px-3 py-2">
+                <i class="fas fa-robot me-1"></i> AI Suggested
+            </span>
+        </div>
+        
+        <div class="row g-4">
+            {% for rec in recommendations %}
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden transition-hover">
+                    <div style="height: 180px;">
+                        <img src="{{ rec.image.url }}" class="w-100 h-100 object-fit-cover" alt="{{ rec.name }}">
+                    </div>
+                    <div class="card-body p-3 text-center">
+                        <h6 class="fw-bold text-dark mb-1">{{ rec.name }}</h6>
+                        <p class="text-success fw-bold mb-3">৳{{ rec.price }}</p>
+                        <a href="{% url 'food_detail' rec.id %}" class="btn btn-outline-primary btn-sm w-100 rounded-pill">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .transition-hover {
+        transition: all 0.3s ease;
+    }
+    .transition-hover:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+    .object-fit-cover {
+        object-fit: cover;
+    }
+</style>
+{% endblock %}

@@ -1,13 +1,11 @@
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404,redirect
-
-from menu.utils import get_ai_recommendations
 from .models import Category, ComboDeal, FlashDeal, Food, Testimonial
 from django.contrib import messages
-# আগের ইমপোর্টের সাথে শুধু ComboDeal টা কমা দিয়ে যোগ করে দিন
-
 from django.core.paginator import Paginator
 from django.db.models import Q
+from .utils import get_ai_recommendations # এই লাইনটি খেয়াল করবেন
+
 def menu_view(request):
     # ১. বেস কোয়েরি সেট (সব এভেইলএবল খাবার)
     food_list = Food.objects.filter(is_available=True).order_by('-id')
@@ -165,30 +163,13 @@ def menu_home(request):
     return render(request, 'menu/menu_home.html', context)
 
 
-def food_suggestion_api(request):
-    """
-    এই ভিউটিই 'Burger', 'Cheesy' বা 'Spicy' লিখলে খাবার খুঁজে বের করবে।
-    """
-    query = request.GET.get('q', '').strip()
+def food_detail(request, food_id):
+    food = get_object_or_404(Food, id=food_id)
     
-    if len(query) > 1:
-        # নাম, ক্যাটাগরি অথবা ডেসক্রিপশন—যেকোনো এক জায়গায় মিললেই খাবারটি চলে আসবে
-        suggestions = Food.objects.filter(
-            Q(name__icontains=query) | 
-            Q(category__name__icontains=query) | 
-            Q(description__icontains=query),
-            is_available=True
-        ).distinct()[:8] 
-        
-        data = [
-            {
-                'id': food.id,
-                'name': food.name,
-                'price': str(food.price),
-                'image': food.image.url,
-                'category': food.category.name 
-            } for food in suggestions
-        ]
-        return JsonResponse({'status': 'success', 'data': data})
+    # AI সাজেশন্স নিয়ে আসা
+    recommendations = get_ai_recommendations(food)
     
-    return JsonResponse({'status': 'empty', 'data': []})
+    return render(request, 'menu/food_detail.html', {
+        'food': food,
+        'recommendations': recommendations
+    })
