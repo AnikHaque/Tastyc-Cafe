@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
+from cloudinary.models import CloudinaryField
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -16,7 +17,8 @@ class Food(models.Model):
     name = models.CharField(max_length=150)
     description = models.TextField()
     price = models.DecimalField(max_digits=8, decimal_places=2)
-    image = models.ImageField(upload_to='foods/')
+    # ImageField এর বদলে CloudinaryField ব্যবহার করুন
+    image = CloudinaryField('image', folder='foods/')
     is_available = models.BooleanField(default=True)
     is_today_special = models.BooleanField(default=False)
     stock = models.PositiveIntegerField(default=0)

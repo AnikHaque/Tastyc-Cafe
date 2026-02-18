@@ -188,49 +188,221 @@
 
 
 <section class="reservation-full-screen my-5">
-    <div class="container-fluid p-0">
-        <div class="row g-0 align-items-center position-relative">
-            
-            <div class="col-lg-8 col-md-12 p-0 overflow-hidden">
-                <div class="luxury-img-wrap">
-                    <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=1500&q=90" alt="Private Dining" class="luxury-full-img">
-                    <div class="img-dark-layer"></div>
-                    <div class="image-text-content d-none d-lg-block">
-                        <h3 class="playfair italic">The Art of Fine Dining</h3>
-                    </div>
+
+<style>
+html, body {
+    overflow-x: hidden;
+}
+
+/* SECTION */
+.reservation-full-screen {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+/* IMAGE */
+.luxury-img-wrap {
+    position: relative;
+    height: 80vh;
+    min-height: 500px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.luxury-full-img {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.img-dark-layer {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+}
+
+.image-text-content {
+    position: absolute;
+    bottom: 60px;
+    left: 60px;
+    color: white;
+}
+
+/* BOOKING CARD */
+.booking-overlay-card {
+    position: absolute;
+    right: 5%;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+    max-width: 95%;
+}
+
+.reservation-glass-box {
+    backdrop-filter: blur(18px);
+    background: rgba(255,255,255,0.88);
+    padding: 50px;
+    border-radius: 20px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+    max-width: 650px;   /* 🔥 bigger */
+    width: 100%;
+}
+
+
+/* FEATURE */
+.feature-row {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.f-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* BUTTON */
+.luxury-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 28px;
+    border-radius: 50px;
+    background: black;
+    color: white;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.luxury-btn:hover {
+    transform: translateY(-3px);
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+
+    .luxury-img-wrap {
+        height: 50vh;
+    }
+
+    .booking-overlay-card {
+        position: relative;
+        top: auto;
+        right: auto;
+        transform: none;
+        margin: -70px auto 0;
+        padding: 0 15px;
+        width: 100%;
+    }
+
+    .reservation-glass-box {
+        padding: 28px;
+        max-width: 100%;
+    }
+
+    .feature-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .image-text-content {
+        display: none;
+    }
+}
+
+/* TABLET */
+@media (min-width: 769px) and (max-width: 1024px) {
+
+    .luxury-img-wrap {
+        height: 60vh;
+    }
+
+    .booking-overlay-card {
+        right: 3%;
+    }
+
+    .reservation-glass-box {
+        padding: 40px;
+    }
+}
+
+/* LARGE SCREEN */
+@media (min-width: 1400px) {
+
+    .luxury-img-wrap {
+        height: 90vh;
+    }
+
+    .reservation-glass-box {
+        padding: 60px;
+    }
+}
+</style>
+
+
+<div class="container-fluid p-0 overflow-hidden">
+    <div class="row g-0 align-items-center position-relative overflow-hidden">
+        
+        <!-- IMAGE -->
+        <div class="col-lg-8 col-md-12 p-0 overflow-hidden">
+            <div class="luxury-img-wrap">
+                <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=1500&q=90"
+                     alt="Private Dining"
+                     class="luxury-full-img">
+
+                <div class="img-dark-layer"></div>
+
+                <div class="image-text-content d-none d-lg-block">
+                    <h3 class="playfair italic">The Art of Fine Dining</h3>
                 </div>
             </div>
-
-            <div class="col-lg-5 col-md-10 col-11 booking-overlay-card">
-                <div class="reservation-glass-box">
-                    <span class="sub-title">Reservations</span>
-                    <h2 class="playfair mt-3">Reserve Your <br><span>Royal Table</span></h2>
-                    
-                    <p class="text-muted mt-4 mb-5">
-                        আমাদের এক্সক্লুসিভ প্রাইভেট ডাইনিং এরিয়াতে আপনার আসনটি নিশ্চিত করুন। আমরা দিচ্ছি নিরিবিলি পরিবেশ এবং রাজকীয় আতিথেয়তা।
-                    </p>
-
-                    <div class="feature-row mb-5">
-                        <div class="f-item">
-                            <i class="fas fa-wine-glass"></i>
-                            <span>Private Events</span>
-                        </div>
-                        <div class="f-item">
-                            <i class="fas fa-clock"></i>
-                            <span>Instant Booking</span>
-                        </div>
-                    </div>
-
-                    <a href="reservations/reserve/" class="luxury-btn">
-                        <span>Book A Table</span>
-                        <i class="fas fa-long-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-
         </div>
+
+        <!-- BOOKING CARD -->
+        <div class="col-lg-5 col-md-8 col-sm-10 col-11 booking-overlay-card">
+            <div class="reservation-glass-box">
+
+                <span class="sub-title">Reservations</span>
+
+                <h2 class="playfair mt-3">
+                    Reserve Your <br>
+                    <span>Royal Table</span>
+                </h2>
+
+                <p class="text-muted mt-4 mb-5">
+                    আমাদের এক্সক্লুসিভ প্রাইভেট ডাইনিং এরিয়াতে আপনার আসনটি নিশ্চিত করুন।
+                    আমরা দিচ্ছি নিরিবিলি পরিবেশ এবং রাজকীয় আতিথেয়তা।
+                </p>
+
+                <div class="feature-row mb-5">
+                    <div class="f-item">
+                        <i class="fas fa-wine-glass"></i>
+                        <span>Private Events</span>
+                    </div>
+
+                    <div class="f-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Instant Booking</span>
+                    </div>
+                </div>
+
+                <a href="reservations/reserve/" class="luxury-btn">
+                    <span>Book A Table</span>
+                    <i class="fas fa-long-arrow-right"></i>
+                </a>
+
+            </div>
+        </div>
+
     </div>
+</div>
+
 </section>
+
 
 <section class="combo-section py-5 bg-light">
     <div class="container">

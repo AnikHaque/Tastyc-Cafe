@@ -31,12 +31,14 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'cloudinary_storage', 
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cloudinary',
     'accounts',
     'menu',
     'cart',
@@ -51,9 +53,18 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'cloudinary_storage',
-    'cloudinary',
+    
 ]
+
+# Cloudinary এর সেটিংস (আপনার Cloudinary ড্যাশবোর্ড থেকে এই মানগুলো নিন)
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'royaldine',
+    'API_KEY': '791983312715839',
+    'API_SECRET': 'U75ac8ookDKG4y4Zl5NhaQqBi4A'
+}
+
+# মিডিয়া ফাইল হিসেবে ক্লাউডিনারিকে সেট করুন
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # ২. সাইট আইডি (জ্যাঙ্গো সাইট ফ্রেমওয়ার্কের জন্য)
 SITE_ID = 1
@@ -155,7 +166,14 @@ TEMPLATES[0]['DIRS'] = [BASE_DIR / 'templates']
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+# মিডিয়া ফাইল সেটিংস (Cloudinary এর জন্য এটি জরুরি)
+MEDIA_URL = '/media/'
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
+# static files এর নিচে এই লাইনটিও চেক করে নিন
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles' # এটি যোগ করে রাখা ভালো
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
