@@ -269,24 +269,24 @@ def rewards_view(request):
     return render(request, 'orders/rewards.html', {'profile': profile})
 
 
+@login_required
 def surprise_box_view(request):
+    winning_food = None
+    
     if request.method == "POST":
-        # ১. সারপ্রাইজ আইটেমগুলো থেকে র‍্যান্ডমলি একটা সিলেক্ট করা
+        # ১. ডাটাবেস থেকে সারপ্রাইজ আইটেমগুলো ফিল্টার করা
         surprise_items = Food.objects.filter(is_surprise_item=True)
         
+        # যদি কোনো আইটেম আলাদা করা না থাকে, তবে সব মেনু থেকে র‍্যান্ডমলি নিন
         if not surprise_items.exists():
-            # যদি কোনো আইটেম সিলেক্ট করা না থাকে, তবে সব মেনু থেকে একটা নিন
             surprise_items = Food.objects.all()
-            
-        winning_food = random.choice(surprise_items)
-        
-        # ২. সরাসরি কার্ডে অ্যাড করা বা সেশন এ রাখা
-        request.session['surprise_item'] = {
-            'id': winning_food.id,
-            'name': winning_food.name,
-            'price': float(winning_food.price),
-            'image': winning_food.image.url
-        }
-        return render(request, 'orders/surprise_reveal.html', {'food': winning_food})
 
-    return render(request, 'orders/surprise_box.html')
+        if surprise_items.exists():
+            winning_food = random.choice(surprise_items)
+            
+            # ২. সেশনে রাখা যাতে ইউজার চাইলেই কার্টে নিতে পারে (ঐচ্ছিক)
+            request.session['last_surprise_id'] = winning_food.id
+        else:
+            messages.error(request, "দুঃখিত, বর্তমানে কোনো সারপ্রাইজ আইটেম নেই।")
+
+    return render(request, 'orders/surprise_box.html', {'winning_food': winning_food})

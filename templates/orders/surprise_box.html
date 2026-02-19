@@ -1,37 +1,102 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container text-center py-5 mt-5">
-    <h1 class="fw-bold mb-4">🎁 The Mystery Box</h1>
-    <p class="text-muted">Pay ৳199 and get a meal worth up to ৳350!</p>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-    <div class="mystery-box-container my-5" id="box-section">
-        <img src="https://cdn-icons-png.flaticon.com/512/679/679821.png" id="gift-box" width="200" style="cursor: pointer; transition: 0.5s;">
-        <h3 class="mt-4" id="tap-text">Tap the box to reveal your meal!</h3>
+<div class="container py-5 mt-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold text-dark">🎁 Mystery Surprise Box</h1>
+        <p class="fs-5 text-muted">Don't know what to eat? Let our AI Chef decide for you!</p>
     </div>
 
-    <form method="POST" id="surprise-form" style="display: none;">
-        {% csrf_token %}
-        <button type="submit" id="submit-btn">Reveal</button>
-    </form>
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            
+            {% if not winning_food %}
+                <div class="box-wrapper py-5">
+                    <img src="https://cdn-icons-png.flaticon.com/512/679/679821.png" 
+                         id="gift-box" class="img-fluid shake-animation" width="220" style="cursor: pointer;">
+                    <h3 class="mt-4 fw-bold">Tap the box to reveal!</h3>
+                    <p class="text-secondary">Fixed Price: ৳199 only</p>
+                </div>
+
+                <form method="POST" id="surprise-form" style="display: none;">
+                    {% csrf_token %}
+                </form>
+            {% else %}
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden animate__animated animate__zoomIn">
+                    <div class="position-relative">
+                        <img src="{{ winning_food.image.url }}" class="card-img-top" style="height: 300px; object-fit: cover;">
+                        <div class="position-absolute top-0 end-0 m-3">
+                            <span class="badge bg-warning text-dark fs-6 px-3 py-2 rounded-pill shadow">You Won!</span>
+                        </div>
+                    </div>
+                    <div class="card-body p-4">
+                        <h2 class="fw-bold text-success mb-1">{{ winning_food.name }}</h2>
+                        <p class="text-muted mb-4">{{ winning_food.description|truncatewords:15 }}</p>
+                        
+                        <div class="d-flex justify-content-between align-items-center bg-light p-3 rounded-3 mb-4">
+                            <div>
+                                <span class="text-muted d-block small">Market Price</span>
+                                <h4 class="mb-0 text-decoration-line-through text-danger">৳{{ winning_food.price }}</h4>
+                            </div>
+                            <div class="text-end">
+                                <span class="text-muted d-block small">Your Price</span>
+                                <h4 class="mb-0 fw-bold text-dark">৳199</h4>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'add_to_cart' winning_food.id %}" class="btn btn-dark btn-lg rounded-pill">Add to Cart & Checkout</a>
+                            <a href="{% url 'surprise_box' %}" class="btn btn-outline-secondary btn-sm border-0 mt-2">Try Again?</a>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    // বক্স খোলার সাথে সাথে কনফেটি উড়ানো
+                    confetti({
+                        particleCount: 150,
+                        spread: 70,
+                        origin: { y: 0.6 }
+                    });
+                </script>
+            {% endif %}
+        </div>
+    </div>
 </div>
 
-<script>
-    document.getElementById('gift-box').onclick = function() {
-        this.style.transform = "scale(1.2) rotate(10deg)";
-        setTimeout(() => {
-            document.getElementById('surprise-form').submit();
-        }, 500);
-    };
-</script>
-
 <style>
-    #gift-box:hover { transform: scale(1.1); filter: drop-shadow(0 0 15px #ffc107); }
-    #gift-box { animation: shake 1.5s infinite; }
+    /* বক্স কাঁপানোর অ্যানিমেশন */
+    .shake-animation {
+        animation: shake 2s infinite;
+        transition: transform 0.3s;
+    }
+    .shake-animation:hover {
+        animation: none;
+        transform: scale(1.1);
+    }
     @keyframes shake {
-        0% { transform: rotate(0); }
-        10% { transform: rotate(5deg); }
-        20% { transform: rotate(-5deg); }
-        30% { transform: rotate(0); }
+        0%, 100% { transform: rotate(0); }
+        10%, 30%, 50%, 70%, 90% { transform: rotate(-5deg); }
+        20%, 40%, 60%, 80% { transform: rotate(5deg); }
+    }
+    .box-wrapper {
+        background: radial-gradient(circle, #ffffff 0%, #f8f9fa 100%);
+        border-radius: 50%;
+        padding: 40px;
     }
 </style>
+
+<script>
+    // বক্স ক্লিক করলে ফর্ম সাবমিট
+    const box = document.getElementById('gift-box');
+    if(box) {
+        box.onclick = function() {
+            this.style.transform = "scale(0.8)";
+            setTimeout(() => {
+                document.getElementById('surprise-form').submit();
+            }, 300);
+        };
+    }
+</script>
 {% endblock %}
