@@ -14,6 +14,7 @@ class Category(models.Model):
 
 
 class Food(models.Model):
+    # ... আপনার আগের ফিল্ডগুলো থাকবে ...
     MOOD_CHOICES = [
         ('happy', 'Happy (Celebration)'),
         ('stressed', 'Stressed (Comfort Food)'),
@@ -28,7 +29,14 @@ class Food(models.Model):
     image = CloudinaryField('image', folder='foods/')
     is_available = models.BooleanField(default=True)
     is_today_special = models.BooleanField(default=False)
+    
+    # --- নতুন রিয়েলিস্টিক ফিচার ফিল্ডস ---
     stock = models.PositiveIntegerField(default=0)
+    low_stock_threshold = models.PositiveIntegerField(default=10) # এর নিচে নামলে "Selling Fast" দেখাবে
+    off_peak_discount = models.PositiveIntegerField(default=0) # শতাংশ (যেমন: ২০ মানে ২০%)
+    # ----------------------------------
+
+    # ... পুষ্টিগুণ ফিল্ডগুলো ...
     calories = models.IntegerField(default=0)
     protein = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
     carbs = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
@@ -39,6 +47,23 @@ class Food(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def is_low_stock(self):
+        """চেক করবে স্টক কি বিপৎসীমার নিচে?"""
+        return 0 < self.stock <= self.low_stock_threshold
+
+    @property
+    def get_dynamic_price(self):
+        """সময় অনুযায়ী অটোমেটিক অফ-পিক ডিসকাউন্ট হিসাব করবে"""
+        from datetime import datetime
+        now_hour = datetime.now().hour
+        
+        # উদাহরণ: দুপুর ৩টা থেকে বিকাল ৫টা (১৫:০০ - ১৭:০০) অফ-পিক আওয়ার
+        if 15 <= now_hour < 17 and self.off_peak_discount > 0:
+            discount = (self.price * self.off_peak_discount) / 100
+            return self.price - discount
+        return self.price
     
 
 class Offer(models.Model):

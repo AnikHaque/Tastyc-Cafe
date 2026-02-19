@@ -5,8 +5,8 @@
 <link rel="stylesheet" href="{% static 'css/menu.css' %}">
 <header class="menu-header text-center">
     <div class="container">
-        <p class="text-uppercase fw-bold text-warning" style="letter-spacing: 5px;">Luxury Dining</p>
-        <h1 class="display-3 fw-bold" style="font-family: 'Playfair Display', serif;">Our Exquisite Menu</h1>
+        <p class="text-uppercase fw-bold text-warning ls-2" style="letter-spacing: 5px;">Luxury Dining</p>
+        <h1 class="display-3 fw-bold playfair">Our Exquisite Menu</h1>
     </div>
 </header>
 <div class="container menu-controls text-center mt-4">
@@ -24,29 +24,40 @@
     <div class="row g-4">
         {% for food in foods %}
         <div class="col-xl-3 col-lg-4 col-md-6">
-            <div class="food-card h-100 d-flex flex-column position-relative shadow-sm">
-                <div class="price-tag">৳{{ food.price }}</div>
+            <div class="food-card h-100 d-flex flex-column position-relative shadow-sm border-0 rounded-4 overflow-hidden">
+                {% if food.is_low_stock %}<div class="position-absolute top-0 start-0 m-3 z-index-2"><span class="badge bg-danger rounded-pill px-3 shadow animate__animated animate__pulse animate__infinite">🔥 Selling Fast! {{ food.stock }} Left</span></div>{% endif %}
+                <div class="price-tag shadow">
+                    {% if food.get_dynamic_price < food.price %}<small class="text-decoration-line-through opacity-75 me-1" style="font-size: 0.75rem;">৳{{ food.price }}</small><span>৳{{ food.get_dynamic_price|floatformat:0 }}</span>
+                    {% else %}৳{{ food.price|floatformat:0 }}{% endif %}
+                </div>
                 <div class="img-wrapper" style="height: 230px; overflow: hidden;"><img src="{{ food.image.url }}" class="w-100 h-100 object-fit-cover transition" alt="{{ food.name }}"></div>
                 <div class="p-4 flex-grow-1 d-flex flex-column text-center">
+                    <div class="mb-1"><span class="badge bg-light text-muted fw-normal rounded-pill" style="font-size: 10px;">{{ food.category.name }}</span></div>
                     <h5 class="fw-bold mb-2">{{ food.name }}</h5>
+                    {% if food.get_dynamic_price < food.price %}<p class="text-success small fw-bold mb-2"><i class="fa-solid fa-clock"></i> Happy Hour Price!</p>{% endif %}
                     <p class="text-muted small flex-grow-1">{{ food.description|truncatechars:60 }}</p>
                     <div class="d-flex align-items-center gap-2 mt-3">
-                        <a href="{% url 'toggle_wishlist' food.id %}" class="wishlist-btn">
-                            {% if food.id|stringformat:"s" in request.session.wishlist %}<i class="fa-solid fa-heart text-danger"></i>{% else %}<i class="fa-regular fa-heart"></i>{% endif %}
-                        </a>
-                        <a href="{% url 'add_to_cart' food.id %}" class="btn btn-danger flex-grow-1 rounded-pill fw-bold py-2"><i class="fa-solid fa-basket-shopping me-2"></i> ADD TO CART</a>
+                        <a href="{% url 'toggle_wishlist' food.id %}" class="wishlist-btn border rounded-circle p-2">{% if food.id|stringformat:"s" in request.session.wishlist %}<i class="fa-solid fa-heart text-danger"></i>{% else %}<i class="fa-regular fa-heart"></i>{% endif %}</a>
+                        {% if food.stock > 0 %}<a href="{% url 'add_to_cart' food.id %}" class="btn btn-danger flex-grow-1 rounded-pill fw-bold py-2 shadow-sm"><i class="fa-solid fa-basket-shopping me-2"></i> ADD TO CART</a>
+                        {% else %}<button class="btn btn-secondary flex-grow-1 rounded-pill fw-bold py-2 shadow-sm cursor-not-allowed" disabled>SOLD OUT</button>{% endif %}
                     </div>
                 </div>
             </div>
         </div>
-        {% empty %}<div class="col-12 text-center py-5"><h3>Oops! No delicious items found.</h3><a href="{% url 'menu' %}" class="btn btn-outline-danger mt-2 rounded-pill">View All Menu</a></div>{% endfor %}
+        {% empty %}<div class="col-12 text-center py-5"><h3>No delicious items found.</h3><a href="{% url 'menu' %}" class="btn btn-outline-danger mt-2 rounded-pill px-4">View All Menu</a></div>{% endfor %}
     </div>
     {% if foods.has_other_pages %}
     <nav class="mt-5"><ul class="pagination justify-content-center">
-        {% if foods.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ foods.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}"><i class="fa-solid fa-chevron-left"></i></a></li>{% endif %}
-        {% for i in foods.paginator.page_range %}{% if foods.number == i %}<li class="page-item active"><span class="page-link">{{ i }}</span></li>
-        {% elif i > foods.number|add:'-3' and i < foods.number|add:'3' %}<li class="page-item"><a class="page-link" href="?page={{ i }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">{{ i }}</a></li>{% endif %}{% endfor %}
-        {% if foods.has_next %}<li class="page-item"><a class="page-link" href="?page={{ foods.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}"><i class="fa-solid fa-chevron-right"></i></a></li>{% endif %}
+        {% if foods.has_previous %}<li class="page-item"><a class="page-link shadow-sm rounded-circle mx-1" href="?page={{ foods.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}"><i class="fa-solid fa-chevron-left"></i></a></li>{% endif %}
+        {% for i in foods.paginator.page_range %}{% if foods.number == i %}<li class="page-item active"><span class="page-link rounded-circle mx-1 shadow">{{ i }}</span></li>
+        {% elif i > foods.number|add:'-3' and i < foods.number|add:'3' %}<li class="page-item"><a class="page-link rounded-circle mx-1 shadow-sm" href="?page={{ i }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">{{ i }}</a></li>{% endif %}{% endfor %}
+        {% if foods.has_next %}<li class="page-item"><a class="page-link shadow-sm rounded-circle mx-1" href="?page={{ foods.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}"><i class="fa-solid fa-chevron-right"></i></a></li>{% endif %}
     </ul></nav>{% endif %}
 </div>
+<style>
+    .pulse-animation { animation: pulse 2s infinite; } .cursor-not-allowed { cursor: not-allowed !important; }
+    .price-tag { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.8); color: #fff; padding: 5px 15px; border-radius: 50px; font-weight: bold; z-index: 5; }
+    .food-card { transition: 0.3s ease; border: 1px solid #f0f0f0 !important; } .food-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important; }
+    .wishlist-btn { transition: 0.3s; background: white; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; } .wishlist-btn:hover { background: #fff1f2; border-color: #ff4757 !important; }
+</style>
 {% endblock %}
