@@ -1,26 +1,17 @@
 {% extends 'accounts/dashboard/base_dashboard.html' %}
-
 {% block title %}Order History | {{ request.user.username }}{% endblock %}
 
 {% block sidebar %}
-    <a href="{% url 'customer_dashboard' %}" class="{% if request.resolver_match.url_name == 'customer_dashboard' %}active{% endif %}">
-        <i class="fa-solid fa-chart-line"></i> Analytics
-    </a>
-    <a href="{% url 'my_orders' %}" class="{% if request.resolver_match.url_name == 'my_orders' %}active{% endif %}">
-        <i class="fa-solid fa-shopping-bag"></i> My Orders
-    </a>
-    <a href="{% url 'create_reservation' %}" class="{% if request.resolver_match.url_name == 'create_reservation' %}active{% endif %}">
-        <i class="fa-solid fa-calendar-plus"></i> Book Table
-    </a>
-    <a href="{% url 'reservation_list' %}" class="{% if request.resolver_match.url_name == 'reservation_list' %}active{% endif %}">
-        <i class="fa-solid fa-list-ul"></i> My Reservations
-    </a>
-    <a href="{% url 'add_review' %}" class="{% if request.resolver_match.url_name == 'add_review' %}active{% endif %}">
-        <i class="fa-solid fa-pen-fancy"></i> Create Review
-    </a>
-    <a href="{% url 'my_testimonials' %}" class="{% if request.resolver_match.url_name == 'my_testimonials' %}active{% endif %}">
-        <i class="fa-solid fa-star"></i> My Reviews
-    </a>
+    {% url 'customer_dashboard' as dash_url %}{% url 'my_orders' as order_url %}
+    {% url 'create_reservation' as book_url %}{% url 'reservation_list' as res_list %}
+    {% url 'add_review' as add_rev %}{% url 'my_testimonials' as my_rev %}
+
+    <a href="{{ dash_url }}" class="{% if request.path == dash_url %}active{% endif %}"><i class="fa-solid fa-chart-line"></i> Analytics</a>
+    <a href="{{ order_url }}" class="{% if request.path == order_url %}active{% endif %}"><i class="fa-solid fa-shopping-bag"></i> My Orders</a>
+    <a href="{{ book_url }}" class="{% if request.path == book_url %}active{% endif %}"><i class="fa-solid fa-calendar-plus"></i> Book Table</a>
+    <a href="{{ res_list }}" class="{% if request.path == res_list %}active{% endif %}"><i class="fa-solid fa-list-ul"></i> My Reservations</a>
+    <a href="{{ add_rev }}" class="{% if request.path == add_rev %}active{% endif %}"><i class="fa-solid fa-pen-fancy"></i> Create Review</a>
+    <a href="{{ my_rev }}" class="{% if request.path == my_rev %}active{% endif %}"><i class="fa-solid fa-star"></i> My Reviews</a>
 {% endblock %}
 
 {% block content %}
@@ -31,87 +22,49 @@
             <p class="text-muted small">Manage your past orders and track current ones.</p>
         </div>
         <div class="col-md-6 text-md-end">
-            <a href="{% url 'menu' %}" class="btn btn-danger px-4 py-2 fw-bold shadow-sm rounded-3">
-                <i class="fa-solid fa-plus me-2"></i>New Order
-            </a>
+            <a href="{% url 'menu' %}" class="btn btn-danger px-4 fw-bold shadow-sm rounded-3"><i class="fa-solid fa-plus me-2"></i>New Order</a>
         </div>
     </div>
 
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
-                <thead class="bg-light">
-                    <tr class="text-muted small fw-bold">
-                        <th class="ps-4 py-3">ORDER ID</th>
-                        <th class="py-3">DATE & TIME</th>
-                        <th class="py-3">TOTAL</th>
-                        <th class="py-3">PAYMENT</th>
-                        <th class="py-3">DELIVERY STATUS</th>
-                        <th class="text-end pe-4 py-3">ACTIONS</th>
+                <thead class="bg-light small fw-bold text-muted">
+                    <tr>
+                        <th class="ps-4 py-3">ORDER ID</th><th class="py-3">DATE & TIME</th>
+                        <th class="py-3">TOTAL</th><th class="py-3">PAYMENT</th>
+                        <th class="py-3">STATUS</th><th class="text-end pe-4 py-3">ACTIONS</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for order in orders %}
                     <tr class="border-bottom">
-                        <td class="ps-4 py-4">
-                            <span class="fw-bold text-dark">#ORD-{{ order.id }}</span>
-                        </td>
-                        
+                        <td class="ps-4 py-4 fw-bold text-dark">#ORD-{{ order.id }}</td>
                         <td class="py-4">
-                            <div class="text-dark small fw-bold">{{ order.created_at|date:"d M, Y" }}</div>
+                            <div class="small fw-bold">{{ order.created_at|date:"d M, Y" }}</div>
                             <div class="text-muted x-small">{{ order.created_at|date:"H:i A" }}</div>
                         </td>
-
-                        <td class="py-4 fw-bold text-dark">
-                            ৳{{ order.total_price }}
-                        </td>
-
+                        <td class="py-4 fw-bold">৳{{ order.total_price }}</td>
                         <td class="py-4">
-                            {% if order.is_paid %}
-                                <span class="badge bg-success-subtle text-success rounded-pill px-3 py-2">
-                                    <i class="fa-solid fa-circle-check me-1"></i> Paid
-                                </span>
-                            {% else %}
-                                <span class="badge bg-warning-subtle text-warning rounded-pill px-3 py-2">
-                                    <i class="fa-solid fa-clock me-1"></i> Unpaid
-                                </span>
-                            {% endif %}
-                        </td>
-
-                        <td class="py-4">
-                            <span class="badge bg-info-subtle text-info rounded-pill px-3 py-2">
-                                {{ order.get_status_display }}
+                            <span class="badge rounded-pill px-3 py-2 {% if order.is_paid %}bg-success-subtle text-success{% else %}bg-warning-subtle text-warning{% endif %}">
+                                <i class="fa-solid {% if order.is_paid %}fa-circle-check{% else %}fa-clock{% endif %} me-1"></i> 
+                                {% if order.is_paid %}Paid{% else %}Unpaid{% endif %}
                             </span>
                         </td>
-
+                        <td class="py-4"><span class="badge bg-info-subtle text-info rounded-pill px-3 py-2">{{ order.get_status_display }}</span></td>
                         <td class="text-end pe-4 py-4">
                             <div class="d-flex justify-content-end gap-2">
-                                <a href="#" class="btn btn-outline-dark btn-sm px-3 rounded-pill fw-bold">
-                                    <i class="fa-solid fa-file-invoice me-1"></i> Invoice
-                                </a>
-
-                                <a href="{% url 'track_order' order.id %}" class="btn btn-outline-danger btn-sm rounded-pill px-3">
-                                    <i class="fas fa-map-marker-alt me-1"></i> Track
-                                </a>
-
-                                <form action="{% url 'delete_order' order.id %}" method="POST" style="display:inline;">
+                                <a href="#" class="btn btn-outline-dark btn-sm px-3 rounded-pill fw-bold">Invoice</a>
+                                <a href="{% url 'track_order' order.id %}" class="btn btn-outline-danger btn-sm rounded-pill px-3">Track</a>
+                                <form action="{% url 'delete_order' order.id %}" method="POST" class="d-inline">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-danger btn-sm px-2 rounded-pill" 
-                                            onclick="return confirm('Are you sure you want to cancel/delete this order?');">
-                                        <i class="fa-solid fa-trash-can"></i>
-                                    </button>
+                                    <button type="submit" class="btn btn-danger btn-sm px-2 rounded-pill" onclick="return confirm('Confirm Delete?');"><i class="fa-solid fa-trash-can"></i></button>
                                 </form>
                             </div>
                         </td>
                     </tr>
                     {% empty %}
-                    <tr>
-                        <td colspan="6" class="text-center py-5 text-muted">
-                            <i class="fa-solid fa-box-open d-block mb-3 fs-1 opacity-25"></i>
-                            <p>You haven't placed any orders yet.</p>
-                            <a href="{% url 'menu' %}" class="btn btn-sm btn-danger rounded-pill px-4">Order Now</a>
-                        </td>
-                    </tr>
+                    <tr><td colspan="6" class="text-center py-5 text-muted"><p>No orders yet.</p><a href="{% url 'menu' %}" class="btn btn-sm btn-danger rounded-pill px-4">Order Now</a></td></tr>
                     {% endfor %}
                 </tbody>
             </table>
@@ -120,14 +73,11 @@
 </div>
 
 <style>
-    /* নতুন ব্যাজ কালার কোড */
-    .bg-success-subtle { background-color: #e8f5e9 !important; color: #2e7d32 !important; }
-    .bg-warning-subtle { background-color: #fff3e0 !important; color: #ef6c00 !important; }
-    .bg-info-subtle { background-color: #e0f7fa !important; color: #00838f !important; }
-    
+    .bg-success-subtle { background-color: #e8f5e9!important; color: #2e7d32!important; }
+    .bg-warning-subtle { background-color: #fff3e0!important; color: #ef6c00!important; }
+    .bg-info-subtle { background-color: #e0f7fa!important; color: #00838f!important; }
     .x-small { font-size: 0.7rem; }
-    .table tbody tr:hover { background-color: #fcfcfc; transition: 0.3s; }
-    .badge { font-size: 0.75rem; letter-spacing: 0.3px; }
-    .btn-sm { font-size: 0.75rem; }
+    .badge { font-size: 0.75rem; }
+    .table tbody tr:hover { background-color: #fcfcfc; transition: 0.2s; }
 </style>
 {% endblock %}

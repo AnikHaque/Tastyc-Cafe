@@ -1,154 +1,103 @@
 {% extends "accounts/dashboard/base_dashboard.html" %}
 
 {% block sidebar %}
-    <a href="{% url 'staff_analytics' %}" class="{% if request.resolver_match.url_name == 'staff_analytics' %}active{% endif %}">
-        <i class="fa-solid fa-chart-pie me-2"></i> Analytics
-    </a>
-    <a href="{% url 'staff_inventory' %}" class="{% if request.resolver_match.url_name == 'staff_inventory' %}active{% endif %}">
-        <i class="fa-solid fa-boxes-stacked me-2"></i> Inventory
-    </a>
-    <a href="{% url 'staff_top_selling' %}" class="{% if request.resolver_match.url_name == 'staff_top_selling' %}active{% endif %}">
-        <i class="fa-solid fa-fire me-2"></i> Top Selling
-    </a>
+    {% url 'staff_analytics' as analytics %}{% url 'staff_inventory' as inv %}{% url 'staff_top_selling' as top %}
+    {% url 'staff_dashboard' as dash %}{% url 'staff_blog_list' as blog_l %}{% url 'staff_create_blog' as blog_c %}
+
+    <a href="{{ analytics }}" class="{% if request.path == analytics %}active{% endif %}"><i class="fa-solid fa-chart-pie me-2"></i> Analytics</a>
+    <a href="{{ inv }}" class="{% if request.path == inv %}active{% endif %}"><i class="fa-solid fa-boxes-stacked me-2"></i> Inventory</a>
+    <a href="{{ top }}" class="{% if request.path == top %}active{% endif %}"><i class="fa-solid fa-fire me-2"></i> Top Selling</a>
     
-    <a href="{% url 'staff_dashboard' %}" class="{% if request.resolver_match.url_name == 'staff_dashboard' and not request.GET.payment and not request.GET.status %}active{% endif %}">
+    <a href="{{ dash }}" class="{% if request.path == dash and not request.GET.payment and not request.GET.status %}active{% endif %}">
         <i class="fa-solid fa-receipt me-2"></i> All Orders
     </a>
-    
-    <a href="{% url 'staff_dashboard' %}?payment=PAID" class="{% if request.GET.payment == 'PAID' %}active{% endif %}">
-        <i class="fa-solid fa-circle-check me-2"></i> Paid Orders
-    </a>
-    
-    <a href="{% url 'staff_dashboard' %}?status=PENDING" class="{% if request.GET.status == 'PENDING' %}active{% endif %}">
-        <i class="fa-solid fa-clock me-2"></i> New Orders (Pending)
-    </a>
+    <a href="{{ dash }}?payment=PAID" class="{% if request.GET.payment == 'PAID' %}active{% endif %}"><i class="fa-solid fa-circle-check me-2"></i> Paid Orders</a>
+    <a href="{{ dash }}?status=PENDING" class="{% if request.GET.status == 'PENDING' %}active{% endif %}"><i class="fa-solid fa-clock me-2"></i> New Orders</a>
 
-    <hr style="background-color: rgba(255,255,255,0.1)">
-
-    <a href="{% url 'staff_blog_list' %}" class="{% if request.resolver_match.url_name == 'staff_blog_list' %}active{% endif %}">
-        <i class="fa-solid fa-newspaper me-2"></i> Manage Blogs
-    </a>
-    <a href="{% url 'staff_create_blog' %}" class="{% if request.resolver_match.url_name == 'staff_create_blog' %}active{% endif %} text-warning fw-bold">
-        <i class="fa-solid fa-plus-circle me-2"></i> Create New Blog
-    </a>
+    <hr class="opacity-10 mx-3">
+    <a href="{{ blog_l }}" class="{% if request.path == blog_l %}active{% endif %}"><i class="fa-solid fa-newspaper me-2"></i> Manage Blogs</a>
+    <a href="{{ blog_c }}" class="{% if request.path == blog_c %}active{% endif %} text-warning fw-bold"><i class="fa-solid fa-plus-circle me-2"></i> Create Blog</a>
 {% endblock %}
 
 {% block content %}
-<h2 style="font-size:1.5rem; margin-bottom:20px;">
-    {% if request.resolver_match.url_name == 'staff_analytics' %}
-        <i class="fa-solid fa-chart-line me-2"></i> Analytics Dashboard
-    {% else %}
-        <i class="fa-solid fa-list-check me-2"></i> Order Management 
-        <small class="text-muted" style="font-size: 0.9rem;">
-            {% if request.GET.payment %}({{ request.GET.payment }}){% endif %}
-            {% if request.GET.status %}({{ request.GET.status }}){% endif %}
-        </small>
-    {% endif %}
-</h2>
+<div class="container-fluid p-0">
+    <h3 class="fw-bold mb-4">
+        {% if request.resolver_match.url_name == 'staff_analytics' %}
+            <i class="fa-solid fa-chart-line me-2"></i> Analytics Dashboard
+        {% else %}
+            <i class="fa-solid fa-list-check me-2"></i> Order Management 
+            <small class="text-muted fs-6">{% if request.GET.payment %}({{ request.GET.payment }}){% endif %} {% if request.GET.status %}({{ request.GET.status }}){% endif %}</small>
+        {% endif %}
+    </h3>
 
-<div class="row mb-3">
-    <div class="col-md-3 mb-2">
-        <div class="card p-3 text-center bg-light border-0 shadow-sm">
-            <h6 class="text-muted">Total Orders</h6>
-            <h4 class="fw-bold">{{ total_orders }}</h4>
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card p-3 border-0 shadow-sm text-center">
+                <h6 class="text-muted small text-uppercase">Total Orders</h6><h3 class="fw-bold mb-0">{{ total_orders }}</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 border-0 shadow-sm text-center bg-success text-white">
+                <h6 class="opacity-75 small text-uppercase">Paid Orders</h6><h3 class="fw-bold mb-0">{{ total_paid }}</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 border-0 shadow-sm text-center bg-warning">
+                <h6 class="opacity-75 small text-uppercase">Unpaid Orders</h6><h3 class="fw-bold mb-0">{{ total_pending }}</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 border-0 shadow-sm text-center bg-info text-white">
+                <h6 class="opacity-75 small text-uppercase">Revenue</h6><h3 class="fw-bold mb-0">৳{{ total_revenue|floatformat:0 }}</h3>
+            </div>
         </div>
     </div>
-    <div class="col-md-3 mb-2">
-        <div class="card p-3 text-center bg-success text-white border-0 shadow-sm">
-            <h6 class="opacity-75">Paid Orders</h6>
-            <h4 class="fw-bold">{{ total_paid }}</h4>
+
+    {% if request.resolver_match.url_name == 'staff_analytics' %}
+        {% include "accounts/dashboard/includes/charts.html" %} 
+    {% else %}
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light small text-uppercase">
+                        <tr><th class="ps-4">Order ID</th><th>Customer</th><th>Amount</th><th>Status</th><th>Date</th><th class="text-end pe-4">Action</th></tr>
+                    </thead>
+                    <tbody class="small">
+                        {% for order in orders %}
+                        <tr>
+                            <td class="ps-4 fw-bold">#{{ order.id }}</td>
+                            <td><div class="fw-bold">{{ order.full_name }}</div><small class="text-muted">{{ order.phone }}</small></td>
+                            <td>৳{{ order.total_price }}</td>
+                            <td>
+                                <span class="badge {% if order.is_paid %}bg-success-light text-success{% else %}bg-danger-light text-danger{% endif %} px-2 py-1">
+                                    {{ order.is_paid|yesno:"Paid,Unpaid" }}
+                                </span>
+                                <span class="badge bg-warning-light text-warning px-2 py-1 ms-1">{{ order.get_status_display }}</span>
+                            </td>
+                            <td>{{ order.created_at|date:"d M, Y" }}</td>
+                            <td class="text-end pe-4">
+                                {% if not order.is_paid or order.status == 'PENDING' %}
+                                    <a href="{% url 'mark_paid' order.id %}" class="btn btn-sm btn-success rounded-pill px-3 shadow-sm" title="Cook Now">Cook</a>
+                                {% endif %}
+                                <a href="{% url 'track_order' order.id %}" class="btn btn-sm btn-outline-dark rounded-pill px-3 ms-1">Details</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="6" class="text-center py-5 text-muted">No orders available.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
-    <div class="col-md-3 mb-2">
-        <div class="card p-3 text-center bg-warning text-dark border-0 shadow-sm">
-            <h6 class="opacity-75">Unpaid Orders</h6>
-            <h4 class="fw-bold">{{ total_pending }}</h4>
-        </div>
-    </div>
-    <div class="col-md-3 mb-2">
-        <div class="card p-3 text-center bg-info text-white border-0 shadow-sm">
-            <h6 class="opacity-75">Total Revenue</h6>
-            <h4 class="fw-bold">৳{{ total_revenue|floatformat:0 }}</h4>
-        </div>
-    </div>
+    {% endif %}
 </div>
 
-<hr class="my-4">
-
-{% if request.resolver_match.url_name == 'staff_analytics' %}
-    {% include "accounts/dashboard/includes/charts.html" %} 
-{% else %}
-    <div class="card shadow-sm border-0">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="bg-light">
-                    <tr>
-                        <th class="ps-3">Order ID</th>
-                        <th>Customer</th>
-                        <th>Amount</th>
-                        <th>Payment Status</th>
-                        <th>Order Status</th>
-                        <th>Date</th>
-                        <th class="text-end pe-3">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for order in orders %}
-                    <tr>
-                        <td class="ps-3 fw-bold text-primary">#{{ order.id }}</td>
-                        <td>
-                            <div class="fw-bold">{{ order.full_name }}</div>
-                            <small class="text-muted">{{ order.phone }}</small>
-                        </td>
-                        <td>৳ {{ order.total_price }}</td>
-                        
-                        <td>
-                            {% if order.is_paid %}
-                                <span class="badge bg-success-light text-success px-3 py-2">
-                                    <i class="fa-solid fa-check"></i> Paid
-                                </span>
-                            {% else %}
-                                <span class="badge bg-danger-light text-danger px-3 py-2">
-                                    <i class="fa-solid fa-xmark"></i> Unpaid
-                                </span>
-                            {% endif %}
-                        </td>
-
-                        <td>
-                            <span class="badge bg-warning-light text-warning px-3 py-2">
-                                {{ order.get_status_display }}
-                            </span>
-                        </td>
-
-                        <td>{{ order.created_at|date:"d M, Y" }}</td>
-                        
-                        <td class="text-end pe-3">
-                            {% if not order.is_paid or order.status == 'PENDING' %}
-                            <a href="{% url 'mark_paid' order.id %}" class="btn btn-sm btn-success shadow-sm" title="Confirm Payment & Cook">
-                                <i class="fas fa-utensils"></i> Cook Now
-                            </a>
-                            {% endif %}
-                            
-                            <a href="{% url 'track_order' order.id %}" class="btn btn-sm btn-outline-info shadow-sm">
-                                <i class="fas fa-eye"></i> Details
-                            </a>
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr><td colspan="7" class="text-center py-5 text-muted">No orders found.</td></tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-{% endif %}
-
 <style>
-    .bg-success-light { background-color: #d1e7dd; color: #0f5132; }
-    .bg-warning-light { background-color: #fff3cd; color: #664d03; }
-    .bg-danger-light { background-color: #f8d7da; color: #842029; }
-    .badge { border-radius: 6px; font-weight: 600; font-size: 0.75rem; }
-    .card { border-radius: 12px; }
-    .table thead th { border-top: 0; border-bottom: 2px solid #f8f9fa; font-size: 0.85rem; }
+    .bg-success-light { background-color: #d1e7dd; }
+    .bg-warning-light { background-color: #fff3cd; }
+    .bg-danger-light { background-color: #f8d7da; }
+    .badge { font-weight: 600; font-size: 0.7rem; border-radius: 4px; }
+    .table thead th { border: none; color: #6c757d; padding: 15px 10px; }
+    .table tbody td { padding: 12px 10px; border-bottom: 1px solid #f8f9fa; }
 </style>
 {% endblock %}

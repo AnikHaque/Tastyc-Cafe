@@ -1,93 +1,59 @@
 {% extends 'accounts/dashboard/base_dashboard.html' %}
-
 {% block title %}Dashboard | My Reviews{% endblock %}
 
 {% block sidebar %}
-    <a href="{% url 'customer_dashboard' %}" class="{% if request.resolver_match.url_name == 'customer_dashboard' %}active{% endif %}">
-        <i class="fa-solid fa-chart-line me-2"></i> Analytics
-    </a>
-    <a href="{% url 'my_orders' %}" class="{% if request.resolver_match.url_name == 'my_orders' %}active{% endif %}">
-        <i class="fa-solid fa-shopping-bag me-2"></i> My Orders
-    </a>
-    <a href="{% url 'create_reservation' %}" class="{% if request.resolver_match.url_name == 'create_reservation' %}active{% endif %}">
-        <i class="fa-solid fa-calendar-plus me-2"></i> Book Table
-    </a>
-    <a href="{% url 'reservation_list' %}" class="{% if request.resolver_match.url_name == 'reservation_list' %}active{% endif %}">
-        <i class="fa-solid fa-list-ul me-2"></i> My Reservations
-    </a>
-    <a href="{% url 'add_review' %}" class="{% if request.resolver_match.url_name == 'add_review' %}active{% endif %}">
-        <i class="fa-solid fa-pen-fancy me-2"></i> Create Review
-    </a>
-    <a href="{% url 'my_testimonials' %}" class="{% if request.resolver_match.url_name == 'my_testimonials' %}active{% endif %}">
-        <i class="fa-solid fa-star me-2"></i> My Reviews
-    </a>
+    {% url 'customer_dashboard' as dash %}{% url 'my_orders' as orders %}
+    {% url 'create_reservation' as book %}{% url 'reservation_list' as res_list %}
+    {% url 'add_review' as add_rev %}{% url 'my_testimonials' as my_testi %}
+    
+    <a href="{{ dash }}" class="{% if request.path == dash %}active{% endif %}"><i class="fa-solid fa-chart-line me-2"></i> Analytics</a>
+    <a href="{{ orders }}" class="{% if request.path == orders %}active{% endif %}"><i class="fa-solid fa-shopping-bag me-2"></i> My Orders</a>
+    <a href="{{ book }}" class="{% if request.path == book %}active{% endif %}"><i class="fa-solid fa-calendar-plus me-2"></i> Book Table</a>
+    <a href="{{ res_list }}" class="{% if request.path == res_list %}active{% endif %}"><i class="fa-solid fa-list-ul me-2"></i> My Reservations</a>
+    <a href="{{ add_rev }}" class="{% if request.path == add_rev %}active{% endif %}"><i class="fa-solid fa-pen-fancy me-2"></i> Create Review</a>
+    <a href="{{ my_testi }}" class="{% if request.path == my_testi %}active{% endif %}"><i class="fa-solid fa-star me-2"></i> My Reviews</a>
 {% endblock %}
 
 {% block content %}
 <div class="container-fluid p-0">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold m-0">My Testimonials</h2>
-        <a href="{% url 'add_review' %}" class="btn btn-danger btn-sm rounded-pill px-4 py-2 shadow-sm">
-            <i class="fa-solid fa-plus me-1"></i> Add New Review
-        </a>
+        <a href="{% url 'add_review' %}" class="btn btn-danger btn-sm rounded-pill px-4 shadow-sm"><i class="fa-solid fa-plus me-1"></i> Add Review</a>
     </div>
     
-    {% if my_testimonials %}
-        <div class="row g-4">
-            {% for t in my_testimonials %}
-                <div class="col-md-6 col-lg-4 col-xl-3">
-                    <div class="card border-0 shadow-sm h-100 rounded-4 overflow-hidden">
-                        <div class="card-body p-4 d-flex flex-column">
-                            <div class="mb-3 text-warning">
-                                <i class="fa-solid fa-star"></i> {{ t.rating }}/5
-                            </div>
-                            
-                            <p class="card-text text-dark flex-grow-1 italic" style="font-style: italic;">
-                                <i class="fa-solid fa-quote-left text-danger opacity-25 me-2"></i>
-                                {{ t.review_text }}
-                            </p>
-                            
-                            <hr class="text-muted opacity-10">
-                            
-                            <div class="d-flex justify-content-between align-items-center mt-2">
-                                <small class="text-muted small">Profession: {{ t.designation|default:"Customer" }}</small>
-                                
-                                <form action="{% url 'delete_testimonial' t.id %}" method="POST" onsubmit="return confirm('আপনি কি নিশ্চিত যে এই রিভিউটি ডিলিট করতে চান?')">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-link text-danger p-0 text-decoration-none" title="Delete Review">
-                                        <i class="fa-solid fa-trash-can"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
+    <div class="row g-4">
+        {% for t in my_testimonials %}
+        <div class="col-md-6 col-lg-4 col-xl-3">
+            <div class="card border-0 shadow-sm h-100 rounded-4 transition-hover">
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="mb-2 text-warning small"><i class="fa-solid fa-star"></i> {{ t.rating }}/5</div>
+                    <p class="card-text text-dark flex-grow-1 small italic mb-3">
+                        <i class="fa-solid fa-quote-left text-danger opacity-25 me-1"></i>{{ t.review_text }}
+                    </p>
+                    <hr class="opacity-10 my-2">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted x-small">As: {{ t.designation|default:"Customer" }}</small>
+                        <form action="{% url 'delete_testimonial' t.id %}" method="POST" onsubmit="return confirm('ডিলিট করবেন?')">
+                            {% csrf_token %}<button type="submit" class="btn btn-link text-danger p-0" title="Delete"><i class="fa-solid fa-trash-can"></i></button>
+                        </form>
                     </div>
                 </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <div class="card border-0 shadow-sm rounded-4 p-5 text-center">
-            <div class="py-4">
-                <i class="fa-solid fa-comment-slash fs-1 text-muted opacity-25 mb-3 d-block"></i>
-                <h5 class="text-dark">আপনি এখনো কোনো রিভিউ দেননি!</h5>
-                <p class="text-muted mb-4">আপনার অভিজ্ঞতা আমাদের সাথে শেয়ার করতে নিচের বাটনে ক্লিক করুন।</p>
-                <a href="{% url 'add_review' %}" class="btn btn-danger rounded-pill px-5 shadow-sm">
-                    রিভিউ যোগ করুন
-                </a>
             </div>
         </div>
-    {% endif %}
+        {% empty %}
+        <div class="col-12 text-center py-5 card border-0 shadow-sm rounded-4">
+            <i class="fa-solid fa-comment-slash fs-1 text-muted opacity-25 mb-3"></i>
+            <h5 class="text-dark">কোনো রিভিউ পাওয়া যায়নি!</h5>
+            <a href="{% url 'add_review' %}" class="btn btn-danger rounded-pill px-4 mt-2">রিভিউ দিন</a>
+        </div>
+        {% endfor %}
+    </div>
 </div>
 
 <style>
-    .card {
-        transition: transform 0.3s ease;
-    }
-    .card:hover {
-        transform: translateY(-5px);
-    }
-    .italic {
-        font-size: 0.95rem;
-        line-height: 1.6;
-    }
+    .transition-hover { transition: 0.3s; }
+    .transition-hover:hover { transform: translateY(-5px); }
+    .italic { font-style: italic; line-height: 1.5; }
+    .x-small { font-size: 0.75rem; }
 </style>
 {% endblock %}

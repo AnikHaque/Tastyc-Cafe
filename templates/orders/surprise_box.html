@@ -1,5 +1,4 @@
-{% extends 'base.html' %}
-{% block content %}
+{% extends 'base.html' %}{% block content %}
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <div class="container py-5 mt-5">
@@ -10,7 +9,6 @@
 
     <div class="row justify-content-center">
         <div class="col-md-6 text-center">
-            
             {% if not winning_food %}
                 <div class="box-wrapper py-5">
                     <img src="https://cdn-icons-png.flaticon.com/512/679/679821.png" 
@@ -18,10 +16,7 @@
                     <h3 class="mt-4 fw-bold">Tap the box to reveal!</h3>
                     <p class="text-secondary">Fixed Price: ৳199 only</p>
                 </div>
-
-                <form method="POST" id="surprise-form" style="display: none;">
-                    {% csrf_token %}
-                </form>
+                <form method="POST" id="surprise-form" style="display: none;">{% csrf_token %}</form>
             {% else %}
                 <div class="card border-0 shadow-lg rounded-4 overflow-hidden animate__animated animate__zoomIn">
                     <div class="position-relative">
@@ -51,14 +46,8 @@
                         </div>
                     </div>
                 </div>
-
                 <script>
-                    // বক্স খোলার সাথে সাথে কনফেটি উড়ানো
-                    confetti({
-                        particleCount: 150,
-                        spread: 70,
-                        origin: { y: 0.6 }
-                    });
+                    confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
                 </script>
             {% endif %}
         </div>
@@ -66,15 +55,8 @@
 </div>
 
 <style>
-    /* বক্স কাঁপানোর অ্যানিমেশন */
-    .shake-animation {
-        animation: shake 2s infinite;
-        transition: transform 0.3s;
-    }
-    .shake-animation:hover {
-        animation: none;
-        transform: scale(1.1);
-    }
+    .shake-animation { animation: shake 2s infinite; transition: transform 0.3s; }
+    .shake-animation:hover { animation: none; transform: scale(1.1); }
     @keyframes shake {
         0%, 100% { transform: rotate(0); }
         10%, 30%, 50%, 70%, 90% { transform: rotate(-5deg); }
@@ -82,20 +64,16 @@
     }
     .box-wrapper {
         background: radial-gradient(circle, #ffffff 0%, #f8f9fa 100%);
-        border-radius: 50%;
-        padding: 40px;
+        border-radius: 50%; padding: 40px;
     }
 </style>
 
 <script>
-    // বক্স ক্লিক করলে ফর্ম সাবমিট
     const box = document.getElementById('gift-box');
     if(box) {
         box.onclick = function() {
             this.style.transform = "scale(0.8)";
-            setTimeout(() => {
-                document.getElementById('surprise-form').submit();
-            }, 300);
+            setTimeout(() => { document.getElementById('surprise-form').submit(); }, 300);
         };
     }
 </script>

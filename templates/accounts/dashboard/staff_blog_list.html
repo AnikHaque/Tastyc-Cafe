@@ -1,87 +1,68 @@
 {% extends "accounts/dashboard/base_dashboard.html" %}
 
 {% block sidebar %}
-    <a href="{% url 'staff_analytics' %}" class="{% if request.resolver_match.url_name == 'staff_analytics' %}active{% endif %}">
-        <i class="fa-solid fa-chart-pie me-2"></i> Analytics
-    </a>
-    <a href="{% url 'staff_inventory' %}" class="{% if request.resolver_match.url_name == 'staff_inventory' %}active{% endif %}">
-        <i class="fa-solid fa-boxes-stacked me-2"></i> Inventory
-    </a>
-    <a href="{% url 'staff_top_selling' %}" class="{% if request.resolver_match.url_name == 'staff_top_selling' %}active{% endif %}">
-        <i class="fa-solid fa-fire me-2"></i> Top Selling
-    </a>
-    
-    <a href="{% url 'staff_dashboard' %}" class="{% if request.resolver_match.url_name == 'staff_dashboard' and not request.GET.status %}active{% endif %}">
-        <i class="fa-solid fa-receipt me-2"></i> All Orders
-    </a>
-    
-    <a href="{% url 'staff_dashboard' %}?status=PAID" class="{% if request.GET.status == 'PAID' %}active{% endif %}">
-        <i class="fa-solid fa-circle-check me-2"></i> Completed Orders
-    </a>
-    
-    <a href="{% url 'staff_dashboard' %}?status=PENDING" class="{% if request.GET.status == 'PENDING' %}active{% endif %}">
-        <i class="fa-solid fa-clock me-2"></i> Pending Orders
-    </a>
+    {% url 'staff_analytics' as analytics %}{% url 'staff_inventory' as inv %}{% url 'staff_top_selling' as top %}
+    {% url 'staff_dashboard' as dash %}{% url 'staff_blog_list' as blog_l %}{% url 'staff_create_blog' as blog_c %}
 
-    <hr style="background-color: rgba(255,255,255,0.1)">
+    <a href="{{ analytics }}" class="{% if request.path == analytics %}active{% endif %}"><i class="fa-solid fa-chart-pie me-2"></i> Analytics</a>
+    <a href="{{ inv }}" class="{% if request.path == inv %}active{% endif %}"><i class="fa-solid fa-boxes-stacked me-2"></i> Inventory</a>
+    <a href="{{ top }}" class="{% if request.path == top %}active{% endif %}"><i class="fa-solid fa-fire me-2"></i> Top Selling</a>
+    <a href="{{ dash }}" class="{% if request.path == dash and not request.GET.status %}active{% endif %}"><i class="fa-solid fa-receipt me-2"></i> All Orders</a>
+    <a href="{{ dash }}?status=PAID" class="{% if request.GET.status == 'PAID' %}active{% endif %}"><i class="fa-solid fa-circle-check me-2"></i> Completed Orders</a>
+    <a href="{{ dash }}?status=PENDING" class="{% if request.GET.status == 'PENDING' %}active{% endif %}"><i class="fa-solid fa-clock me-2"></i> Pending Orders</a>
 
-    <a href="{% url 'staff_blog_list' %}" class="{% if request.resolver_match.url_name == 'staff_blog_list' %}active{% endif %}">
-        <i class="fa-solid fa-newspaper me-2"></i> Manage Blogs
-    </a>
-    <a href="{% url 'staff_create_blog' %}" class="{% if request.resolver_match.url_name == 'staff_create_blog' %}active{% endif %} text-warning fw-bold">
-        <i class="fa-solid fa-plus-circle me-2"></i> Create New Blog
-    </a>
+    <hr class="opacity-10 mx-3">
+    <a href="{{ blog_l }}" class="{% if request.path == blog_l %}active{% endif %}"><i class="fa-solid fa-newspaper me-2"></i> Manage Blogs</a>
+    <a href="{{ blog_c }}" class="{% if request.path == blog_c %}active{% endif %} text-warning fw-bold"><i class="fa-solid fa-plus-circle me-2"></i> Create Blog</a>
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid">
+<div class="container-fluid p-0">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold m-0">Manage Blog Posts</h2>
         <a href="{% url 'staff_create_blog' %}" class="btn btn-danger rounded-pill px-4 shadow-sm">
-            <i class="fa-solid fa-plus me-1"></i> Create New Post
+            <i class="fa-solid fa-plus me-1"></i> New Post
         </a>
     </div>
 
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
-                <thead class="bg-light">
-                    <tr class="text-muted small fw-bold">
-                        <th class="ps-4 py-3">THUMBNAIL</th>
-                        <th class="py-3">TITLE & CATEGORY</th>
-                        <th class="py-3">DATE PUBLISHED</th>
-                        <th class="py-3">READ TIME</th>
-                        <th class="text-end pe-4 py-3">ACTIONS</th>
+                <thead class="bg-light small text-muted text-uppercase">
+                    <tr>
+                        <th class="ps-4 py-3">Thumbnail</th>
+                        <th class="py-3">Title & Category</th>
+                        <th class="py-3">Date</th>
+                        <th class="py-3 text-center">Read Time</th>
+                        <th class="text-end pe-4 py-3">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for blog in blogs %}
-                    <tr class="border-bottom">
+                    <tr class="small">
                         <td class="ps-4 py-3">
                             {% if blog.thumbnail %}
-                                <img src="{{ blog.thumbnail.url }}" alt="thumb" class="rounded-3" style="width: 60px; height: 40px; object-fit: cover;">
+                                <img src="{{ blog.thumbnail.url }}" alt="thumb" class="rounded-3 shadow-sm" style="width: 50px; height: 35px; object-fit: cover;">
                             {% else %}
-                                <div class="bg-secondary rounded-3 d-flex align-items-center justify-content-center text-white" style="width: 60px; height: 40px; font-size: 10px;">No Img</div>
+                                <div class="bg-light border rounded-3 d-flex align-items-center justify-content-center text-muted x-small" style="width: 50px; height: 35px;">No Img</div>
                             {% endif %}
                         </td>
                         <td class="py-3">
-                            <div class="fw-bold text-dark mb-1">{{ blog.title|truncatechars:40 }}</div>
-                            <span class="badge bg-primary-subtle text-primary rounded-pill small" style="font-size: 11px;">{{ blog.category }}</span>
+                            <div class="fw-bold text-dark">{{ blog.title|truncatechars:35 }}</div>
+                            <span class="badge bg-primary-subtle text-primary x-small rounded-pill">{{ blog.category }}</span>
                         </td>
-                        <td class="py-3 text-muted small">
-                            {{ blog.created_at|date:"d M, Y" }}
-                        </td>
-                        <td class="py-3">
-                            <span class="text-dark small"><i class="fa-regular fa-clock me-1 text-muted"></i> {{ blog.read_time }} min</span>
+                        <td class="py-3 text-muted">{{ blog.created_at|date:"d M, Y" }}</td>
+                        <td class="py-3 text-center">
+                            <span class="text-muted"><i class="fa-regular fa-clock me-1"></i>{{ blog.read_time }}m</span>
                         </td>
                         <td class="text-end pe-4 py-3">
-                            <div class="d-flex justify-content-end gap-2">
-                                <a href="{% url 'staff_edit_blog' blog.id %}" class="btn btn-outline-primary btn-sm rounded-pill px-3">
-                                    <i class="fa-solid fa-pen-to-square"></i> Edit
+                            <div class="d-flex justify-content-end gap-1">
+                                <a href="{% url 'staff_edit_blog' blog.id %}" class="btn btn-sm btn-light rounded-pill px-3 border shadow-sm">
+                                    <i class="fa-solid fa-pen-to-square text-primary"></i> Edit
                                 </a>
-                                <form action="{% url 'staff_delete_blog' blog.id %}" method="POST" onsubmit="return confirm('Sotti ki delete korben?')">
+                                <form action="{% url 'staff_delete_blog' blog.id %}" method="POST" onsubmit="return confirm('Delete korben?')">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3">
+                                    <button type="submit" class="btn btn-sm btn-light rounded-pill px-2 border shadow-sm text-danger">
                                         <i class="fa-solid fa-trash-can"></i>
                                     </button>
                                 </form>
@@ -90,9 +71,9 @@
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="5" class="text-center py-5 text-muted">
+                        <td colspan="5" class="text-center py-5">
                             <i class="fa-solid fa-file-circle-xmark d-block mb-3 fs-1 opacity-25"></i>
-                            <p>No blog posts found.</p>
+                            <p class="text-muted">No blog posts found.</p>
                         </td>
                     </tr>
                     {% endfor %}
@@ -103,7 +84,10 @@
 </div>
 
 <style>
-    .bg-primary-subtle { background-color: #e3f2fd; }
-    .table tbody tr:hover { background-color: #fafafa; }
+    .bg-primary-subtle { background-color: #eef2ff !important; }
+    .x-small { font-size: 0.7rem; }
+    .table thead th { border: none; letter-spacing: 0.5px; }
+    .table tbody td { border-bottom: 1px solid #f8f9fa; }
+    .btn-light:hover { background-color: #fff; border-color: #dee2e6; }
 </style>
 {% endblock %}

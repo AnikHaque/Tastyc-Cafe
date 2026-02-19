@@ -1,135 +1,129 @@
 {% extends "accounts/dashboard/base_dashboard.html" %}
 
 {% block sidebar %}
-    <a href="{% url 'staff_analytics' %}" class="{% if request.resolver_match.url_name == 'staff_analytics' %}active{% endif %}">
-        <i class="fa-solid fa-chart-pie me-2"></i> Analytics
-    </a>
-    <a href="{% url 'staff_inventory' %}" class="{% if request.resolver_match.url_name == 'staff_inventory' %}active{% endif %}">
-        <i class="fa-solid fa-boxes-stacked me-2"></i> Inventory
-    </a>
-    <a href="{% url 'staff_top_selling' %}" class="{% if request.resolver_match.url_name == 'staff_top_selling' %}active{% endif %}">
-        <i class="fa-solid fa-fire me-2"></i> Top Selling
-    </a>
-    
-    <a href="{% url 'staff_dashboard' %}" class="{% if request.resolver_match.url_name == 'staff_dashboard' and not request.GET.status %}active{% endif %}">
-        <i class="fa-solid fa-receipt me-2"></i> All Orders
-    </a>
-    
-    <a href="{% url 'staff_dashboard' %}?status=PAID" class="{% if request.GET.status == 'PAID' %}active{% endif %}">
-        <i class="fa-solid fa-circle-check me-2"></i> Completed Orders
-    </a>
-    
-    <a href="{% url 'staff_dashboard' %}?status=PENDING" class="{% if request.GET.status == 'PENDING' %}active{% endif %}">
-        <i class="fa-solid fa-clock me-2"></i> Pending Orders
-    </a>
+    {% url 'staff_analytics' as analytics %}{% url 'staff_inventory' as inv %}{% url 'staff_top_selling' as top %}
+    {% url 'staff_dashboard' as dash %}{% url 'staff_blog_list' as blog_l %}{% url 'staff_create_blog' as blog_c %}
 
-    <hr style="background-color: rgba(255,255,255,0.1)">
+    <a href="{{ analytics }}" class="{% if request.path == analytics %}active{% endif %}"><i class="fa-solid fa-chart-pie me-2"></i> Analytics</a>
+    <a href="{{ inv }}" class="{% if request.path == inv %}active{% endif %}"><i class="fa-solid fa-boxes-stacked me-2"></i> Inventory</a>
+    <a href="{{ top }}" class="{% if request.path == top %}active{% endif %}"><i class="fa-solid fa-fire me-2"></i> Top Selling</a>
+    <a href="{{ dash }}" class="{% if request.path == dash and not request.GET.status %}active{% endif %}"><i class="fa-solid fa-receipt me-2"></i> All Orders</a>
+    <a href="{{ dash }}?status=PAID" class="{% if request.GET.status == 'PAID' %}active{% endif %}"><i class="fa-solid fa-circle-check me-2"></i> Completed Orders</a>
+    <a href="{{ dash }}?status=PENDING" class="{% if request.GET.status == 'PENDING' %}active{% endif %}"><i class="fa-solid fa-clock me-2"></i> Pending Orders</a>
 
-    <a href="{% url 'staff_blog_list' %}" class="{% if request.resolver_match.url_name == 'staff_blog_list' %}active{% endif %}">
-        <i class="fa-solid fa-newspaper me-2"></i> Manage Blogs
-    </a>
-    <a href="{% url 'staff_create_blog' %}" class="{% if request.resolver_match.url_name == 'staff_create_blog' %}active{% endif %} text-warning fw-bold">
-        <i class="fa-solid fa-plus-circle me-2"></i> Create New Blog
-    </a>
+    <hr class="opacity-10 mx-3">
+    <a href="{{ blog_l }}" class="{% if request.path == blog_l %}active{% endif %}"><i class="fa-solid fa-newspaper me-2"></i> Manage Blogs</a>
+    <a href="{{ blog_c }}" class="{% if request.path == blog_c %}active{% endif %} text-warning fw-bold"><i class="fa-solid fa-plus-circle me-2"></i> Create Blog</a>
 {% endblock %}
 
-
 {% block content %}
-<h2 style="font-size:1.5rem; margin-bottom:20px;">Analytics Dashboard</h2>
+<div class="container-fluid p-0">
+    <h3 class="fw-bold mb-4">Analytics Dashboard</h3>
 
-<!-- Top Stats Cards -->
-<div class="row mb-3">
-    <div class="col-md-4 mb-2">
-        <div class="card p-2 text-center bg-light" style="font-size:0.9rem;">
-            <h6>Total Orders</h6>
-            <h4>{{ total_orders }}</h4>
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 p-3 text-center border-start border-primary border-5">
+                <h6 class="text-muted small text-uppercase fw-bold">Total Orders</h6>
+                <h2 class="fw-bold mb-0">{{ total_orders }}</h2>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 p-3 text-center bg-success text-white">
+                <h6 class="opacity-75 small text-uppercase fw-bold">Completed Orders</h6>
+                <h2 class="fw-bold mb-0">{{ total_paid }}</h2>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 p-3 text-center bg-warning">
+                <h6 class="text-dark opacity-75 small text-uppercase fw-bold">Pending Orders</h6>
+                <h2 class="fw-bold mb-0 text-dark">{{ total_pending }}</h2>
+            </div>
         </div>
     </div>
-    <div class="col-md-4 mb-2">
-        <div class="card p-2 text-center bg-success text-white" style="font-size:0.9rem;">
-            <h6>Completed Orders</h6>
-            <h4>{{ total_paid }}</h4>
+
+    <div class="row g-4 mb-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+                <h6 class="fw-bold mb-3"><i class="fa-solid fa-chart-line me-2 text-primary"></i>Revenue Last 7 Days</h6>
+                <div style="height: 300px;"><canvas id="revenueChart"></canvas></div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 h-100 text-center">
+                <h6 class="fw-bold mb-3">Order Status Distribution</h6>
+                <div style="height: 250px;"><canvas id="statusChart"></canvas></div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <h6 class="fw-bold mb-3"><i class="fa-solid fa-chart-bar me-2 text-info"></i>Orders Last 7 Days</h6>
+                <div style="height: 250px;"><canvas id="ordersChart"></canvas></div>
+            </div>
         </div>
     </div>
-    <div class="col-md-4 mb-2">
-        <div class="card p-2 text-center bg-warning text-dark" style="font-size:0.9rem;">
-            <h6>Pending Orders</h6>
-            <h4>{{ total_pending }}</h4>
-        </div>
-    </div>
 </div>
 
-<!-- Revenue Chart -->
-<div class="card p-3 mb-3" style="font-size:0.85rem;">
-    <h6>Revenue Last 7 Days</h6>
-    <canvas id="revenueChart" height="150"></canvas>
-</div>
-
-<!-- Orders per Day Chart -->
-<div class="card p-3 mb-3" style="font-size:0.85rem;">
-    <h6>Orders Last 7 Days</h6>
-    <canvas id="ordersChart" height="150"></canvas>
-</div>
-
-<!-- Status Distribution Pie Chart -->
-<div class="card p-3 mb-3" style="font-size:0.85rem; max-width:400px; margin:auto;">
-    <h6 class="text-center">Order Status Distribution</h6>
-    <canvas id="statusChart" height="200" width="200"></canvas>
-</div>
-
-
-<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-const revenueCtx = document.getElementById('revenueChart').getContext('2d');
-const revenueChart = new Chart(revenueCtx, {
+const commonOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: true, position: 'bottom' } }
+};
+
+// 1. Revenue Chart
+new Chart(document.getElementById('revenueChart').getContext('2d'), {
     type: 'line',
     data: {
         labels: {{ chart_labels|safe }},
         datasets: [{
-            label: 'Revenue ($)',
+            label: 'Revenue (৳)',
             data: {{ chart_data|safe }},
-            borderColor: 'rgba(75, 192, 192, 1)',
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            tension: 0.3,
+            borderColor: '#6366f1',
+            backgroundColor: 'rgba(99, 102, 241, 0.1)',
+            tension: 0.4,
             fill: true,
+            pointRadius: 4
         }]
     },
-    options: { responsive: true, plugins: { legend: { display: true } }, scales: { y: { beginAtZero: true } } }
+    options: {
+        ...commonOptions,
+        scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } }
+    }
 });
 
-// Example: Orders per day (reuse chart_labels, or create new data in view)
-const ordersCtx = document.getElementById('ordersChart').getContext('2d');
-const ordersChart = new Chart(ordersCtx, {
+// 2. Orders Chart
+new Chart(document.getElementById('ordersChart').getContext('2d'), {
     type: 'bar',
     data: {
         labels: {{ chart_labels|safe }},
         datasets: [{
             label: 'Orders',
             data: {{ orders_per_day|safe }},
-            backgroundColor: 'rgba(54, 162, 235, 0.7)',
-            borderColor: 'rgba(54, 162, 235, 1)',
-            borderWidth: 1
+            backgroundColor: '#38bdf8',
+            borderRadius: 5
         }]
     },
-    options: { responsive: true, plugins: { legend: { display: true } }, scales: { y: { beginAtZero: true } } }
+    options: {
+        ...commonOptions,
+        scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } }
+    }
 });
 
-// Example: Status pie chart
-const statusCtx = document.getElementById('statusChart').getContext('2d');
-const statusChart = new Chart(statusCtx, {
-    type: 'pie',
+// 3. Status Chart
+new Chart(document.getElementById('statusChart').getContext('2d'), {
+    type: 'doughnut',
     data: {
         labels: ['PAID', 'PENDING'],
         datasets: [{
-            label: 'Orders Status',
             data: [{{ total_paid }}, {{ total_pending }}],
-            backgroundColor: ['rgba(40, 167, 69, 0.7)', 'rgba(255, 193, 7, 0.7)'],
-            borderColor: ['rgba(40, 167, 69, 1)', 'rgba(255, 193, 7, 1)'],
-            borderWidth: 1
+            backgroundColor: ['#10b981', '#f59e0b'],
+            borderWidth: 0
         }]
     },
-    options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+    options: commonOptions
 });
 </script>
 {% endblock %}
