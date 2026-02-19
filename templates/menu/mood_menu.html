@@ -1,76 +1,22 @@
-<!-- {% extends 'base.html' %}
-{% block content %}
+@admin.register(Food)
+class FoodAdmin(admin.ModelAdmin):
+    # 'mood_tag' এবং 'is_surprise_item' লিস্টে দেখার জন্য যোগ করা হয়েছে
+    list_display = ('display_image', 'name', 'category', 'mood_tag', 'price_badge', 'is_surprise_item', 'is_available')
+    
+    # সাইডবারে ফিল্টার করার জন্য 'mood_tag' যোগ করা হয়েছে
+    list_filter = ('category', 'is_available', 'mood_tag', 'is_surprise_item')
+    
+    search_fields = ('name',)
+    
+    # লিস্ট থেকেই যেন মুড এবং সারপ্রাইজ স্ট্যাটাস চেঞ্জ করা যায়
+    list_editable = ('is_available', 'mood_tag', 'is_surprise_item') 
 
-<div id="main-container" class="transition-all duration-500 py-5 min-vh-100">
-    <div class="container text-center">
-        <h1 class="fw-bold mb-4" id="mood-title">How are you feeling today?</h1>
-        
-        <div class="d-flex justify-content-center gap-3 mb-5 flex-wrap">
-            <button onclick="changeMood('happy')" class="btn btn-warning rounded-pill px-4">😊 Happy</button>
-            <button onclick="changeMood('stressed')" class="btn btn-info rounded-pill px-4">😫 Stressed</button>
-            <button onclick="changeMood('romantic')" class="btn btn-danger rounded-pill px-4">❤️ Romantic</button>
-            <button onclick="changeMood('lazy')" class="btn btn-secondary rounded-pill px-4">😴 Lazy</button>
-        </div>
+    def display_image(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" style="width: 45px; height:45px; border-radius:10px; object-fit:cover; box-shadow: 0 2px 5px rgba(0,0,0,0.1);" />', obj.image.url)
+        return format_html('<span style="color: #ccc;">No Image</span>')
+    display_image.short_description = "Preview"
 
-        <div class="row" id="food-list">
-            {% for food in foods %}
-            <div class="col-md-4 mb-4">
-                <div class="card shadow border-0 rounded-4 overflow-hidden">
-                    <img src="{{ food.image.url }}" class="card-img-top" height="200">
-                    <div class="card-body">
-                        <h5 class="fw-bold">{{ food.name }}</h5>
-                        <p class="text-success fw-bold">৳{{ food.price }}</p>
-                        <a href="{% url 'add_to_cart' food.id %}" class="btn btn-dark btn-sm rounded-pill">Add to Cart</a>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</div>
-
-<script>
-    function changeMood(mood) {
-        const container = document.getElementById('main-container');
-        const title = document.getElementById('mood-title');
-        
-        // ১. থিম ও কালার পরিবর্তন
-        if (mood === 'happy') {
-            container.style.backgroundColor = "#FFF9C4"; // হালকা হলুদ
-            title.innerText = "Let's Celebrate Your Happiness! 🎉";
-        } else if (mood === 'stressed') {
-            container.style.backgroundColor = "#E1F5FE"; // হালকা নীল (শান্তিদায়ক)
-            title.innerText = "Take a breath. You need comfort food. ☕";
-        } else if (mood === 'romantic') {
-            container.style.backgroundColor = "#FFEBEE"; // হালকা গোলাপি/লাল
-            title.innerText = "Make it a night to remember... ❤️";
-        } else if (mood === 'lazy') {
-            container.style.backgroundColor = "#F5F5F5"; // হালকা গ্রে
-            title.innerText = "Quick meals for your lazy vibes. 🍕";
-        }
-
-        // ২. রিয়েল-টাইমে ডাটা ফিল্টার করার জন্য পেজ রিলোড (URL এ মুড পাঠিয়ে)
-        window.location.href = "?mood=" + mood;
-    }
-
-    // পেজ লোড হওয়ার সময় সঠিক ব্যাকগ্রাউন্ড রাখা
-    window.onload = function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const mood = urlParams.get('mood') || 'happy';
-        changeMoodOnLoad(mood);
-    };
-
-    function changeMoodOnLoad(mood) {
-        const container = document.getElementById('main-container');
-        if (mood === 'happy') container.style.backgroundColor = "#FFF9C4";
-        if (mood === 'stressed') container.style.backgroundColor = "#E1F5FE";
-        if (mood === 'romantic') container.style.backgroundColor = "#FFEBEE";
-        if (mood === 'lazy') container.style.backgroundColor = "#F5F5F5";
-    }
-</script>
-
-<style>
-    .transition-all { transition: all 0.5s ease-in-out; }
-</style>
-
-{% endblock %} -->
+    def price_badge(self, obj):
+        return format_html('<b style="color: #2f3542;">৳{}</b>', obj.price)
+    price_badge.short_description = "Price"
