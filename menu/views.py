@@ -5,25 +5,42 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q
 from .utils import get_ai_recommendations 
+from django.db.models import Case, When, IntegerField, Q # Q এবং Case ইম্পোর্ট করে নিন
 
 def menu_view(request):
-    food_list = Food.objects.filter(is_available=True).order_by('-id')
-    categories = Category.objects.all()
+    # ১. প্রথমে বেস কোয়েরিসেট নিন (অর্ডার এখানে করবেন না)
+    food_list = Food.objects.filter(is_available=True)
+    
+    # ২. সার্চ লজিক
     search_query = request.GET.get('search')
     if search_query:
         food_list = food_list.filter(
             Q(name__icontains=search_query) | 
             Q(description__icontains=search_query)
         )
+        
+    # ৩. ক্যাটাগরি ফিল্টার
     category_slug = request.GET.get('category')
     if category_slug:
         food_list = food_list.filter(category__name__iexact=category_slug.replace('-', ' '))
+
+    food_list = food_list.annotate(
+        priority=Case(
+            When(stock__lte=0, then=4),
+            When(is_today_special=True, then=1),
+            When(stock__lte=10, then=2),
+            default=3,
+            output_field=IntegerField(),
+        )
+    ).order_by('priority', '-created_at') # প্রায়োরিটি অনুযায়ী এবং নতুনগুলো আগে
+
+    # ৫. প্যাজিনেশন
     paginator = Paginator(food_list, 8) 
     page_number = request.GET.get('page')
     foods = paginator.get_page(page_number)
 
     context = {
-        'categories': categories,
+        'categories': Category.objects.all(),
         'foods': foods, 
     }
     return render(request, 'menu.html', context)
