@@ -1,14 +1,16 @@
-
 import random
+import time
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
+from django.db import transaction
+from django.utils import timezone
+from django.contrib.auth.models import User, Group
+from decimal import Decimal
 
 from accounts.models import UserProfile
 from .models import Order, OrderItem
 from menu.models import Food
-from django.contrib.auth.models import User, Group
-from decimal import Decimal
 
 # -------------------------------------------------------------------
 # ১. হেল্পার: ডেলিভারি ম্যান চেক
@@ -17,7 +19,7 @@ def is_delivery_man(user):
     return user.groups.filter(name='Delivery Man').exists()
 
 # -------------------------------------------------------------------
-# ২. চেকআউট: পেমেন্ট মেথড অনুযায়ী লজিক
+# ২. চেকআউট: পেমেন্ট মেথড অনুযায়ী লজিক (With Order Guardian Logic)
 # -------------------------------------------------------------------
 @login_required
 def checkout_view(request):
@@ -29,112 +31,130 @@ def checkout_view(request):
     total = sum(Decimal(str(item['price'])) * int(item['qty']) for item in cart.values())
 
     if request.method == 'POST':
+        # ডাবল সাবমিট প্রোটেকশন (ব্যাকএন্ড গার্ড)
+        last_order_time = request.session.get('last_order_time', 0)
+        if time.time() - last_order_time < 60:
+            messages.error(request, "একটু অপেক্ষা করুন! আপনি মাত্র একটি অর্ডার দিয়েছেন।")
+            return redirect('my_orders')
+
         full_name = request.POST.get('full_name')
         phone = request.POST.get('phone')
         address = request.POST.get('address')
         payment_method = request.POST.get('payment_method')
 
-        # অর্ডার ক্রিয়েট
-        order = Order.objects.create(
-            user=request.user,
-            full_name=full_name,
-            phone=phone,
-            address=address,
-            total_price=total,
-            status='PENDING',
-            is_paid=False # ডিফল্ট আনপেইড
-        )
-
-        for item_id, item_data in cart.items():
-            is_combo = str(item_id).startswith('combo_')
-            OrderItem.objects.create(
-                order=order,
-                food_id=None if is_combo else int(item_id),
-                combo_id=int(item_data['product_id']) if is_combo else None,
-                price=item_data['price'],
-                quantity=item_data['qty']
-            )
-
-        # ডেলিভারি ম্যান অ্যাসাইন
         try:
-            auto_assign_delivery_man(order)
-        except:
-            pass
+            with transaction.atomic():
+                # রিয়েল-টাইম স্টক গার্ড
+                for item_id, item_data in cart.items():
+                    if not str(item_id).startswith('combo_') and not str(item_id).startswith('deal_'):
+                        food = Food.objects.select_for_update().get(id=int(item_id))
+                        if food.stock < int(item_data['qty']):
+                            messages.error(request, f"দুঃখিত, {food.name} পর্যাপ্ত স্টকে নেই।")
+                            return redirect('menu')
+                        food.stock -= int(item_data['qty'])
+                        food.save()
 
-        request.session['cart'] = {}
-        
-        # পেমেন্ট মেথড অনুযায়ী রিডাইরেক্ট
-        if payment_method == 'cod':
-            messages.success(request, "অর্ডারটি সফল হয়েছে (Cash on Delivery)")
-            return redirect('my_orders')
-        else:
-            # অনলাইন পেমেন্টের জন্য পেমেন্ট পেজে পাঠানো
-            return redirect('payment_page', order_id=order.id)
+                # অর্ডার ক্রিয়েট
+                order = Order.objects.create(
+                    user=request.user,
+                    full_name=full_name,
+                    phone=phone,
+                    address=address,
+                    total_price=total,
+                    status='PENDING',
+                    is_paid=False 
+                )
+
+                for item_id, item_data in cart.items():
+                    is_combo = str(item_id).startswith('combo_')
+                    OrderItem.objects.create(
+                        order=order,
+                        food_id=None if is_combo else int(item_id),
+                        combo_id=int(item_data['product_id']) if is_combo else None,
+                        price=item_data['price'],
+                        quantity=item_data['qty']
+                    )
+
+                request.session['last_order_time'] = time.time()
+                
+                try:
+                    auto_assign_delivery_man(order)
+                except:
+                    pass
+
+                request.session['cart'] = {}
+                
+                if payment_method == 'cod':
+                    messages.success(request, "অর্ডারটি সফল হয়েছে (Cash on Delivery)")
+                    return redirect('my_orders')
+                else:
+                    return redirect('payment_page', order_id=order.id)
+
+        except Exception as e:
+            messages.error(request, "অর্ডার প্রসেস করার সময় সমস্যা হয়েছে।")
+            return redirect('menu')
 
     return render(request, 'orders/checkout.html', {'cart': cart, 'total': total})
 
 # -------------------------------------------------------------------
-# ৩. স্টাফ অ্যাকশন: "Confirm & Prepare" (আগের Mark Paid এর পরিবর্তে)
+# ৩. স্টাফ অ্যাকশন: "Confirm & Prepare"
 # -------------------------------------------------------------------
 @login_required
 def mark_paid(request, order_id):
-    """
-    এখন এটি পেমেন্টের চেয়ে 'অর্ডার কনফার্মেশন' হিসেবে কাজ করবে।
-    স্টাফ ক্লিক করলে স্ট্যাটাস PENDING থেকে PREPARING হবে।
-    """
     if not request.user.is_staff:
         return redirect('dashboard')
 
     order = get_object_or_404(Order, id=order_id)
-    
+    order.is_paid = True 
     if order.status == 'PENDING':
         order.status = 'PREPARING'
-        order.save()
-        messages.success(request, f"অর্ডার #{order.id} কনফার্ম করা হয়েছে এবং রান্না শুরু হয়েছে।")
-    
+    order.save()
+    messages.success(request, f"অর্ডার #{order.id} কনফার্ম করা হয়েছে।")
     return redirect('staff_dashboard')
 
 # -------------------------------------------------------------------
-# ৪. ডেলিভারি ড্যাশবোর্ড: ডেলিভারি হলে অটো পেমেন্ট ট্রু হবে (COD এর জন্য)
+# ৪. ডেলিভারি ড্যাশবোর্ড লজিক
 # -------------------------------------------------------------------
 @login_required
 @user_passes_test(is_delivery_man)
 def update_delivery_status(request, order_id, new_status):
     order = get_object_or_404(Order, id=order_id, delivery_man=request.user)
     
-    # পাইথন লজিক: যদি স্ট্যাটাস ডেলিভারড হয়, তবে পেমেন্টও ট্রু করে দাও
     if new_status == 'DELIVERED':
         order.status = 'DELIVERED'
         order.is_paid = True 
-        messages.success(request, f"অর্ডার #{order.id} ডেলিভারড এবং পেমেন্ট সম্পন্ন।")
+        messages.success(request, f"অর্ডার #{order.id} ডেলিভারড!")
+        update_user_rewards(order.user, order.total_price)
     elif new_status in ['ON_THE_WAY', 'PREPARING']:
         order.status = new_status
     
     order.save()
     return redirect('delivery_dashboard')
 
+@login_required
+def update_order_status(request, order_id, status):
+    order = get_object_or_404(Order, id=order_id, delivery_man=request.user)
+    if status in ['ON_THE_WAY', 'DELIVERED']:
+        order.status = status
+        if status == 'DELIVERED':
+            order.is_paid = True
+            update_user_rewards(order.user, order.total_price)
+        order.save()
+    return redirect('delivery_dashboard')
+
 # -------------------------------------------------------------------
-# ৫. পেমেন্ট সাকসেস: অনলাইন পেমেন্ট সফল হলে অটো পেমেন্ট ট্রু হবে
+# ৫. পেমেন্ট ও অন্যান্য ভিউ
 # -------------------------------------------------------------------
 @login_required
 def payment_success(request):
-    """
-    আপনার পেমেন্ট গেটওয়ে (Stripe/SSL) থেকে যখন এখানে ফিরে আসবে, 
-    তখন সেশন বা আইডি চেক করে ইজ পেইড ট্রু করা হয়।
-    """
-    # এখানে লজিক থাকতে হবে কোন অর্ডারটি পেইড হলো (Session বা URL Parameter থেকে)
-    # উদাহরণস্বরূপ আমরা কাস্টমারের শেষ আনপেইড অর্ডারটি ধরছি:
     last_order = Order.objects.filter(user=request.user, is_paid=False).first()
     if last_order:
         last_order.is_paid = True
-        last_order.status = 'PREPARING' # অনলাইন পেইড মানেই কনফার্মড অর্ডার
+        last_order.status = 'PREPARING'
         last_order.save()
-        
+        update_user_rewards(request.user, last_order.total_price)
     return render(request, 'orders/success.html')
 
-# -------------------------------------------------------------------
-# অন্যান্য ভিউ (ট্র্যাকিং ও ড্যাশবোর্ড)
-# -------------------------------------------------------------------
 @login_required
 def my_orders(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
@@ -158,29 +178,19 @@ def auto_assign_delivery_man(order):
     except:
         pass
 
-from django.utils import timezone  # এই ইমপোর্টটি ফাইলের একদম উপরে নিশ্চিত করুন
-
 @login_required
 def delivery_dashboard(request):
-    # শুধুমাত্র এই ডেলিভারি ম্যানের কাছে থাকা একটিভ অর্ডার (Preparing বা On the way)
     orders = Order.objects.filter(
         delivery_man=request.user, 
         status__in=['PREPARING', 'ON_THE_WAY']
     ).order_by('-created_at')
-    
-    # আজকের তারিখ বের করার সঠিক উপায়
     today = timezone.now().date()
-    
-    # আজকের সাকসেসফুল ডেলিভারি সংখ্যা
     completed_today = Order.objects.filter(
         delivery_man=request.user, 
         status='DELIVERED', 
         updated_at__date=today
     )
-    
-    # ইনকাম ক্যালকুলেশন (প্রতি ডেলিভারি ৫০ টাকা হিসেবে)
     total_earnings = completed_today.count() * 50
-
     return render(request, 'delivery/dashboard.html', {
         'orders': orders,
         'completed_count': completed_today.count(),
@@ -188,105 +198,46 @@ def delivery_dashboard(request):
     })
 
 @login_required
-def update_order_status(request, order_id, status):
-    """ডেলিভারি ম্যান অর্ডারের স্ট্যাটাস আপডেট করবে"""
-    # নিরাপত্তা নিশ্চিত করা: অর্ডারটি যেন এই ডেলিভারি ম্যানেরই হয়
-    order = get_object_or_404(Order, id=order_id, delivery_man=request.user)
-    
-    if status in ['ON_THE_WAY', 'DELIVERED']:
-        order.status = status
-        order.save()
-        
-    return redirect('delivery_dashboard')
-
-@login_required
 def payment_page(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
     return redirect('create_payment', order_id=order.id)
-    
 
 @login_required
 def delete_order(request, order_id):
-    """অর্ডার ডিলিট করার লজিক"""
     order = get_object_or_404(Order, id=order_id, user=request.user)
     if request.method == 'POST':
         order.delete()
         messages.success(request, f"Order #{order_id} has been deleted.")
     return redirect('customer_dashboard')
 
-
-def mark_paid(request, order_id):
-    """
-    স্টাফ যখন 'Confirm Payment' বা 'Cook Now' বাটনে ক্লিক করবে, তখন এই ফাংশনটি কল হবে।
-    এটি পেমেন্ট কনফার্ম করবে এবং রান্নার প্রসেস শুরু করবে।
-    """
-    # অর্ডারের আইডি দিয়ে অবজেক্টটি খুঁজে বের করা
-    order = get_object_or_404(Order, id=order_id)
-    
-    # পেমেন্ট স্ট্যাটাস আপডেট
-    order.is_paid = True 
-    
-    # যদি অর্ডারটি একদম নতুন (PENDING) থাকে, তবে সেটির প্রসেস শুরু করা (PREPARING)
-    if order.status == 'PENDING':
-        order.status = 'PREPARING'
-    
-    order.save()
-    
-    # কাজ শেষ করে আবার স্টাফ ড্যাশবোর্ডেই ফেরত পাঠানো
-    return redirect('staff_dashboard')
-
-
-# ১. রিওয়ার্ড আপডেট করার মেইন লজিক (Helper)
+# -------------------------------------------------------------------
+# ৬. রিওয়ার্ড ও সারপ্রাইজ বক্স
+# -------------------------------------------------------------------
 def update_user_rewards(user, order_total):
     profile, created = UserProfile.objects.get_or_create(user=user)
-    earned_points = int(order_total / 100) * 5 # প্রতি ১০০ টাকায় ৫ পয়েন্ট
+    earned_points = int(order_total / 100) * 5
     profile.points += earned_points
     profile.total_orders += 1
-    
-    # লেভেল আপ কন্ডিশন
     if profile.total_orders >= 20: profile.membership_level = 'Platinum'
     elif profile.total_orders >= 10: profile.membership_level = 'Gold'
     elif profile.total_orders >= 5: profile.membership_level = 'Silver'
-    
     profile.save()
 
-# ২. ডেলিভারি স্ট্যাটাস আপডেট (যেখানে পয়েন্ট কল হবে)
-@login_required
-def update_delivery_status(request, order_id, new_status):
-    order = get_object_or_404(Order, id=order_id)
-    if new_status == 'DELIVERED' and order.status != 'DELIVERED':
-        order.status = 'DELIVERED'
-        order.is_paid = True
-        order.save()
-        # এখানে পয়েন্ট কল হবে
-        update_user_rewards(order.user, order.total_price)
-    return redirect('delivery_dashboard')
-
-# ৩. রিওয়ার্ড পেজ ভিউ
 @login_required
 def rewards_view(request):
     profile, created = UserProfile.objects.get_or_create(user=request.user)
     return render(request, 'orders/rewards.html', {'profile': profile})
 
-
 @login_required
 def surprise_box_view(request):
     winning_food = None
-    
     if request.method == "POST":
-        # ১. ডাটাবেস থেকে সারপ্রাইজ আইটেমগুলো ফিল্টার করা
         surprise_items = Food.objects.filter(is_surprise_item=True)
-        
-        # যদি কোনো আইটেম আলাদা করা না থাকে, তবে সব মেনু থেকে র‍্যান্ডমলি নিন
         if not surprise_items.exists():
             surprise_items = Food.objects.all()
-
         if surprise_items.exists():
             winning_food = random.choice(surprise_items)
-            
-            # ২. সেশনে রাখা যাতে ইউজার চাইলেই কার্টে নিতে পারে (ঐচ্ছিক)
             request.session['last_surprise_id'] = winning_food.id
         else:
             messages.error(request, "দুঃখিত, বর্তমানে কোনো সারপ্রাইজ আইটেম নেই।")
-
     return render(request, 'orders/surprise_box.html', {'winning_food': winning_food})
