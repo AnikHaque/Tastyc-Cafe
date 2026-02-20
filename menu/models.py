@@ -63,6 +63,29 @@ class Food(models.Model):
             self.save()
             return False
         return self.is_available
+    
+    @property
+    def get_dynamic_price(self):
+        from datetime import datetime
+        now_hour = datetime.now().hour
+        current_price = self.price
+
+        # লজিক ১: High Demand Surge (স্টক যখন বিপৎসীমার নিচে)
+        # যদি স্টক ৩-এর নিচে নেমে যায়, তবে দাম ৫% বাড়িয়ে দাও (ডিমান্ড বেশি)
+        if 0 < self.stock <= 3:
+            current_price = self.price * 1.05 
+
+        # লজিক ২: Happy Hour (দুপুর ৩টা - ৫টা)
+        elif 15 <= now_hour < 17 and self.off_peak_discount > 0:
+            discount = (self.price * self.off_peak_discount) / 100
+            current_price = self.price - discount
+
+        # লজিক ৩: Overstock Clearance (স্টক যখন অনেক বেশি, যেমন ১০০-এর উপরে)
+        # স্টক ক্লিয়ার করার জন্য অটো ২% ছাড়
+        elif self.stock > 100:
+            current_price = self.price * 0.98
+
+        return current_price
 
     def __str__(self):
         return self.name
