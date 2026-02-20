@@ -1,14 +1,17 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}Our Exquisite Menu | RoyalDine Luxury{% endblock %}
+
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/menu.css' %}">
+
 <header class="menu-header text-center">
     <div class="container">
         <p class="text-uppercase fw-bold text-warning ls-2" style="letter-spacing: 5px;">Luxury Dining</p>
         <h1 class="display-3 fw-bold playfair">Our Exquisite Menu</h1>
     </div>
 </header>
+
 <div class="container menu-controls text-center mt-4">
     <form method="GET" action="{% url 'menu' %}" class="search-bar mx-auto">
         <i class="fa-solid fa-magnifying-glass text-muted fs-5"></i>
@@ -20,6 +23,7 @@
         {% for cat in categories %}<a href="?category={{ cat.name|slugify }}" class="filter-pill {% if request.GET.category == cat.name|slugify %}active{% endif %}">{{ cat.name }}</a>{% endfor %}
     </div>
 </div>
+
 <div class="container pb-5">
     <div class="row g-4">
         {% for food in foods %}
@@ -54,4 +58,10 @@
         {% if foods.has_next %}<li class="page-item"><a class="page-link shadow-sm rounded-circle mx-1" href="?page={{ foods.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}"><i class="fa-solid fa-chevron-right"></i></a></li>{% endif %}
     </ul></nav>{% endif %}
 </div>
+
+<style>
+    .price-tag { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.8); color: #fff; padding: 5px 15px; border-radius: 50px; font-weight: bold; z-index: 5; }
+    .food-card { transition: 0.3s ease; border: 1px solid #f0f0f0 !important; } .food-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important; }
+    .wishlist-btn { transition: 0.3s; background: white; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; } .wishlist-btn:hover { background: #fff1f2; border-color: #ff4757 !important; }
+</style>
 {% endblock %}

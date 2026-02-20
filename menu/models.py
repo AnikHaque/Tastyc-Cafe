@@ -52,6 +52,18 @@ class Food(models.Model):
         cal_msg = f"Only {self.calories} calories." if self.calories > 0 else ""
         return f"Order {self.name} at RoyalDine. {self.description[:100]}. {mood_msg} {cal_msg} Authentic taste delivered to your door."
 
+    # models.py এর Food ক্লাসের ভেতর
+    def auto_manage_availability(self):
+        """
+        যদি স্টক ০ হয় অথবা খাবারটি আজকের স্পেশাল না হয়ে থাকে এবং 
+        গত ৩ দিনে একবারও অর্ডার না হয়, তবে এটি অটোমেটিক 'is_available=False' করে দেবে।
+        """
+        if self.stock <= 0:
+            self.is_available = False
+            self.save()
+            return False
+        return self.is_available
+
     def __str__(self):
         return self.name
 
