@@ -2,7 +2,6 @@ import json
 import random
 from datetime import date, timedelta, datetime
 from decimal import Decimal
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
@@ -11,13 +10,13 @@ from django.db.models import Sum, Count
 from django.db.models.functions import TruncDate
 from django.utils.text import slugify
 from django.utils import timezone
-
 from menu.models import Food, Testimonial
 from .forms import CustomerRegisterForm, LoginForm
 from .decorators import customer_required, staff_required, manager_required
 from orders.models import Order, OrderItem
 from blog.models import Blog 
-from accounts.models import UserProfile # আপনার ইউজার প্রোফাইল মডেল
+from accounts.models import UserProfile 
+from django.db.models.functions import ExtractHour
 
 # -------------------------------------------------------------------
 # ০. Business Intelligence Engine (The Giant Unique Feature)
@@ -209,6 +208,32 @@ def staff_analytics(request):
         'orders_per_day': json.dumps(orders_count_data), 
     }
     return render(request, 'accounts/dashboard/staff_analytics.html', context)
+@login_required
+def staff_operation_pulse(request):
+    if not request.user.is_staff:
+        return redirect('home')
+
+    # ২৪ ঘণ্টার ডাটা আনা
+    peak_hours_qs = Order.objects.annotate(
+        hour=ExtractHour('created_at')
+    ).values('hour').annotate(count=Count('id')).order_by('hour')
+
+    hour_labels = [f"{h}:00" for h in range(24)]
+    hour_data = [0] * 24
+    for item in peak_hours_qs:
+        hour_data[item['hour']] = item['count']
+
+    # ব্যস্ততম সময় এবং প্রেডিকশন
+    max_orders = max(hour_data) if hour_data else 0
+    busy_hour = hour_labels[hour_data.index(max_orders)] if max_orders > 0 else "N/A"
+
+    context = {
+        'hour_labels': json.dumps(hour_labels),
+        'hour_data': json.dumps(hour_data),
+        'busy_hour': busy_hour,
+        'total_insights': sum(hour_data)
+    }
+    return render(request, 'accounts/dashboard/staff_operation_pulse.html', context)
 
 @login_required
 def staff_inventory(request):

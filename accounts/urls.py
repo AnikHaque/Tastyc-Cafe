@@ -14,6 +14,7 @@ urlpatterns =[
      path('dashboard/staff/inventory/', views.staff_inventory, name='staff_inventory'),
      path('dashboard/staff/top-selling/', views.staff_top_selling, name='staff_top_selling'),
      path('staff/intelligence/', views.admin_intelligence_dashboard, name='admin_intelligence'),
+     path('staff/operation-pulse/', views.staff_operation_pulse, name='staff_operation_pulse'),
      path('dashboard/blogs/', views.staff_blog_list, name='staff_blog_list'),
      path('dashboard/blogs/create/', views.staff_create_blog, name='staff_create_blog'), 
      # accounts/urls.py তে যোগ করুন (উদাহরণ)

@@ -1,0 +1,68 @@
+{% extends "accounts/dashboard/base_dashboard.html" %}
+
+{% block sidebar %}
+    <a href="{% url 'staff_operation_pulse' %}" class="{% if request.resolver_match.url_name == 'staff_operation_pulse' %}active{% endif %}">
+        <i class="fa-solid fa-bolt-lightning me-2 text-warning"></i> Operation Pulse
+    </a>
+    {% endblock %}
+
+{% block content %}
+<div class="container-fluid p-0">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold mb-0">Operation Pulse</h3>
+        <span class="badge bg-dark rounded-pill px-3">Live Prediction</span>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-primary text-white">
+                <h6 class="text-white-50 small fw-bold text-uppercase">Peak Order Time</h6>
+                <h2 class="fw-bold mb-0">{{ busy_hour }}</h2>
+                <p class="small mb-0 mt-2 opacity-75">এই সময়ে আপনার সবচেয়ে বেশি স্টাফ প্রয়োজন হয়।</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm rounded-4 p-4 border-start border-warning border-5">
+                <h6 class="text-muted small fw-bold text-uppercase">Insights Captured</h6>
+                <h2 class="fw-bold mb-0 text-dark">{{ total_insights }} Orders Analyzed</h2>
+                <p class="small mb-0 mt-2 text-muted">গত সকল ডাটার ওপর ভিত্তি করে এই রিপোর্ট তৈরি।</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+        <h6 class="fw-bold mb-4"><i class="fa-solid fa-chart-area me-2 text-primary"></i>Hourly Traffic Heatmap</h6>
+        <div style="height: 350px;">
+            <canvas id="peakHourChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    new Chart(document.getElementById('peakHourChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: {{ hour_labels|safe }},
+            datasets: [{
+                label: 'Orders',
+                data: {{ hour_data|safe }},
+                backgroundColor: 'rgba(99, 102, 241, 0.5)',
+                borderColor: '#6366f1',
+                borderWidth: 2,
+                borderRadius: 5,
+                hoverBackgroundColor: '#4f46e5'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true, grid: { color: '#f3f4f6' } },
+                x: { grid: { display: false } }
+            }
+        }
+    });
+</script>
+{% endblock %}
