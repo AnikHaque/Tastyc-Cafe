@@ -1,153 +1,90 @@
-{% extends 'base.html' %}
-{% load static %}
-
+{% extends 'base.html' %}{% load static %}
 {% block content %}
 <div class="container-fluid py-5 bg-light" style="min-height: 100vh;">
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-5">
-            <div>
-                <h1 class="fw-bold text-dark mb-1">Business Intelligence</h1>
-                <p class="text-muted"><i class="fa-solid fa-calendar-day me-2"></i>Real-time insights for your restaurant</p>
-            </div>
-            <div class="text-end">
-                <span class="badge bg-success rounded-pill px-3 py-2"><i class="fa-solid fa-circle-dot me-2"></i>Live System Active</span>
-            </div>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div><h2 class="fw-bold text-dark m-0">Business Intelligence</h2><p class="text-muted small mb-0"><i class="fa-solid fa-calendar-day me-2"></i>Real-time insights for your restaurant</p></div>
+            <span class="badge bg-success rounded-pill px-3 py-2"><i class="fa-solid fa-circle-dot me-2 small"></i>Live Active</span>
         </div>
 
-        <div class="row g-4 mb-5">
+        <div class="row g-3 mb-4">
             <div class="col-md-3">
                 <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
                     <div class="card-body p-4 bg-primary text-white">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <div class="bg-white bg-opacity-25 rounded-3 p-2">
-                                <i class="fa-solid fa-bangladeshi-taka-sign fa-xl"></i>
-                            </div>
-                            {% if report.growth_index %}
-                                <span class="badge bg-white text-primary rounded-pill"><i class="fa-solid fa-arrow-up"></i> Trending</span>
-                            {% endif %}
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div class="bg-white bg-opacity-25 rounded-3 p-2"><i class="fa-solid fa-bangladeshi-taka-sign"></i></div>
+                            {% if report.growth_index %}<span class="badge bg-white text-primary rounded-pill small">Trending</span>{% endif %}
                         </div>
-                        <h6 class="text-white text-opacity-75 text-uppercase small fw-bold">Daily Revenue</h6>
-                        <h2 class="fw-bold mb-0">৳{{ report.daily_revenue }}</h2>
+                        <h6 class="text-white-50 small fw-bold text-uppercase">Daily Revenue</h6>
+                        <h3 class="fw-bold mb-0">৳{{ report.daily_revenue }}</h3>
                     </div>
                 </div>
             </div>
-
             <div class="col-md-3">
-                <div class="card border-0 shadow-sm rounded-4 h-100">
-                    <div class="card-body p-4">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <div class="bg-warning bg-opacity-10 text-warning rounded-3 p-2">
-                                <i class="fa-solid fa-bolt-lightning fa-xl"></i>
-                            </div>
-                        </div>
-                        <h6 class="text-muted text-uppercase small fw-bold">Sales Velocity</h6>
-                        <h2 class="fw-bold mb-0">{{ report.velocity_per_hour }} <small class="fs-6 text-muted fw-normal">Orders/Hr</small></h2>
-                    </div>
+                <div class="card border-0 shadow-sm rounded-4 h-100 p-4">
+                    <div class="bg-warning bg-opacity-10 text-warning rounded-3 p-2 mb-2" style="width:fit-content;"><i class="fa-solid fa-bolt-lightning"></i></div>
+                    <h6 class="text-muted small fw-bold text-uppercase">Velocity</h6>
+                    <h3 class="fw-bold mb-0">{{ report.velocity_per_hour }} <small class="fs-6 text-muted fw-normal">Ord/Hr</small></h3>
                 </div>
             </div>
-
             <div class="col-md-3">
-                <div class="card border-0 shadow-sm rounded-4 h-100">
-                    <div class="card-body p-4 border-start border-info border-5">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <div class="bg-info bg-opacity-10 text-info rounded-3 p-2">
-                                <i class="fa-solid fa-users fa-xl"></i>
-                            </div>
-                        </div>
-                        <h6 class="text-muted text-uppercase small fw-bold">Loyalty Score</h6>
-                        <h2 class="fw-bold mb-0 text-info">{{ report.loyalty_index }}%</h2>
-                        <div class="progress mt-2" style="height: 4px;">
-                            <div class="progress-bar bg-info" style="width: {{ report.loyalty_index }}%"></div>
-                        </div>
-                    </div>
+                <div class="card border-0 shadow-sm rounded-4 h-100 p-4 border-start border-info border-5">
+                    <div class="bg-info bg-opacity-10 text-info rounded-3 p-2 mb-2" style="width:fit-content;"><i class="fa-solid fa-users"></i></div>
+                    <h6 class="text-muted small fw-bold text-uppercase">Loyalty</h6>
+                    <h3 class="fw-bold mb-0">{{ report.loyalty_index }}%</h3>
+                    <div class="progress mt-2" style="height:4px;"><div class="progress-bar bg-info" style="width: {{ report.loyalty_index }}%"></div></div>
                 </div>
             </div>
-
             <div class="col-md-3">
-                <div class="card border-0 shadow-sm rounded-4 h-100 {% if low_stock_count > 0 %}border border-danger border-2{% endif %}">
-                    <div class="card-body p-4">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <div class="{% if low_stock_count > 0 %}bg-danger{% else %}bg-success{% endif %} bg-opacity-10 {% if low_stock_count > 0 %}text-danger{% else %}text-success{% endif %} rounded-3 p-2">
-                                <i class="fa-solid fa-box-open fa-xl"></i>
-                            </div>
-                        </div>
-                        <h6 class="text-muted text-uppercase small fw-bold">Inventory Risk</h6>
-                        <h2 class="fw-bold mb-0 {% if low_stock_count > 0 %}text-danger{% else %}text-success{% endif %}">{{ low_stock_count }} <small class="fs-6 text-muted fw-normal">Low Stock</small></h2>
-                    </div>
+                <div class="card border-0 shadow-sm rounded-4 h-100 p-4 {% if low_stock_count > 0 %}border border-danger{% endif %}">
+                    <div class="{% if low_stock_count > 0 %}bg-danger{% else %}bg-success{% endif %} bg-opacity-10 {% if low_stock_count > 0 %}text-danger{% else %}text-success{% endif %} rounded-3 p-2 mb-2" style="width:fit-content;"><i class="fa-solid fa-box-open"></i></div>
+                    <h6 class="text-muted small fw-bold text-uppercase">Stock Risk</h6>
+                    <h3 class="fw-bold mb-0 {% if low_stock_count > 0 %}text-danger{% endif %}">{{ low_stock_count }} <small class="fs-6 text-muted fw-normal">Low</small></h3>
                 </div>
             </div>
         </div>
 
         <div class="row g-4">
             <div class="col-lg-8">
-                <div class="card border-0 shadow-sm rounded-4 h-100">
-                    <div class="card-header bg-white border-0 py-4 px-4 d-flex justify-content-between align-items-center">
-                        <h5 class="fw-bold mb-0"><i class="fa-solid fa-fire text-danger me-2"></i>Fastest Moving Foods</h5>
-                        <a href="{% url 'staff_top_selling' %}" class="btn btn-sm btn-outline-primary rounded-pill px-3">View More</a>
+                <div class="card border-0 shadow-sm rounded-4">
+                    <div class="card-header bg-white border-0 p-4 d-flex justify-content-between align-items-center">
+                        <h5 class="fw-bold mb-0"><i class="fa-solid fa-fire text-danger me-2"></i>Fastest Moving</h5>
+                        <a href="{% url 'staff_top_selling' %}" class="btn btn-sm btn-outline-primary rounded-pill">View All</a>
                     </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive px-4 pb-4">
-                            <table class="table table-hover align-middle mb-0">
-                                <thead class="table-light">
-                                    <tr class="text-muted small text-uppercase">
-                                        <th class="py-3">Food Name</th>
-                                        <th class="py-3 text-center">Total Sold</th>
-                                        <th class="py-3 text-end">Market Trend</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for item in top_items %}
-                                    <tr>
-                                        <td class="py-3 fw-bold text-dark">{{ item.food__name }}</td>
-                                        <td class="py-3 text-center">{{ item.sold_qty }} units</td>
-                                        <td class="py-3 text-end">
-                                            <div class="d-inline-flex align-items-center text-success">
-                                                <i class="fa-solid fa-chart-line me-2"></i> High Demand
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    {% empty %}
-                                    <tr>
-                                        <td colspan="3" class="text-center py-5 text-muted small">No data recorded for this period.</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="table-responsive px-4 pb-4">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light"><tr class="text-muted small text-uppercase"><th>Food</th><th class="text-center">Sold</th><th class="text-end">Trend</th></tr></thead>
+                            <tbody class="small">
+                                {% for item in top_items %}
+                                <tr>
+                                    <td class="fw-bold text-dark py-3">{{ item.food__name }}</td>
+                                    <td class="text-center">{{ item.sold_qty }} units</td>
+                                    <td class="text-end text-success"><i class="fa-solid fa-chart-line me-1"></i> High</td>
+                                </tr>
+                                {% empty %}
+                                <tr><td colspan="3" class="text-center py-5 text-muted">No data available.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-
             <div class="col-lg-4">
-                <div class="card border-0 shadow-sm rounded-4 bg-dark text-white h-100">
-                    <div class="card-body p-4 d-flex flex-column">
-                        <h5 class="fw-bold mb-3"><i class="fa-solid fa-lightbulb text-warning me-2"></i>Smart Suggestions</h5>
-                        <p class="text-white text-opacity-75 small mb-4">Based on current sales velocity, your restaurant is performing <b>{{ report.growth_index|yesno:"above,below" }}</b> the weekly average.</p>
-                        
-                        <div class="mt-auto">
-                            <div class="p-3 bg-secondary bg-opacity-25 rounded-4 mb-3">
-                                <small class="d-block text-warning fw-bold mb-1">Recommended Action:</small>
-                                {% if low_stock_count > 0 %}
-                                    <p class="small mb-0 text-white">Stock items are critical. Restock immediately to avoid loss.</p>
-                                {% else %}
-                                    <p class="small mb-0 text-white">Stock levels are healthy. Focus on marketing high-margin items.</p>
-                                {% endif %}
-                            </div>
-                            <button class="btn btn-warning w-100 rounded-pill fw-bold py-2 shadow-sm" onclick="window.location.reload();">
-                                <i class="fa-solid fa-rotate me-2"></i>Update Intelligence
-                            </button>
-                        </div>
+                <div class="card border-0 shadow-sm rounded-4 bg-dark text-white h-100 p-4">
+                    <h5 class="fw-bold mb-3"><i class="fa-solid fa-lightbulb text-warning me-2"></i>Smart AI</h5>
+                    <p class="text-white-50 small">Performing <b>{{ report.growth_index|yesno:"above,below" }}</b> weekly average.</p>
+                    <div class="mt-auto bg-white bg-opacity-10 p-3 rounded-4">
+                        <small class="text-warning fw-bold">Action:</small>
+                        <p class="small mb-0">{% if low_stock_count > 0 %}Critical stock items. Restock ASAP!{% else %}Levels healthy. Focus on promotions.{% endif %}</p>
                     </div>
+                    <button class="btn btn-warning w-100 rounded-pill fw-bold mt-3 py-2" onclick="location.reload();"><i class="fa-solid fa-rotate me-2"></i>Refresh</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 <style>
-    .rounded-4 { border-radius: 1.2rem !important; }
-    .bg-soft-primary { background-color: #e7f1ff; }
-    .card { transition: transform 0.3s ease; }
-    .card:hover { transform: translateY(-5px); }
+    .rounded-4 { border-radius: 1rem !important; }
+    .card { transition: 0.3s; } .card:hover { transform: translateY(-3px); }
 </style>
 {% endblock %}

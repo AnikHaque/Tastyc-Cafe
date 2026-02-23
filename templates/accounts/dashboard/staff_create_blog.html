@@ -1,19 +1,15 @@
 {% extends "accounts/dashboard/base_dashboard.html" %}
-
 {% block sidebar %}
-    {% url 'staff_analytics' as analytics %}{% url 'staff_inventory' as inv %}{% url 'staff_top_selling' as top %}
-    {% url 'staff_dashboard' as dash %}{% url 'staff_blog_list' as blog_l %}{% url 'staff_create_blog' as blog_c %}
-
-    <a href="{{ analytics }}" class="{% if request.path == analytics %}active{% endif %}"><i class="fa-solid fa-chart-pie me-2"></i> Analytics</a>
-    <a href="{{ inv }}" class="{% if request.path == inv %}active{% endif %}"><i class="fa-solid fa-boxes-stacked me-2"></i> Inventory</a>
-    <a href="{{ top }}" class="{% if request.path == top %}active{% endif %}"><i class="fa-solid fa-fire me-2"></i> Top Selling</a>
-    <a href="{{ dash }}" class="{% if request.path == dash and not request.GET.status %}active{% endif %}"><i class="fa-solid fa-receipt me-2"></i> All Orders</a>
-    <a href="{{ dash }}?status=PAID" class="{% if request.GET.status == 'PAID' %}active{% endif %}"><i class="fa-solid fa-circle-check me-2"></i> Completed Orders</a>
-    <a href="{{ dash }}?status=PENDING" class="{% if request.GET.status == 'PENDING' %}active{% endif %}"><i class="fa-solid fa-clock me-2"></i> Pending Orders</a>
-
+    {% url 'staff_analytics' as a %}{% url 'staff_inventory' as i %}{% url 'staff_top_selling' as t %}{% url 'staff_dashboard' as d %}{% url 'staff_blog_list' as bl %}{% url 'staff_create_blog' as bc %}
+    <a href="{{ a }}" class="{% if request.path == a %}active{% endif %}"><i class="fa-solid fa-chart-pie me-2"></i> Analytics</a>
+    <a href="{{ i }}" class="{% if request.path == i %}active{% endif %}"><i class="fa-solid fa-boxes-stacked me-2"></i> Inventory</a>
+    <a href="{{ t }}" class="{% if request.path == t %}active{% endif %}"><i class="fa-solid fa-fire me-2"></i> Top Selling</a>
+    <a href="{{ d }}" class="{% if request.path == d and not request.GET.status %}active{% endif %}"><i class="fa-solid fa-receipt me-2"></i> All Orders</a>
+    <a href="{{ d }}?status=PAID" class="{% if request.GET.status == 'PAID' %}active{% endif %}"><i class="fa-solid fa-circle-check me-2"></i> Completed</a>
+    <a href="{{ d }}?status=PENDING" class="{% if request.GET.status == 'PENDING' %}active{% endif %}"><i class="fa-solid fa-clock me-2"></i> Pending</a>
     <hr class="opacity-10 mx-3">
-    <a href="{{ blog_l }}" class="{% if request.path == blog_l %}active{% endif %}"><i class="fa-solid fa-newspaper me-2"></i> Manage Blogs</a>
-    <a href="{{ blog_c }}" class="{% if request.path == blog_c %}active{% endif %} text-warning fw-bold"><i class="fa-solid fa-plus-circle me-2"></i> Create Blog</a>
+    <a href="{{ bl }}" class="{% if request.path == bl %}active{% endif %}"><i class="fa-solid fa-newspaper me-2"></i> Manage Blogs</a>
+    <a href="{{ bc }}" class="{% if request.path == bc %}active{% endif %} text-warning fw-bold"><i class="fa-solid fa-plus-circle me-2"></i> Create Blog</a>
 {% endblock %}
 
 {% block content %}
@@ -25,23 +21,17 @@
                     <h2 class="playfair fw-bold">Write a New <span class="text-danger">Story</span></h2>
                     <p class="text-muted small">Share your culinary wisdom and restaurant news with the world.</p>
                 </div>
-                
-                <form method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    
+                <form method="POST" enctype="multipart/form-data">{% csrf_token %}
                     <div class="mb-4">
                         <label class="form-label fw-bold small text-uppercase text-muted">Blog Title</label>
                         <input type="text" name="title" class="form-control custom-input shadow-none" placeholder="Enter a catchy title" required>
                     </div>
-
                     <div class="row g-4 mb-4">
                         <div class="col-md-6">
                             <label class="form-label fw-bold small text-uppercase text-muted">Category</label>
                             <select name="category" class="form-select custom-input shadow-none">
-                                <option value="Recipes">Recipes</option>
-                                <option value="Culinary Tips">Culinary Tips</option>
-                                <option value="Restaurant News">Restaurant News</option>
-                                <option value="Events">Events</option>
+                                <option value="Recipes">Recipes</option><option value="Culinary Tips">Culinary Tips</option>
+                                <option value="Restaurant News">Restaurant News</option><option value="Events">Events</option>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -49,10 +39,9 @@
                             <input type="file" name="thumbnail" class="form-control custom-input shadow-none" accept="image/*" required>
                         </div>
                     </div>
-
                     <div class="row g-4 mb-4">
                         <div class="col-md-6">
-                            <label class="form-label fw-bold small text-uppercase text-muted">Read Time (Minutes)</label>
+                            <label class="form-label fw-bold small text-uppercase text-muted">Read Time (Min)</label>
                             <input type="number" name="read_time" class="form-control custom-input shadow-none" placeholder="e.g. 5" required>
                         </div>
                         <div class="col-md-6">
@@ -60,41 +49,21 @@
                             <input type="text" name="tags" class="form-control custom-input shadow-none" placeholder="beef, recipe, dinner">
                         </div>
                     </div>
-
                     <div class="mb-5">
                         <label class="form-label fw-bold small text-uppercase text-muted">Content</label>
                         <textarea name="content" rows="12" class="form-control custom-input shadow-none" placeholder="Share your culinary wisdom..." required></textarea>
                     </div>
-
-                    <button type="submit" class="btn btn-danger w-100 py-3 fw-bold rounded-pill shadow-sm transition-hover">
-                        Publish Blog Post <i class="fas fa-paper-plane ms-2"></i>
-                    </button>
+                    <button type="submit" class="btn btn-danger w-100 py-3 fw-bold rounded-pill shadow-sm transition-hover">Publish Blog Post <i class="fas fa-paper-plane ms-2"></i></button>
                 </form>
             </div>
         </div>
     </div>
 </div>
-
 <style>
     .playfair { font-family: 'Playfair Display', serif; }
-    .custom-input {
-        background: #fdfdfd;
-        border: 1px solid #eee;
-        border-radius: 12px;
-        padding: 12px 18px;
-        transition: 0.3s;
-        font-size: 0.95rem;
-    }
-    .custom-input:focus {
-        background: #fff;
-        border-color: #ff4757;
-        box-shadow: 0 5px 15px rgba(255, 71, 87, 0.05) !important;
-    }
+    .custom-input { background: #fdfdfd; border: 1px solid #eee; border-radius: 12px; padding: 12px 18px; transition: 0.3s; font-size: 0.95rem; }
+    .custom-input:focus { background: #fff; border-color: #ff4757; box-shadow: 0 5px 15px rgba(255, 71, 87, 0.05) !important; }
+    .transition-hover:hover { background: #0f141e; transform: translateY(-3px); }
     .transition-hover { transition: 0.3s; }
-    .transition-hover:hover { 
-        background: #0f141e; 
-        transform: translateY(-3px);
-    }
-    label { letter-spacing: 0.5px; }
 </style>
 {% endblock %}

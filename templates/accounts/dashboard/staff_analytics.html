@@ -1,129 +1,37 @@
 {% extends "accounts/dashboard/base_dashboard.html" %}
-
 {% block sidebar %}
-    {% url 'staff_analytics' as analytics %}{% url 'staff_inventory' as inv %}{% url 'staff_top_selling' as top %}
-    {% url 'staff_dashboard' as dash %}{% url 'staff_blog_list' as blog_l %}{% url 'staff_create_blog' as blog_c %}
-
-    <a href="{{ analytics }}" class="{% if request.path == analytics %}active{% endif %}"><i class="fa-solid fa-chart-pie me-2"></i> Analytics</a>
-    <a href="{{ inv }}" class="{% if request.path == inv %}active{% endif %}"><i class="fa-solid fa-boxes-stacked me-2"></i> Inventory</a>
-    <a href="{{ top }}" class="{% if request.path == top %}active{% endif %}"><i class="fa-solid fa-fire me-2"></i> Top Selling</a>
-    <a href="{{ dash }}" class="{% if request.path == dash and not request.GET.status %}active{% endif %}"><i class="fa-solid fa-receipt me-2"></i> All Orders</a>
-    <a href="{{ dash }}?status=PAID" class="{% if request.GET.status == 'PAID' %}active{% endif %}"><i class="fa-solid fa-circle-check me-2"></i> Completed Orders</a>
-    <a href="{{ dash }}?status=PENDING" class="{% if request.GET.status == 'PENDING' %}active{% endif %}"><i class="fa-solid fa-clock me-2"></i> Pending Orders</a>
-
+    {% url 'staff_analytics' as a %}{% url 'staff_inventory' as i %}{% url 'staff_top_selling' as t %}{% url 'staff_dashboard' as d %}{% url 'staff_blog_list' as bl %}{% url 'staff_create_blog' as bc %}
+    <a href="{{ a }}" class="{% if request.path == a %}active{% endif %}"><i class="fa-solid fa-chart-pie me-2"></i> Analytics</a>
+    <a href="{{ i }}" class="{% if request.path == i %}active{% endif %}"><i class="fa-solid fa-boxes-stacked me-2"></i> Inventory</a>
+    <a href="{{ t }}" class="{% if request.path == t %}active{% endif %}"><i class="fa-solid fa-fire me-2"></i> Top Selling</a>
+    <a href="{{ d }}" class="{% if request.path == d and not request.GET.status %}active{% endif %}"><i class="fa-solid fa-receipt me-2"></i> All Orders</a>
+    <a href="{{ d }}?status=PAID" class="{% if request.GET.status == 'PAID' %}active{% endif %}"><i class="fa-solid fa-circle-check me-2"></i> Completed</a>
+    <a href="{{ d }}?status=PENDING" class="{% if request.GET.status == 'PENDING' %}active{% endif %}"><i class="fa-solid fa-clock me-2"></i> Pending</a>
     <hr class="opacity-10 mx-3">
-    <a href="{{ blog_l }}" class="{% if request.path == blog_l %}active{% endif %}"><i class="fa-solid fa-newspaper me-2"></i> Manage Blogs</a>
-    <a href="{{ blog_c }}" class="{% if request.path == blog_c %}active{% endif %} text-warning fw-bold"><i class="fa-solid fa-plus-circle me-2"></i> Create Blog</a>
+    <a href="{{ bl }}" class="{% if request.path == bl %}active{% endif %}"><i class="fa-solid fa-newspaper me-2"></i> Blogs</a>
+    <a href="{{ bc }}" class="{% if request.path == bc %}active{% endif %} text-warning fw-bold"><i class="fa-solid fa-plus-circle me-2"></i> Create</a>
 {% endblock %}
 
 {% block content %}
 <div class="container-fluid p-0">
     <h3 class="fw-bold mb-4">Analytics Dashboard</h3>
-
     <div class="row g-3 mb-4">
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm rounded-4 p-3 text-center border-start border-primary border-5">
-                <h6 class="text-muted small text-uppercase fw-bold">Total Orders</h6>
-                <h2 class="fw-bold mb-0">{{ total_orders }}</h2>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm rounded-4 p-3 text-center bg-success text-white">
-                <h6 class="opacity-75 small text-uppercase fw-bold">Completed Orders</h6>
-                <h2 class="fw-bold mb-0">{{ total_paid }}</h2>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm rounded-4 p-3 text-center bg-warning">
-                <h6 class="text-dark opacity-75 small text-uppercase fw-bold">Pending Orders</h6>
-                <h2 class="fw-bold mb-0 text-dark">{{ total_pending }}</h2>
-            </div>
-        </div>
+        <div class="col-md-4"><div class="card border-0 shadow-sm rounded-4 p-3 text-center border-start border-primary border-5"><h6 class="text-muted small fw-bold">TOTAL ORDERS</h6><h2 class="fw-bold mb-0">{{ total_orders }}</h2></div></div>
+        <div class="col-md-4"><div class="card border-0 shadow-sm rounded-4 p-3 text-center bg-success text-white"><h6 class="opacity-75 small fw-bold">COMPLETED</h6><h2 class="fw-bold mb-0">{{ total_paid }}</h2></div></div>
+        <div class="col-md-4"><div class="card border-0 shadow-sm rounded-4 p-3 text-center bg-warning text-dark"><h6 class="opacity-75 small fw-bold">PENDING</h6><h2 class="fw-bold mb-0">{{ total_pending }}</h2></div></div>
     </div>
-
     <div class="row g-4 mb-4">
-        <div class="col-lg-8">
-            <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
-                <h6 class="fw-bold mb-3"><i class="fa-solid fa-chart-line me-2 text-primary"></i>Revenue Last 7 Days</h6>
-                <div style="height: 300px;"><canvas id="revenueChart"></canvas></div>
-            </div>
-        </div>
-        
-        <div class="col-lg-4">
-            <div class="card border-0 shadow-sm rounded-4 p-4 h-100 text-center">
-                <h6 class="fw-bold mb-3">Order Status Distribution</h6>
-                <div style="height: 250px;"><canvas id="statusChart"></canvas></div>
-            </div>
-        </div>
-
-        <div class="col-12">
-            <div class="card border-0 shadow-sm rounded-4 p-4">
-                <h6 class="fw-bold mb-3"><i class="fa-solid fa-chart-bar me-2 text-info"></i>Orders Last 7 Days</h6>
-                <div style="height: 250px;"><canvas id="ordersChart"></canvas></div>
-            </div>
-        </div>
+        <div class="col-lg-8"><div class="card border-0 shadow-sm rounded-4 p-4 h-100"><h6 class="fw-bold mb-3">Revenue (7 Days)</h6><div style="height:300px;"><canvas id="revenueChart"></canvas></div></div></div>
+        <div class="col-lg-4"><div class="card border-0 shadow-sm rounded-4 p-4 h-100 text-center"><h6 class="fw-bold mb-3">Distribution</h6><div style="height:250px;"><canvas id="statusChart"></canvas></div></div></div>
+        <div class="col-12"><div class="card border-0 shadow-sm rounded-4 p-4"><h6 class="fw-bold mb-3">Orders (7 Days)</h6><div style="height:250px;"><canvas id="ordersChart"></canvas></div></div></div>
     </div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-const commonOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { display: true, position: 'bottom' } }
-};
-
-// 1. Revenue Chart
-new Chart(document.getElementById('revenueChart').getContext('2d'), {
-    type: 'line',
-    data: {
-        labels: {{ chart_labels|safe }},
-        datasets: [{
-            label: 'Revenue (৳)',
-            data: {{ chart_data|safe }},
-            borderColor: '#6366f1',
-            backgroundColor: 'rgba(99, 102, 241, 0.1)',
-            tension: 0.4,
-            fill: true,
-            pointRadius: 4
-        }]
-    },
-    options: {
-        ...commonOptions,
-        scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } }
-    }
-});
-
-// 2. Orders Chart
-new Chart(document.getElementById('ordersChart').getContext('2d'), {
-    type: 'bar',
-    data: {
-        labels: {{ chart_labels|safe }},
-        datasets: [{
-            label: 'Orders',
-            data: {{ orders_per_day|safe }},
-            backgroundColor: '#38bdf8',
-            borderRadius: 5
-        }]
-    },
-    options: {
-        ...commonOptions,
-        scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } }
-    }
-});
-
-// 3. Status Chart
-new Chart(document.getElementById('statusChart').getContext('2d'), {
-    type: 'doughnut',
-    data: {
-        labels: ['PAID', 'PENDING'],
-        datasets: [{
-            data: [{{ total_paid }}, {{ total_pending }}],
-            backgroundColor: ['#10b981', '#f59e0b'],
-            borderWidth: 0
-        }]
-    },
-    options: commonOptions
-});
+const opt = { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } } };
+const lbl = {{ chart_labels|safe }};
+new Chart(document.getElementById('revenueChart'), { type: 'line', data: { labels: lbl, datasets: [{ label: 'Revenue (৳)', data: {{ chart_data|safe }}, borderColor: '#6366f1', backgroundColor: 'rgba(99, 102, 241, 0.1)', tension: 0.4, fill: true }] }, options: opt });
+new Chart(document.getElementById('ordersChart'), { type: 'bar', data: { labels: lbl, datasets: [{ label: 'Orders', data: {{ orders_per_day|safe }}, backgroundColor: '#38bdf8', borderRadius: 5 }] }, options: opt });
+new Chart(document.getElementById('statusChart'), { type: 'doughnut', data: { labels: ['PAID', 'PENDING'], datasets: [{ data: [{{ total_paid }}, {{ total_pending }}], backgroundColor: ['#10b981', '#f59e0b'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false } });
 </script>
 {% endblock %}
