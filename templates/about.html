@@ -1,114 +1,43 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block title %}About Us | RoyalDine Story{% endblock %}
-
 {% block content %}
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
 <link rel="stylesheet" href="{% static 'css/about.css' %}">
-
-<header class="page-header">
-    <div class="container">
-        <p>A Journey of Taste</p>
-        <h1>Our Story</h1>
+<header class="page-header text-center py-5"><div class="container">
+    <p class="m-0">A Journey of Taste</p><h1 class="display-3 fw-bold playfair">Our Story</h1>
+</div></header>
+<section class="section-padding py-5"><div class="container"><div class="row align-items-center g-5">
+    <div class="col-lg-6 animate__animated animate__fadeInLeft"><div class="img-stack position-relative">
+        <img src="{% if story.main_image %}{{ story.main_image.url }}{% else %}https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=800&q=80{% endif %}" class="img-fluid rounded shadow" alt="Kitchen">
+        <div class="experience-box position-absolute bottom-0 start-0 bg-danger text-white p-3 rounded"><h2>{{ story.experience_years|default:"15" }}+</h2><p class="m-0 small">Years of Service</p></div>
+    </div></div>
+    <div class="col-lg-6 ps-lg-5"><h6 class="text-danger fw-bold text-uppercase">High Quality Food</h6>
+        <h2 class="display-5 fw-bold mb-4">{{ story.title|default:"Authentic Flavors, Traditional Recipes." }}</h2>
+        <p class="text-muted mb-4">{{ story.description|default:"Since 2011, RoyalDine has been committed to providing an exceptional dining experience." }}</p>
+        <div class="row g-3 mb-4">
+            <div class="col-6"><h6 class="fw-bold mb-0"><i class="fa-solid fa-check-circle text-success me-1"></i> 100% Fresh</h6><p class="small text-muted">Daily organic supplies.</p></div>
+            <div class="col-6"><h6 class="fw-bold mb-0"><i class="fa-solid fa-check-circle text-success me-1"></i> Expert Chefs</h6><p class="small text-muted">Top culinary masters.</p></div>
+        </div><a href="{% url 'menu' %}" class="btn btn-danger btn-lg px-5 rounded-pill shadow-sm">Explore Our Menu</a>
     </div>
-</header>
-
-<section class="section-padding">
-    <div class="container">
-        <div class="row align-items-center g-5">
-            <div class="col-lg-6 animate__animated animate__fadeInLeft">
-                <div class="img-stack">
-                    {% if story.main_image %}
-                        <img src="{{ story.main_image.url }}" alt="RoyalDine Kitchen">
-                    {% else %}
-                        <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=800&q=80" alt="Kitchen">
-                    {% endif %}
-                    <div class="experience-box">
-                        <h2>{{ story.experience_years|default:"15" }}+</h2>
-                        <p class="m-0">Years of Service</p>
-                    </div>
-                </div>
+</div></div></section>
+<section class="section-padding bg-light py-5"><div class="container"><div class="row g-4 text-center">
+    {% for f in features %}<div class="col-md-4"><div class="feature-box">
+        <div class="icon-circle mx-auto mb-3"><i class="fa-solid {{ f.icon_class }} fs-2"></i></div><h5 class="fw-bold">{{ f.title }}</h5><p class="text-muted small">{{ f.description }}</p>
+    </div></div>{% empty %}<p class="text-center text-muted">No features added yet.</p>{% endfor %}
+</div></div></section>
+<section class="section-padding py-5">
+    <div class="container text-center mb-5"><h6 class="text-danger fw-bold">OUR TEAM</h6><h2 class="display-6 fw-bold">The Faces Behind the Taste</h2></div>
+    <div class="container"><div class="row g-4">
+        {% for chef in chefs %}<div class="col-lg-4 col-md-6"><div class="chef-card overflow-hidden rounded shadow-sm">
+            <div class="chef-img-box position-relative"><img src="{{ chef.image.url }}" class="w-100" alt="{{ chef.name }}">
+                <div class="chef-overlay position-absolute bottom-0 w-100 p-3 bg-dark bg-opacity-75 text-white text-center"><h5 class="m-0">{{ chef.name }}</h5><p class="text-warning small m-0">{{ chef.designation }}</p></div>
             </div>
-            <div class="col-lg-6 ps-lg-5">
-                <h6 class="text-danger fw-bold text-uppercase">High Quality Food</h6>
-                <h2 class="display-5 fw-bold mb-4" style="font-family: var(--font-heading);">
-                    {{ story.title|default:"Authentic Flavors, Traditional Recipes." }}
-                </h2>
-                <p class="text-muted mb-4">
-                    {{ story.description|default:"Since 2011, RoyalDine has been committed to providing an exceptional dining experience." }}
-                </p>
-                
-                <div class="row g-4 mb-5">
-                    <div class="col-6">
-                        <h5 class="fw-bold"><i class="fa-solid fa-check-circle text-success me-2"></i>100% Fresh</h5>
-                        <p class="small text-muted">Daily organic supplies.</p>
-                    </div>
-                    <div class="col-6">
-                        <h5 class="fw-bold"><i class="fa-solid fa-check-circle text-success me-2"></i>Expert Chefs</h5>
-                        <p class="small text-muted">Top culinary masters.</p>
-                    </div>
-                </div>
-                
-                <a href="{% url 'menu' %}" class="btn btn-danger btn-lg px-5 rounded-pill shadow-sm">Explore Our Menu</a>
-            </div>
-        </div>
-    </div>
+        </div></div>{% empty %}<p class="text-center text-muted">Meet our chefs soon!</p>{% endfor %}
+    </div></div>
 </section>
-
-<section class="section-padding bg-light">
-    <div class="container">
-        <div class="row g-4 text-center">
-            {% for feature in features %}
-            <div class="col-md-4">
-                <div class="feature-box">
-                    <div class="icon-circle mx-auto"><i class="fa-solid {{ feature.icon_class }}"></i></div>
-                    <h4 class="fw-bold">{{ feature.title }}</h4>
-                    <p class="text-muted">{{ feature.description }}</p>
-                </div>
-            </div>
-            {% empty %}
-                <p class="text-center text-muted">No features added yet.</p>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-
-<section class="section-padding">
-    <div class="container text-center mb-5">
-        <h6 class="text-danger fw-bold">OUR TEAM</h6>
-        <h2 class="display-6 fw-bold" style="font-family: var(--font-heading);">The Faces Behind the Taste</h2>
-    </div>
-    <div class="container">
-        <div class="row g-4">
-            {% for chef in chefs %}
-            <div class="col-lg-4 col-md-6">
-                <div class="chef-card">
-                    <div class="chef-img-box">
-                        <img src="{{ chef.image.url }}" alt="{{ chef.name }}">
-                        <div class="chef-overlay">
-                            <h4 class="m-0">{{ chef.name }}</h4>
-                            <p class="text-warning small m-0">{{ chef.designation }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% empty %}
-                <p class="text-center text-muted">Meet our chefs soon!</p>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-
-<section class="cta-banner text-center">
-    <div class="container">
-        <h2 class="display-5 fw-bold mb-4" style="font-family: var(--font-heading);">Ready to experience the taste?</h2>
-        <p class="mb-5 opacity-75">Book a table or order online today and get 10% discount!</p>
-        <div class="d-flex justify-content-center gap-3">
-            <a href="{% url 'menu' %}" class="btn btn-danger btn-lg px-5 rounded-pill">Order Online</a>
-            <a href="#" class="btn btn-outline-light btn-lg px-5 rounded-pill">Contact Us</a>
-        </div>
-    </div>
-</section>
+<section class="cta-banner text-center py-5 bg-dark text-white"><div class="container">
+    <h2 class="display-5 fw-bold mb-3">Ready to experience the taste?</h2><p class="mb-4 opacity-75">Book a table or order online today and get 10% discount!</p>
+    <div class="d-flex justify-content-center gap-2"><a href="{% url 'menu' %}" class="btn btn-danger btn-lg px-4 rounded-pill">Order Online</a><a href="#" class="btn btn-outline-light btn-lg px-4 rounded-pill">Contact Us</a></div>
+</div></section>
 {% endblock %}
