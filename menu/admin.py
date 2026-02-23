@@ -98,25 +98,4 @@ class ComboDealAdmin(admin.ModelAdmin):
 class FlashDealAdmin(admin.ModelAdmin):
     list_display = ('title', 'end_time', 'is_active')
 
-@admin.register(Food)
-class FoodAdmin(admin.ModelAdmin):
-    # 'mood_tag' এবং 'is_surprise_item' লিস্টে দেখার জন্য যোগ করা হয়েছে
-    list_display = ('display_image', 'name', 'category', 'mood_tag', 'price_badge', 'is_surprise_item', 'is_available')
-    
-    # সাইডবারে ফিল্টার করার জন্য 'mood_tag' যোগ করা হয়েছে
-    list_filter = ('category', 'is_available', 'mood_tag', 'is_surprise_item')
-    
-    search_fields = ('name',)
-    
-    # লিস্ট থেকেই যেন মুড এবং সারপ্রাইজ স্ট্যাটাস চেঞ্জ করা যায়
-    list_editable = ('is_available', 'mood_tag', 'is_surprise_item') 
 
-    def display_image(self, obj):
-        if obj.image:
-            return format_html('<img src="{}" style="width: 45px; height:45px; border-radius:10px; object-fit:cover; box-shadow: 0 2px 5px rgba(0,0,0,0.1);" />', obj.image.url)
-        return format_html('<span style="color: #ccc;">No Image</span>')
-    display_image.short_description = "Preview"
-
-    def price_badge(self, obj):
-        return format_html('<b style="color: #2f3542;">৳{}</b>', obj.price)
-    price_badge.short_description = "Price"
