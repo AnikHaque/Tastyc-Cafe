@@ -14,6 +14,9 @@
     <a href="{% url 'profile_settings' %}" class="{% if request.path == '/profile/' %}active{% endif %}">
     <i class="fa-solid fa-user-gear"></i> Profile Settings
 </a>
+<a href="{% url 'support_page' %}" class="{% if request.path == '/accounts/dashboard/support/' %}active{% endif %}">
+    <i class="fa-solid fa-headset"></i> Support
+</a>
 {% endblock %}
 
 {% block content %}

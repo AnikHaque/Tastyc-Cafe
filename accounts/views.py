@@ -369,3 +369,7 @@ def profile_settings(request):
         form = ProfileUpdateForm(instance=request.user)
     
     return render(request, 'accounts/dashboard/profile_settings.html', {'form': form})
+
+def support_page(request):
+    # একদম সিম্পল ভিউ যা শুধু একটি পেজ দেখাবে
+    return render(request, 'accounts/dashboard/support.html')

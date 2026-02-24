@@ -1,0 +1,64 @@
+{% extends 'accounts/dashboard/base_dashboard.html' %}
+{% block title %}Dashboard | Welcome {{ request.user.username }}{% endblock %}
+
+{% block sidebar %}
+    {% url 'customer_dashboard' as dash %}{% url 'my_orders' as orders %}
+    {% url 'create_reservation' as book %}{% url 'reservation_list' as res_list %}
+    {% url 'add_review' as add_rev %}{% url 'my_testimonials' as my_testi %}
+    <a href="{{ dash }}" class="{% if request.path == dash %}active{% endif %}"><i class="fa-solid fa-chart-line"></i> Analytics</a>
+    <a href="{{ orders }}" class="{% if request.path == orders %}active{% endif %}"><i class="fa-solid fa-shopping-bag"></i> My Orders</a>
+    <a href="{{ book }}" class="{% if request.path == book %}active{% endif %}"><i class="fa-solid fa-calendar-plus"></i> Book Table</a>
+    <a href="{{ res_list }}" class="{% if request.path == res_list %}active{% endif %}"><i class="fa-solid fa-list-ul"></i> My Reservations</a>
+    <a href="{{ add_rev }}" class="{% if request.path == add_rev %}active{% endif %}"><i class="fa-solid fa-pen-fancy"></i> Create Review</a>
+    <a href="{{ my_testi }}" class="{% if request.path == my_testi %}active{% endif %}"><i class="fa-solid fa-star"></i> My Reviews</a>
+    <a href="{% url 'profile_settings' %}" class="{% if request.path == '/profile/' %}active{% endif %}">
+    <i class="fa-solid fa-user-gear"></i> Profile Settings
+</a>
+<a href="{% url 'support_page' %}" class="{% if request.path == '/accounts/dashboard/support/' %}active{% endif %}">
+    <i class="fa-solid fa-headset"></i> Support
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+    <div class="mb-4">
+        <h2 class="fw-bold">Contact Support</h2>
+        <p class="text-muted">আপনার যেকোনো প্রয়োজনে আমরা আছি আপনার পাশে।</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 h-100 p-4 text-center">
+                <div class="mb-3">
+                    <i class="fa-brands fa-whatsapp display-5 text-success"></i>
+                </div>
+                <h5 class="fw-bold">WhatsApp</h5>
+                <p class="small text-muted mb-4">দ্রুত সমাধানের জন্য হোয়াটসঅ্যাপে নক দিন।</p>
+                <a href="https://wa.me/8801XXXXXXXXX" target="_blank" class="btn btn-success rounded-pill w-100">Send Message</a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 h-100 p-4 text-center">
+                <div class="mb-3">
+                    <i class="fa-brands fa-facebook-messenger display-5 text-primary"></i>
+                </div>
+                <h5 class="fw-bold">Messenger</h5>
+                <p class="small text-muted mb-4">ফেসবুকে আমাদের মেসেজ পাঠান।</p>
+                <a href="https://m.me/YourPageID" target="_blank" class="btn btn-primary rounded-pill w-100">Contact Us</a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 h-100 p-4 text-center">
+                <div class="mb-3">
+                    <i class="fa-solid fa-phone-volume display-5 text-dark"></i>
+                </div>
+                <h5 class="fw-bold">Call Hotline</h5>
+                <p class="small text-muted mb-4">সরাসরি কথা বলতে আমাদের ফোন করুন।</p>
+                <a href="tel:+8801XXXXXXXXX" class="btn btn-dark rounded-pill w-100">Call Now</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
