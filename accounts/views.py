@@ -11,7 +11,7 @@ from django.db.models.functions import TruncDate
 from django.utils.text import slugify
 from django.utils import timezone
 from menu.models import Food, Testimonial
-from .forms import CustomerRegisterForm, LoginForm
+from .forms import CustomerRegisterForm, LoginForm, ProfileUpdateForm
 from .decorators import customer_required, staff_required, manager_required
 from orders.models import Order, OrderItem
 from blog.models import Blog 
@@ -129,7 +129,7 @@ def customer_dashboard(request):
     from .dashboard_logic import CustomerAnalytics
     analytics = CustomerAnalytics(user=request.user, order_model=Order, review_model=Testimonial)
     context = analytics.get_all_stats()
-    
+
     # ২. লয়্যালটি লজিক (সরাসরি ভিউতে)
     completed_order_count = Order.objects.filter(user=request.user, status__iexact='Completed').count()
     
@@ -356,3 +356,16 @@ def staff_delete_blog(request, blog_id):
     if request.method == "POST":
         blog.delete()
     return redirect('staff_blog_list')
+
+@login_required
+def profile_settings(request):
+    if request.method == 'POST':
+        form = ProfileUpdateForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your profile has been updated successfully!')
+            return redirect('profile_settings')
+    else:
+        form = ProfileUpdateForm(instance=request.user)
+    
+    return render(request, 'accounts/dashboard/profile_settings.html', {'form': form})

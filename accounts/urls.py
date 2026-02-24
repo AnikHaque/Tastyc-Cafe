@@ -20,6 +20,7 @@ urlpatterns =[
      # accounts/urls.py তে যোগ করুন (উদাহরণ)
      path('blogs/edit/<int:blog_id>/', views.staff_edit_blog, name='staff_edit_blog'),
      path('blogs/delete/<int:blog_id>/', views.staff_delete_blog, name='staff_delete_blog'),
+     path('dashboard/profile/', views.profile_settings, name='profile_settings'),
      ]
 
 

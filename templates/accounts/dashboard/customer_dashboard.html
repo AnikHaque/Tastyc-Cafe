@@ -11,6 +11,9 @@
     <a href="{{ res_list }}" class="{% if request.path == res_list %}active{% endif %}"><i class="fa-solid fa-list-ul"></i> My Reservations</a>
     <a href="{{ add_rev }}" class="{% if request.path == add_rev %}active{% endif %}"><i class="fa-solid fa-pen-fancy"></i> Create Review</a>
     <a href="{{ my_testi }}" class="{% if request.path == my_testi %}active{% endif %}"><i class="fa-solid fa-star"></i> My Reviews</a>
+    <a href="{% url 'profile_settings' %}" class="{% if request.path == '/profile/' %}active{% endif %}">
+    <i class="fa-solid fa-user-gear"></i> Profile Settings
+</a>
 {% endblock %}
 
 {% block content %}
