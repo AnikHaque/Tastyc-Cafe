@@ -4,36 +4,35 @@
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/cart.css' %}">
-<link rel="stylesheet" href="{% static 'css/footer.css' %}">
-<header class="cart-header">
+<header class="cart-header py-5 bg-dark">
     <div class="container text-center">
-        <h1 class="display-5 fw-bold text-white">আপনার ঝুড়ি</h1>
+        <h1 class="display-5 fw-bold text-white">আপনার ঝুড়ি</h1>
         <p class="text-white-50">সেরা স্বাদের খাবারগুলো এখন আপনার হাতের কাছে</p>
     </div>
 </header>
 
-<section class="pb-5 cart-container">
+<section class="pb-5 cart-container mt-n4">
     <div class="container">
         {% if cart %}
         <div class="row g-4">
             <div class="col-lg-8">
                 {% for id, item in cart.items %}
-                <div class="cart-item-card">
-                    <div class="item-img-wrapper">
-                        <img src="{{ item.image }}" alt="{{ item.name }}">
+                <div class="cart-item-card mb-3 p-3 bg-white shadow-sm rounded-4 d-flex align-items-center">
+                    <div class="item-img-wrapper" style="width: 100px;">
+                        <img src="{{ item.image }}" class="img-fluid rounded-3" alt="{{ item.name }}">
                     </div>
-                    <div class="item-details">
-                        <h5 class="item-name">{{ item.name }}</h5>
-                        <p class="item-price">৳ {{ item.price }}</p>
-                        <div class="modern-qty">
-                            <a href="{% url 'update_cart' id 'decrease' %}"><i class="fas fa-minus"></i></a>
-                            <span>{{ item.qty }}</span>
-                            <a href="{% url 'update_cart' id 'increase' %}"><i class="fas fa-plus"></i></a>
+                    <div class="item-details ms-3 flex-grow-1">
+                        <h5 class="item-name fw-bold mb-1">{{ item.name }}</h5>
+                        <p class="item-price text-muted mb-2">৳ {{ item.price }}</p>
+                        <div class="modern-qty d-flex align-items-center gap-3">
+                            <a href="{% url 'update_cart' id 'decrease' %}" class="btn btn-sm btn-outline-dark rounded-circle"><i class="fas fa-minus"></i></a>
+                            <span class="fw-bold">{{ item.qty }}</span>
+                            <a href="{% url 'update_cart' id 'increase' %}" class="btn btn-sm btn-outline-dark rounded-circle"><i class="fas fa-plus"></i></a>
                         </div>
                     </div>
                     <div class="text-end">
                         <p class="fw-bold mb-3">৳ {{ item.total_item_price }}</p>
-                        <a href="{% url 'remove_from_cart' id %}" class="remove-btn">
+                        <a href="{% url 'remove_from_cart' id %}" class="btn btn-sm btn-light text-danger">
                             <i class="fas fa-trash-alt"></i>
                         </a>
                     </div>
@@ -42,12 +41,35 @@
             </div>
 
             <div class="col-lg-4">
-                <div class="summary-card">
+                <div class="summary-card bg-white p-4 shadow-sm rounded-4 sticky-top" style="top: 100px;">
                     <h4 class="fw-bold mb-4">অর্ডারের বিবরণ</h4>
-                    <div class="d-flex justify-content-between mb-3 text-muted">
-                        <span>মোট আইটেম</span>
-                        <span>{{ cart|length }}টি</span>
+                    
+                    <div class="coupon-box mb-4">
+                        <label class="small fw-bold mb-2">কুপন কোড থাকলে দিন</label>
+                        <form action="{% url 'apply_coupon' %}" method="POST" class="input-group">
+                            {% csrf_token %}
+                            <input type="text" name="coupon_code" class="form-control" placeholder="OFF20" required>
+                            <button class="btn btn-dark" type="submit">Apply</button>
+                        </form>
+                        {% if request.session.applied_coupon %}
+                            <div class="mt-2 small text-success">
+                                <i class="fas fa-check-circle"></i> <strong>{{ request.session.applied_coupon }}</strong> অ্যাপ্লাই হয়েছে!
+                            </div>
+                        {% endif %}
                     </div>
+
+                    <div class="d-flex justify-content-between mb-2 text-muted">
+                        <span>সাবটোটাল</span>
+                        <span>৳ {{ subtotal }}</span>
+                    </div>
+
+                    {% if discount > 0 %}
+                    <div class="d-flex justify-content-between mb-2 text-success fw-bold">
+                        <span>ডিসকাউন্ট ({{ request.session.discount_percent }}%)</span>
+                        <span>- ৳ {{ discount }}</span>
+                    </div>
+                    {% endif %}
+
                     <div class="d-flex justify-content-between mb-3 text-muted">
                         <span>ডেলিভারি চার্জ</span>
                         <span class="text-success">ফ্রি</span>
@@ -55,9 +77,9 @@
                     <hr>
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <span class="fw-bold h5">সর্বমোট</span>
-                        <span class="h3 fw-bold">৳ {{ total }}</span>
+                        <span class="h3 fw-bold text-primary">৳ {{ total }}</span>
                     </div>
-                    <a href="{% url 'checkout' %}" class="btn btn-checkout">
+                    <a href="{% url 'checkout' %}" class="btn btn-warning w-100 py-3 rounded-pill fw-bold text-dark shadow-sm">
                         চেকআউট করুন <i class="fas fa-arrow-right ms-2"></i>
                     </a>
                 </div>
@@ -66,15 +88,10 @@
         {% else %}
         <div class="text-center py-5 bg-white rounded-5 shadow-sm">
             <i class="fas fa-shopping-basket fa-4x text-light mb-4"></i>
-            <h3>আপনার ঝুড়ি খালি!</h3>
-            <p class="text-muted mb-4">এখনই কিছু সুস্বাদু খাবার যোগ করুন।</p>
-            <a href="{% url 'menu' %}" class="btn btn-checkout px-5 w-auto">মেনু দেখুন</a>
+            <h3>আপনার ঝুড়ি খালি!</h3>
+            <a href="{% url 'menu' %}" class="btn btn-warning px-5 rounded-pill mt-3">মেনু দেখুন</a>
         </div>
         {% endif %}
     </div>
 </section>
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-{% include 'includes/footer.html' %}
 {% endblock %}

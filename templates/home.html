@@ -41,6 +41,39 @@
     {% for cat in categories %}<a href="{% url 'category_items' cat.id %}" class="cat-bubble text-decoration-none">{{ cat.name }} <span class="ms-1 opacity-50 small">({{ cat.item_count }})</span></a>{% endfor %}
 </div></div></section>
 
+{% if active_coupon %}
+<section class="py-5">
+    <div class="container">
+        <div class="promo-coupon-card p-4 p-md-5 text-white position-relative overflow-hidden shadow-lg" 
+             style="background: linear-gradient(135deg, #1a1a1a, #333); border-radius: 30px; border: 1px solid rgba(255,255,255,0.1);">
+            
+            <div class="position-absolute top-0 end-0 p-4 opacity-10">
+                <i class="fas fa-gift fa-10x" style="transform: rotate(20deg);"></i>
+            </div>
+
+            <div class="row align-items-center position-relative">
+                <div class="col-lg-8 text-center text-lg-start mb-4 mb-lg-0">
+                    <h5 class="text-warning text-uppercase letter-spacing-2 mb-2 fw-bold small">Special Offer Available</h5>
+                    <h2 class="playfair display-5 fw-bold mb-3">এখনই অর্ডার করে জিতে নিন বিশেষ ছাড়!</h2>
+                    <p class="opacity-75 lead mb-0">
+                        আমাদের যেকোনো খাবারে <strong>{{ active_coupon.discount }}%</strong> ডিসকাউন্ট পেতে নিচের কুপনটি ব্যবহার করুন।
+                    </p>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <div class="coupon-display-box bg-white text-dark p-3 rounded-4 shadow-sm" style="border: 2px dashed #ff4757;">
+                        <p class="small text-muted mb-1 fw-bold text-uppercase">Coupon Code</p>
+                        <h3 class="fw-bold text-danger mb-2" style="letter-spacing: 2px;">{{ active_coupon.code }}</h3>
+                        <button onclick="copyCoupon('{{ active_coupon.code }}')" class="btn btn-dark w-100 rounded-pill py-2 fw-bold">
+                            <i class="far fa-copy me-2"></i> কপি করুন
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
 <section class="py-5"><div class="container">
     <div class="section-head d-flex justify-content-between align-items-end mb-4"><div><h2 class="playfair fw-bold">Top Masterpieces</h2><p class="text-muted">Our most beloved signature dishes</p></div><a href="{% url 'menu' %}" class="text-dark fw-bold mb-3">View All <i class="fas fa-arrow-right ms-2"></i></a></div>
     <div class="row g-4">

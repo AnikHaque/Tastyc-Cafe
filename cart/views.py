@@ -1,19 +1,33 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from menu.models import Food
 from django.contrib import messages
+from decimal import Decimal
+
 
 def cart_view(request):
     cart = request.session.get('cart', {})
     
-    # প্রতিটি আইটেমের টোটাল প্রাইস (price * qty) ভিউতেই ক্যালকুলেট করে নিচ্ছি
+    # প্রতিটি আইটেমের টোটাল প্রাইস (price * qty) ক্যালকুলেট করা
     for item_id, item in cart.items():
         item['total_item_price'] = float(item['price']) * int(item['qty'])
 
-    total = sum(float(item['price']) * int(item['qty']) for item in cart.values())
+    # কার্টের মূল সাবটোটাল
+    subtotal = sum(float(item['price']) * int(item['qty']) for item in cart.values())
+
+    # কুপন ও ডিসকাউন্ট লজিক
+    discount_amount = 0
+    discount_percent = request.session.get('discount_percent') # সেশন থেকে পার্সেন্টেজ নেওয়া
+    
+    if discount_percent:
+        discount_amount = (subtotal * float(discount_percent)) / 100
+    
+    final_total = subtotal - discount_amount
 
     return render(request, 'cart/cart.html', {
         'cart': cart,
-        'total': total
+        'subtotal': subtotal,       # ডিসকাউন্ট ছাড়া প্রাইস
+        'discount': discount_amount, # ডিসকাউন্ট কত টাকা কমলো
+        'total': final_total        # ডিসকাউন্ট দেওয়ার পর ফাইনাল প্রাইস
     })
 
 def add_to_cart(request, food_id):

@@ -6,7 +6,7 @@ from core.models import AboutSection, HeroSection, RestaurantFeature
 from menu.forms import TestimonialForm
 from menu.models import Category, ComboDeal, Food, Offer, Testimonial
 from blog.models import Blog
-from orders.models import OrderItem
+from orders.models import Coupon, OrderItem
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from menu.models import FlashDeal
@@ -56,11 +56,17 @@ def home(request):
     hero = HeroSection.objects.filter(is_active=True).last()
     features = RestaurantFeature.objects.all()
     about = AboutSection.objects.last() # লাস্ট ডাটাটি নিবে
+
+    active_coupon = Coupon.objects.filter(
+        active=True, 
+        valid_to__gte=timezone.now()
+    ).first()
     context = {
        'hero': hero,
         'features': features,
         'about': about,
         "categories": categories,
+        'active_coupon': active_coupon,
         "top_selling": top_selling,
         "today_specials": today_specials,
         "offers": offers,

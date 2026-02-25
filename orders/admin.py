@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Order, OrderItem
+from .models import Coupon, Order, OrderItem
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
@@ -38,3 +38,10 @@ class OrderAdmin(admin.ModelAdmin):
                 obj.is_paid = True 
 
         super().save_model(request, obj, form, change)
+
+
+@admin.register(Coupon)
+class CouponAdmin(admin.ModelAdmin):
+    list_display = ['code', 'discount', 'valid_to', 'active']
+    list_filter = ['active', 'valid_to']
+    search_fields = ['code']

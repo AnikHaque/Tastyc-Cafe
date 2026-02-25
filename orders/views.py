@@ -313,4 +313,4 @@ def apply_coupon(request):
         except Exception:
             messages.error(request, "দুঃখিত, কুপনটি সঠিক নয় বা মেয়াদ শেষ হয়ে গেছে।")
             
-    return redirect('checkout_view') # আপনার ইউআরএল অনুযায়ী নাম দিন
+        return redirect(request.META.get('HTTP_REFERER', 'cart'))

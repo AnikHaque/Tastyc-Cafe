@@ -22,4 +22,5 @@ urlpatterns = [
     path('surprise-box/', views.surprise_box_view, name='surprise_box'),
     path('reorder/<int:order_id>/', views.reorder_instant, name='reorder_instant'),
     path('dashboard/payments/', views.my_payments, name='my_payments'),
+    path('apply-coupon/', views.apply_coupon, name='apply_coupon'),
 ]
