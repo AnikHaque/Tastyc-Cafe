@@ -24,6 +24,13 @@
 <a href="{% url 'support_page' %}" class="{% if request.path == '/accounts/dashboard/support/' %}active{% endif %}">
     <i class="fa-solid fa-headset"></i> Support
 </a>
+
+{% url 'chat:index' as chat_url %} {# chat name-space thakle evabe, nahoy shudhu 'chat' #}
+<a href="/chat/" class="{% if '/chat/' in request.path %}active{% endif %}">
+    <i class="fa-solid fa-comments fa-shake"></i> Make Conversation
+    <span class="badge rounded-pill bg-success ms-1" style="font-size: 9px;">LIVE</span>
+</a>
+
 {% endblock %}
 
 {% block content %}
