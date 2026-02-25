@@ -298,3 +298,19 @@ def reorder_instant(request, order_id):
     messages.success(request, f"Order #{old_order.id} items added to cart!")
     return redirect('cart') # সরাসরি কার্ট পেজে নিয়ে যাবে
 
+def apply_coupon(request):
+    if request.method == "POST":
+        code = request.POST.get('coupon_code')
+        now = timezone.now()
+        try:
+            # আমরা আগের মডেলে code, discount, valid_to, active রেখেছিলাম
+            from .models import Coupon 
+            coupon = Coupon.objects.get(code__iexact=code, valid_to__gte=now, active=True)
+            
+            request.session['applied_coupon'] = coupon.code
+            request.session['discount_percent'] = coupon.discount
+            messages.success(request, f'কুপন "{code}" সফলভাবে যোগ করা হয়েছে!')
+        except Exception:
+            messages.error(request, "দুঃখিত, কুপনটি সঠিক নয় বা মেয়াদ শেষ হয়ে গেছে।")
+            
+    return redirect('checkout_view') # আপনার ইউআরএল অনুযায়ী নাম দিন
