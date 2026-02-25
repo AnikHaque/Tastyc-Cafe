@@ -18,9 +18,6 @@ from menu.models import Food
 def is_delivery_man(user):
     return user.groups.filter(name='Delivery Man').exists()
 
-# -------------------------------------------------------------------
-# ২. চেকআউট: পেমেন্ট মেথড অনুযায়ী লজিক (With Order Guardian Logic)
-# -------------------------------------------------------------------
 @login_required
 def checkout_view(request):
     cart = request.session.get('cart', {})
@@ -28,13 +25,24 @@ def checkout_view(request):
         messages.warning(request, "আপনার কার্টটি খালি!")
         return redirect('menu')
 
+    # কার্টের বেস টোটাল
     total = sum(Decimal(str(item['price'])) * int(item['qty']) for item in cart.values())
+    
+    # --- কুপন লজিক শুরু ---
+    discount_amount = Decimal('0.00')
+    coupon_code = request.session.get('applied_coupon')
+    discount_percent = request.session.get('discount_percent')
+
+    if coupon_code and discount_percent:
+        discount_amount = (total * Decimal(str(discount_percent))) / 100
+        total = total - discount_amount # ডিসকাউন্ট বাদ দিয়ে ফাইনাল টোটাল
+    # --- কুপন লজিক শেষ ---
 
     if request.method == 'POST':
-        # ডাবল সাবমিট প্রোটেকশন (ব্যাকএন্ড গার্ড)
+        # ডাবল সাবমিট প্রোটেকশন
         last_order_time = request.session.get('last_order_time', 0)
         if time.time() - last_order_time < 60:
-            messages.error(request, "একটু অপেক্ষা করুন! আপনি মাত্র একটি অর্ডার দিয়েছেন।")
+            messages.error(request, "একটু অপেক্ষা করুন! আপনি মাত্র একটি অর্ডার দিয়েছেন।")
             return redirect('my_orders')
 
         full_name = request.POST.get('full_name')
@@ -44,7 +52,7 @@ def checkout_view(request):
 
         try:
             with transaction.atomic():
-                # রিয়েল-টাইম স্টক গার্ড
+                # রিয়েল-টাইম স্টক গার্ড (আপনার আগের কোড অনুযায়ী)
                 for item_id, item_data in cart.items():
                     if not str(item_id).startswith('combo_') and not str(item_id).startswith('deal_'):
                         food = Food.objects.select_for_update().get(id=int(item_id))
@@ -54,17 +62,20 @@ def checkout_view(request):
                         food.stock -= int(item_data['qty'])
                         food.save()
 
-                # অর্ডার ক্রিয়েট
+                # অর্ডার ক্রিয়েট (নতুন কুপন ফিল্ড সহ)
                 order = Order.objects.create(
                     user=request.user,
                     full_name=full_name,
                     phone=phone,
                     address=address,
-                    total_price=total,
+                    total_price=total,       # এটি এখন ডিসকাউন্ট করা প্রাইস
+                    coupon_code=coupon_code, # সেশন থেকে নেওয়া
+                    discount_amount=discount_amount, # ক্যালকুলেট করা অ্যামাউন্ট
                     status='PENDING',
                     is_paid=False 
                 )
 
+                # OrderItem ক্রিয়েট করা (আপনার আগের কোড)
                 for item_id, item_data in cart.items():
                     is_combo = str(item_id).startswith('combo_')
                     OrderItem.objects.create(
@@ -75,26 +86,34 @@ def checkout_view(request):
                         quantity=item_data['qty']
                     )
 
+                # সেশন ক্লিনআপ
                 request.session['last_order_time'] = time.time()
-                
+                request.session['cart'] = {}
+                if 'applied_coupon' in request.session:
+                    del request.session['applied_coupon']
+                    del request.session['discount_percent']
+
                 try:
                     auto_assign_delivery_man(order)
-                except:
-                    pass
+                except: pass
 
-                request.session['cart'] = {}
-                
                 if payment_method == 'cod':
-                    messages.success(request, "অর্ডারটি সফল হয়েছে (Cash on Delivery)")
+                    messages.success(request, f"অর্ডার সফল হয়েছে! আপনি ৳{discount_amount} ডিসকাউন্ট পেয়েছেন।")
                     return redirect('my_orders')
                 else:
                     return redirect('payment_page', order_id=order.id)
 
         except Exception as e:
-            messages.error(request, "অর্ডার প্রসেস করার সময় সমস্যা হয়েছে।")
+            messages.error(request, f"অর্ডার প্রসেস করার সময় সমস্যা হয়েছে: {str(e)}")
             return redirect('menu')
 
-    return render(request, 'orders/checkout.html', {'cart': cart, 'total': total})
+    return render(request, 'orders/checkout.html', {
+        'cart': cart, 
+        'total': total, 
+        'discount': discount_amount, 
+        'original_total': total + discount_amount
+    })
+
 
 # -------------------------------------------------------------------
 # ৩. স্টাফ অ্যাকশন: "Confirm & Prepare"
@@ -278,3 +297,4 @@ def reorder_instant(request, order_id):
     
     messages.success(request, f"Order #{old_order.id} items added to cart!")
     return redirect('cart') # সরাসরি কার্ট পেজে নিয়ে যাবে
+

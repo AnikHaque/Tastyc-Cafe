@@ -5,6 +5,16 @@ from django.utils import timezone
 from decimal import Decimal
 from django.db.models import Sum
 
+
+class Coupon(models.Model):
+    code = models.CharField(max_length=50, unique=True)
+    discount = models.IntegerField(help_text="ডিসকাউন্ট শতাংশ (০-১০০)")
+    valid_to = models.DateTimeField()
+    active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.code
+
 class OrderManager(models.Manager):
     def total_revenue(self):
         return self.filter(is_paid=True).aggregate(Sum('total_price'))['total_price__sum'] or Decimal('0.00')
@@ -33,9 +43,10 @@ class Order(models.Model):
         blank=True, 
         related_name='assigned_deliveries'
     )
+    coupon_code = models.CharField(max_length=50, null=True, blank=True)
+    discount_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
     objects = OrderManager()
 
     class Meta:
@@ -80,3 +91,7 @@ class OrderItem(models.Model):
         if self.price is None or self.quantity is None:
             return 0
         return self.price * self.quantity
+
+
+
+
