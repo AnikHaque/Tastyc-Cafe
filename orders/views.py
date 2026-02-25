@@ -249,10 +249,6 @@ def update_user_rewards(user, order_total):
     elif profile.total_orders >= 5: profile.membership_level = 'Silver'
     profile.save()
 
-@login_required
-def rewards_view(request):
-    profile, created = UserProfile.objects.get_or_create(user=request.user)
-    return render(request, 'orders/rewards.html', {'profile': profile})
 
 @login_required
 def surprise_box_view(request):
