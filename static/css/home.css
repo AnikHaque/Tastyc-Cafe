@@ -1,5 +1,5 @@
  :root {
-        --primary: #ff4757;
+        --primary: #C5A059;
         --gold: #d4af37;
         --deep-dark: #0f141e;
         --soft-bg: #fdfdfd;
@@ -16,7 +16,7 @@
         clip-path: polygon(0 0, 100% 0, 100% 92%, 50% 100%, 0 92%);
     }
     .hero h1 { font-size: 5.5rem; font-weight: 900; margin-bottom: 25px; }
-    .hero span { color: var(--primary); font-style: italic; }
+    .hero span { color: #C5A059; font-style: italic; }
 
     /* --- Section Styling --- */
     .section-head { margin-bottom: 70px; text-align: center; }
@@ -51,7 +51,7 @@
 
     /* --- Buttons --- */
     .btn-posh {
-        background: var(--primary); color: white; padding: 18px 45px; border-radius: 50px;
+        background-color: #C5A059; color: white; padding: 18px 45px; border-radius: 50px;
         font-weight: 700; letter-spacing: 1px; transition: 0.4s; border: none; text-decoration: none;
         display: inline-block; box-shadow: 0 10px 20px rgba(255, 71, 87, 0.2);
     }

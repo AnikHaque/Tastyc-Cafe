@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; background-color: #f9f9f9;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td align="center" style="padding: 20px;">
+                <table width="600" style="background-color: #ffffff; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <tr>
+                        <td bgcolor="#121212" style="padding: 30px; text-align: center;">
+                            <h1 style="color: #C5A059; margin: 0; text-transform: uppercase; letter-spacing: 5px;">Royal Dine</h1>
+                            <p style="color: rgba(255,255,255,0.7); margin: 5px 0 0 0;">Exclusive Message</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 40px; color: #333;">
+                            <h3 style="color: #121212;">প্রিয় গ্রাহক,</h3>
+                            <p style="font-size: 16px; line-height: 1.6;">{{ message_body }}</p>
+                            
+                            <div style="margin-top: 30px; padding: 20px; border-top: 1px dashed #C5A059;">
+                                <p style="margin: 0; font-weight: bold; color: #121212;">শুভেচ্ছান্তে,</p>
+                                <p style="margin: 5px 0; color: #C5A059; font-size: 18px; font-weight: bold;">{{ sender_name }}</p>
+                                <p style="margin: 0; font-size: 12px; color: #888;">Royal Dine Management</p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="#f4f4f4" style="padding: 20px; text-align: center; font-size: 12px; color: #999;">
+                            এই ইমেইলটি <b>{{ sender_email }}</b> এর পক্ষ থেকে পাঠানো হয়েছে।
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

@@ -131,3 +131,61 @@ def contact_view(request):
         
     return render(request, 'contact.html')
 
+from django.shortcuts import render
+from django.contrib import messages
+from django.conf import settings
+
+# ইমেইল পাঠানোর প্রয়োজনীয় ইম্পোর্টস
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
+def custom_email_sender(request):
+    """
+    এই ভিউটি একটি কাস্টম ফর্ম থেকে ডাটা নিয়ে লাক্সারি টেম্পলেটে ইমেইল পাঠায়।
+    """
+    if request.method == "POST":
+        # ১. ফর্ম থেকে ডাটা রিসিভ করা
+        s_name = request.POST.get('sender_name')
+        s_email = request.POST.get('sender_email')
+        r_email = request.POST.get('receiver_email')
+        subject = request.POST.get('subject')
+        msg_body = request.POST.get('message')
+
+        # ২. HTML টেম্পলেট লোড করা (আপনার গ্লোবাল templates/emails/ ফোল্ডার থেকে)
+        # নিশ্চিত করুন dynamic_email.html ফাইলটি templates/emails/ এর ভেতর আছে
+        try:
+            html_content = render_to_string('emails/dynamic_email.html', {
+                'sender_name': s_name,
+                'sender_email': s_email,
+                'message_body': msg_body,
+            })
+            text_content = strip_tags(html_content)
+
+            # ৩. প্রেরকের ঠিকানা সেট করা (settings.py এর DEFAULT_FROM_EMAIL ব্যবহার করে)
+            # ফরম্যাট: "Name <email@example.com>"
+            from_email_formatted = f"{s_name} <{settings.DEFAULT_FROM_EMAIL}>"
+
+            # ৪. ইমেইল অবজেক্ট তৈরি করা
+            email = EmailMultiAlternatives(
+                subject=subject,
+                body=text_content,
+                from_email=from_email_formatted,
+                to=[r_email],
+                # গ্রাহক রিপ্লাই দিলে যেন ইউজারের ইমেইলে যায়
+                reply_to=[s_email],
+            )
+            email.attach_alternative(html_content, "text/html")
+
+            # ৫. ইমেইল পাঠানো
+            # fail_silently=False দেওয়া হয়েছে যাতে কোনো এরর থাকলে জ্যাঙ্গো সেটি দেখায়
+            email.send(fail_silently=False)
+            
+            messages.success(request, f"সাফল্যের সাথে {r_email} ঠিকানায় মেইল পাঠানো হয়েছে! মেইলট্র্যাপ ইনবক্স চেক করুন।")
+
+        except Exception as e:
+            # কোনো এরর হলে সেটি মেসেজ হিসেবে দেখাবে
+            messages.error(request, f"মেইল পাঠানো যায়নি। কারিগরি ত্রুটি: {str(e)}")
+
+    # আপনার ফর্ম পেজটি রেন্ডার করা (templates/emails/email_form_page.html)
+    return render(request, 'emails/email_form_page.html')

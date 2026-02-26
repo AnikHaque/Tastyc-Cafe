@@ -22,6 +22,7 @@ urlpatterns = [
     path('blogs/', include('blog.urls')),
     path('booking/', include('tablebooking.urls')),
     path('chat/', include('chat.urls')),
+    path('send-custom-mail/', views.custom_email_sender, name='custom_mail'),
 ]
 
 # 👇 THIS MUST BE AT THE BOTTOM

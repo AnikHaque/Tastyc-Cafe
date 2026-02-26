@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="py-5" style="background: #f4f7f6; min-height: 90vh;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-lg" style="border-radius: 25px; overflow: hidden;">
+                    <div class="bg-dark p-4 text-center">
+                        <h3 class="text-white mb-0 playfair" style="color: #C5A059 !important;">Luxury Mail Dispatcher</h3>
+                    </div>
+                    <div class="card-body p-5">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label class="fw-bold small">আপনার নাম (Sender Name)</label>
+                                <input type="text" name="sender_name" class="form-control rounded-pill" placeholder="উদা: আরিয়ান আহমেদ" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="fw-bold small">আপনার ইমেইল (Sender Email)</label>
+                                <input type="email" name="sender_email" class="form-control rounded-pill" placeholder="sender@example.com" required>
+                            </div>
+                            <hr>
+                            <div class="mb-3">
+                                <label class="fw-bold small">প্রাপকের ইমেইল (Receiver Email)</label>
+                                <input type="email" name="receiver_email" class="form-control rounded-pill" placeholder="receiver@example.com" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="fw-bold small">বিষয় (Subject)</label>
+                                <input type="text" name="subject" class="form-control rounded-pill" placeholder="মেইলের টাইটেল" required>
+                            </div>
+                            <div class="mb-4">
+                                <label class="fw-bold small">মেসেজ (Message Body)</label>
+                                <textarea name="message" class="form-control" rows="4" style="border-radius: 15px;" placeholder="আপনার সুন্দর বার্তাটি এখানে লিখুন..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-dark w-100 rounded-pill py-3 fw-bold shadow">
+                                <i class="fas fa-paper-plane me-2"></i> Send Luxury Email
+                            </button>
+                        </form>
+
+                        {% if messages %}
+                            <div class="mt-4">
+                                {% for message in messages %}
+                                    <div class="alert alert-{{ message.tags }} rounded-pill text-center small">{{ message }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

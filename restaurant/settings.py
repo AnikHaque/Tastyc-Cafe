@@ -62,7 +62,18 @@ CLOUDINARY_STORAGE = {
     'API_KEY': '791983312715839',
     'API_SECRET': 'U75ac8ookDKG4y4Zl5NhaQqBi4A'
 }
+# Email Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
+EMAIL_HOST_USER = '47e7c8396d26b7' # এখানে ইউজার আইডি দিন
+EMAIL_HOST_PASSWORD = 'b67c9e1b429f48' # এখানে পাসওয়ার্ড দিন
+EMAIL_PORT = '2525'
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
 
+# ডিফল্ট ইমেইল এড্রেস যা কাস্টমার দেখবে
+# settings.py এর ভেতরে এটি পরিবর্তন করুন
+DEFAULT_FROM_EMAIL = 'noreply@royaldine.com'
 # মিডিয়া ফাইল হিসেবে ক্লাউডিনারিকে সেট করুন
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
