@@ -94,3 +94,45 @@
       }
     }
   
+    /* আপনার আগের সব স্টাইল এখানে থাকবে... */
+    .delivery-link { color: #ffc107 !important; font-weight: 600; border: 1px solid #ffc107; border-radius: 20px; padding: 5px 15px !important; margin-right: 10px; transition: 0.3s; }
+    .delivery-link:hover { background: #ffc107; color: #000 !important; }
+    .logout-link { color: #ff4d4d !important; }
+
+     /* উইজেট বাটন স্টাইল */
+    .widget-btn {
+        width: 55px; height: 55px; border-radius: 50%; color: white;
+        display: flex; align-items: center; justify-content: center;
+        text-decoration: none; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative; border: 2px solid rgba(255,255,255,0.2);
+    }
+    
+    .call-btn { background: #2ecc71; font-size: 20px; width: 48px; height: 48px; }
+    .messenger-btn { background: #0084FF; font-size: 28px; width: 62px; height: 62px; }
+
+    .widget-btn:hover { transform: scale(1.1) translateY(-5px); color: white; }
+    
+    /* টুলটিপ স্টাইল */
+    .widget-tooltip {
+        position: absolute; right: 75px; background: rgba(0,0,0,0.8);
+        color: white; padding: 5px 12px; border-radius: 8px; font-size: 12px;
+        white-space: nowrap; opacity: 0; pointer-events: none; transition: 0.3s;
+    }
+    .widget-btn:hover .widget-tooltip { opacity: 1; right: 70px; }
+
+    /* গ্রিন ডট অ্যানিমেশন */
+    .online-dot {
+        position: absolute; top: 5px; right: 5px; width: 14px; height: 14px;
+        background: #2ecc71; border: 2px solid white; border-radius: 50%;
+    }
+
+    /* পালস ইফেক্ট - নজর কাড়তে সাহায্য করবে */
+    .messenger-btn::after {
+        content: ''; position: absolute; width: 100%; height: 100%;
+        border-radius: 50%; border: 2px solid #0084FF;
+        animation: widget-pulse 2s infinite; opacity: 0;
+    }
+    @keyframes widget-pulse {
+        0% { transform: scale(1); opacity: 0.6; }
+        100% { transform: scale(1.6); opacity: 0; }
+    }

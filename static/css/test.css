@@ -1,0 +1,95 @@
+/* root variables */
+:root { 
+    --gold: #C5A059; 
+    --dark: #0f0f0f; 
+    --light-gold: #e3c18d; 
+    --green: #27ae60; 
+    --pink: #ff4757; 
+}
+
+/* Global Styles */
+body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fcfcfc; color: #333; overflow-x: hidden; }
+.playfair { font-family: 'Playfair Display', serif; }
+.section-title { text-align: center; margin-bottom: 60px; }
+.section-title h2 { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 3.5rem; position: relative; display: inline-block; }
+.section-title h2 span { color: var(--gold); font-style: italic; }
+.section-title h2::after { content: ''; position: absolute; width: 50%; height: 4px; background: var(--gold); bottom: -10px; left: 25%; border-radius: 10px; }
+
+/* Feature Cards */
+.feature-card { background: white; border: none; border-radius: 30px; padding: 40px; transition: 0.4s; box-shadow: 0 10px 40px rgba(0,0,0,0.05); }
+.feature-card:hover { transform: translateY(-15px); background: var(--dark); color: white; }
+.feature-icon { font-size: 3rem; color: var(--gold); margin-bottom: 20px; }
+
+/* Thali & Healthy Cards */
+.thali-card { display: flex; background: var(--dark); color: white; border-radius: 40px; overflow: hidden; height: 350px; border: 1px solid rgba(255,255,255,0.1); }
+.thali-img { width: 50%; object-fit: cover; }
+.thali-info { width: 50%; padding: 40px; display: flex; flex-direction: column; justify-content: center; }
+.healthy-card { background: white; border-radius: 150px 150px 40px 40px; padding: 25px; transition: 0.5s; border: 1px solid #eee; text-align: center; }
+.healthy-img { width: 100%; height: 250px; border-radius: 130px; object-fit: cover; margin-bottom: 20px; border: 8px solid #fff; box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+.healthy-card:hover { border-color: var(--green); transform: scale(1.03); }
+
+/* Masterpiece & Special Box */
+.mp-card { position: relative; border-radius: 30px; overflow: hidden; background: white; padding: 15px; transition: 0.5s; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+.mp-card:hover { transform: translateY(-15px); box-shadow: 0 30px 60px rgba(0,0,0,0.15); }
+.mp-img-wrap { border-radius: 20px; overflow: hidden; height: 240px; position: relative; }
+.badge-price { position: absolute; top: 15px; right: 15px; background: white; padding: 5px 15px; border-radius: 50px; font-weight: 800; color: var(--dark); }
+.special-box { position: relative; border-radius: 40px; overflow: hidden; height: 450px; }
+.special-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); display: flex; flex-direction: column; justify-content: flex-end; padding: 35px; color: white; }
+
+/* Flash Deal & Coupon */
+.flash-container { background: #000; border-radius: 50px; padding: 60px; color: white; position: relative; overflow: hidden; border-left: 10px solid var(--gold); }
+.timer-circle { width: 80px; height: 80px; border: 2px dashed var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; }
+.coupon-card { background: #fff9f0; border: 2px dashed var(--gold); border-radius: 20px; padding: 30px; text-align: center; }
+
+/* AI Mood Cards */
+.ai-glass-card { background: #ffffff; border-radius: 25px; overflow: hidden; border: 1px solid rgba(0,0,0,0.05); transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); position: relative; height: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.03); }
+.ai-glass-card:hover { transform: translateY(-12px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); border-color: #ff4757; }
+.ai-card-img-wrap { position: relative; height: 200px; overflow: hidden; margin: 12px; border-radius: 20px; }
+.ai-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+.ai-glass-card:hover .ai-img { transform: scale(1.1); }
+.ai-badge-hot { position: absolute; top: 10px; right: 10px; background: #ff4757; color: white; padding: 4px 12px; border-radius: 50px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+.ai-mood-tag { position: absolute; bottom: 10px; left: 10px; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(5px); padding: 4px 12px; border-radius: 50px; font-size: 11px; font-weight: 600; color: #333; }
+.ai-card-body { padding: 0 20px 20px 20px; }
+.ai-btn-add { width: 38px; height: 38px; background: #333; color: white; display: flex; align-items: center; justify-content: center; border-radius: 12px; text-decoration: none; transition: 0.3s; }
+.ai-btn-add:hover { background: #ff4757; color: white; transform: rotate(90deg); }
+
+/* Offer Cards */
+.offer-card-premium { background: #fff; border-radius: 30px; position: relative; border: 1px solid #f0f0f0; transition: all 0.4s ease; overflow: visible; }
+.offer-card-premium:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(220, 53, 69, 0.1); border-color: #ff4757; }
+.offer-img-box { height: 220px; overflow: hidden; border-radius: 30px 30px 0 0; position: relative; }
+.offer-img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
+.offer-card-premium:hover .offer-img { transform: scale(1.1); }
+.offer-badge-glow { position: absolute; top: -15px; left: 20px; background: #dc3545; color: white; padding: 10px 18px; border-radius: 15px; font-weight: 800; z-index: 10; box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4); animation: pulse-red 2s infinite; }
+.offer-overlay-timer { position: absolute; bottom: 10px; right: 15px; background: rgba(0, 0, 0, 0.7); color: white; padding: 4px 12px; border-radius: 50px; font-size: 11px; }
+.btn-offer-claim { background: #1a1a1a; color: white; border-radius: 50px; padding: 10px; font-weight: 600; transition: 0.3s; border: none; }
+.btn-offer-claim:hover { background: #dc3545; color: white; letter-spacing: 1px; }
+
+/* Testimonials & Reviews */
+.premium-review-card { background: #ffffff; border-radius: 30px; padding: 40px 30px; position: relative; box-shadow: 0 15px 45px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.03); height: 100%; transition: all 0.4s ease; margin: 15px; }
+.premium-review-card:hover { transform: translateY(-5px); box-shadow: 0 25px 60px rgba(0,0,0,0.08); }
+.quote-icon { position: absolute; top: 25px; right: 30px; font-size: 2rem; color: rgba(0,0,0,0.05); }
+.review-text { font-size: 1.05rem; line-height: 1.8; color: #555; font-style: italic; min-height: 100px; }
+.guest-avatar-wrap { width: 70px; height: 70px; border-radius: 50%; padding: 4px; border: 2px solid #ff4757; overflow: hidden; }
+.guest-avatar-wrap img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.rating-stars { color: #ffc107; font-size: 0.8rem; }
+
+/* Blog Section */
+.blog-card-luxury { border-radius: 20px; overflow: hidden; transition: all 0.4s ease; background: #fff; border: 1px solid rgba(0,0,0,0.05); }
+.blog-img-box { height: 220px; overflow: hidden; position: relative; }
+.blog-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1); }
+.blog-card-luxury:hover .blog-img { transform: scale(1.1); }
+.blog-date-tag { position: absolute; bottom: 15px; left: 15px; background: #fff; color: #000; padding: 5px 15px; font-size: 11px; font-weight: 700; border-radius: 5px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+.category-dot { width: 8px; height: 8px; background: #ff4757; border-radius: 50%; display: inline-block; margin-right: 8px; }
+.btn-read-all { color: #1a1a1a; font-weight: 700; text-decoration: none; border-bottom: 2px solid #1a1a1a; padding-bottom: 5px; transition: 0.3s; }
+.btn-read-all:hover { color: #ff4757; border-color: #ff4757; padding-right: 10px; }
+
+/* Utilities */
+.text-orange { color: #ff7f50; }
+.letter-spacing-1 { letter-spacing: 1px; }
+.letter-spacing-2 { letter-spacing: 2px; }
+
+@keyframes pulse-red {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
+    70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+}

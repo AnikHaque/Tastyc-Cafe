@@ -1,42 +1,8 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block content %}
+{% extends 'base.html' %}{% load static %}{% block content %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<link rel="stylesheet" href="{% static 'css/home.css' %}">
-
-<style>
-    :root { --gold: #C5A059; --dark: #0f0f0f; --light-gold: #e3c18d; --green: #27ae60; --pink: #ff4757; }
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fcfcfc; color: #333; overflow-x: hidden; }
-    .playfair { font-family: 'Playfair Display', serif; }
-    .section-title { text-align: center; margin-bottom: 60px; }
-    .section-title h2 { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 3.5rem; position: relative; display: inline-block; }
-    .section-title h2 span { color: var(--gold); font-style: italic; }
-    .section-title h2::after { content: ''; position: absolute; width: 50%; height: 4px; background: var(--gold); bottom: -10px; left: 25%; border-radius: 10px; }
-    .feature-card { background: white; border: none; border-radius: 30px; padding: 40px; transition: 0.4s; box-shadow: 0 10px 40px rgba(0,0,0,0.05); }
-    .feature-card:hover { transform: translateY(-15px); background: var(--dark); color: white; }
-    .feature-icon { font-size: 3rem; color: var(--gold); margin-bottom: 20px; }
-    .thali-card { display: flex; background: var(--dark); color: white; border-radius: 40px; overflow: hidden; height: 350px; border: 1px solid rgba(255,255,255,0.1); }
-    .thali-img { width: 50%; object-fit: cover; }
-    .thali-info { width: 50%; padding: 40px; display: flex; flex-direction: column; justify-content: center; }
-    .healthy-card { background: white; border-radius: 150px 150px 40px 40px; padding: 25px; transition: 0.5s; border: 1px solid #eee; text-align: center; }
-    .healthy-img { width: 100%; height: 250px; border-radius: 130px; object-fit: cover; margin-bottom: 20px; border: 8px solid #fff; box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
-    .healthy-card:hover { border-color: var(--green); transform: scale(1.03); }
-    .mp-card { position: relative; border-radius: 30px; overflow: hidden; background: white; padding: 15px; transition: 0.5s; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-    .mp-card:hover { transform: translateY(-15px); box-shadow: 0 30px 60px rgba(0,0,0,0.15); }
-    .mp-img-wrap { border-radius: 20px; overflow: hidden; height: 240px; position: relative; }
-    .badge-price { position: absolute; top: 15px; right: 15px; background: white; padding: 5px 15px; border-radius: 50px; font-weight: 800; color: var(--dark); }
-    .special-box { position: relative; border-radius: 40px; overflow: hidden; height: 450px; }
-    .special-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); display: flex; flex-direction: column; justify-content: flex-end; padding: 35px; color: white; }
-    .flash-container { background: #000; border-radius: 50px; padding: 60px; color: white; position: relative; overflow: hidden; border-left: 10px solid var(--gold); }
-    .timer-circle { width: 80px; height: 80px; border: 2px dashed var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; }
-    .coupon-card { background: #fff9f0; border: 2px dashed var(--gold); border-radius: 20px; padding: 30px; text-align: center; }
-    .review-card { background: white; border-radius: 30px; padding: 40px; border: 1px solid #eee; transition: 0.4s; }
-    .review-card img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; border: 4px solid var(--gold); }
-</style>
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/home.css' %}"><link rel="stylesheet" href="{% static 'css/test.css' %}">
 <section class="hero" style="{% if hero.background_image %}background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('{{ hero.background_image.url }}');{% endif %}">
     <div class="container animate__animated animate__fadeIn">
         <p class="text-uppercase letter-spacing-3 mb-3 fw-bold opacity-75">{{ hero.sub_title|default:"Est. 2025 • Fine Dining" }}</p>
@@ -47,720 +13,99 @@
         </div>
     </div>
 </section>
-
-<section class="py-5 bg-white">
-    <div class="container py-5">
-        <div class="row g-4 text-center">
-            {% for feature in features %}<div class="col-md-3">
-                <div class="feature-card h-100">
-                    <i class="{{ feature.icon_class }} feature-icon"></i>
-                    <h5 class="fw-bold">{{ feature.title }}</h5>
-                    <p class="small opacity-75">{{ feature.description }}</p>
-                </div>
-            </div>{% endfor %}
+<section class="py-5 bg-white"><div class="container py-5"><div class="row g-4 text-center">
+    {% for feature in features %}<div class="col-md-3"><div class="feature-card h-100"><i class="{{ feature.icon_class }} feature-icon"></i><h5 class="fw-bold">{{ feature.title }}</h5><p class="small opacity-75">{{ feature.description }}</p></div></div>{% endfor %}
+</div></div></section>
+<section id="about" class="py-5"><div class="container py-5"><div class="row align-items-center">
+    <div class="col-lg-6"><div class="position-relative">
+        <img src="{% if about.image %}{{ about.image.url }}{% else %}https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=800{% endif %}" class="img-fluid rounded-5 shadow-lg">
+        <div class="position-absolute top-0 start-0 bg-gold p-4 rounded-4 shadow-lg text-white m-n3 d-none d-md-block"><h2 class="fw-bold mb-0">{{ about.experience_years }}+</h2><small>Years Experience</small></div>
+    </div></div>
+    <div class="col-lg-6 ps-lg-5 mt-5 mt-lg-0">
+        <span class="text-warning fw-bold text-uppercase">{{ about.legacy_tag|default:"Our Legacy" }}</span>
+        <h2 class="playfair display-4 fw-bold mt-2 mb-4">{{ about.title|safe }}</h2>
+        <p class="text-muted lead">{{ about.description }}</p>
+        <div class="row mt-5 g-4">
+            <div class="col-4 border-end"><h3>{{ about.stat1_count }}</h3><small>Menu Items</small></div>
+            <div class="col-4 border-end ps-4"><h3>{{ about.stat2_count }}</h3><small>Top Chefs</small></div>
+            <div class="col-4 ps-4"><h3>{{ about.stat3_count }}</h3><small>Awards</small></div>
         </div>
     </div>
-</section>
-
-<section id="about" class="py-5">
-    <div class="container py-5">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <div class="position-relative">
-                    <img src="{% if about.image %}{{ about.image.url }}{% else %}https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=800{% endif %}" class="img-fluid rounded-5 shadow-lg">
-                    <div class="position-absolute top-0 start-0 bg-gold p-4 rounded-4 shadow-lg text-white m-n3 d-none d-md-block">
-                        <h2 class="fw-bold mb-0">{{ about.experience_years }}+</h2>
-                        <small>Years Experience</small>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 ps-lg-5 mt-5 mt-lg-0">
-                <span class="text-warning fw-bold text-uppercase">{{ about.legacy_tag|default:"Our Legacy" }}</span>
-                <h2 class="playfair display-4 fw-bold mt-2 mb-4">{{ about.title|safe }}</h2>
-                <p class="text-muted lead">{{ about.description }}</p>
-                <div class="row mt-5 g-4">
-                    <div class="col-4 border-end"><h3>{{ about.stat1_count }}</h3><small>Menu Items</small></div>
-                    <div class="col-4 border-end ps-4"><h3>{{ about.stat2_count }}</h3><small>Top Chefs</small></div>
-                    <div class="col-4 ps-4"><h3>{{ about.stat3_count }}</h3><small>Awards</small></div>
-                </div>
-            </div>
-        </div>
+</div></div></section>
+<section class="py-5 bg-light"><div class="container">
+    <div class="section-title"><h2>Signature <span>Collections</span></h2></div>
+    <div class="d-flex flex-wrap justify-content-center gap-3">
+        {% for cat in categories %}<a href="{% url 'category_items' cat.id %}" class="btn btn-white shadow-sm rounded-pill px-4 py-2 fw-bold text-dark border">{{ cat.name }} <span class="ms-2 badge bg-gold text-white">{{ cat.item_count }}</span></a>{% endfor %}
     </div>
-</section>
-
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="section-title"><h2>Signature <span>Collections</span></h2></div>
-        <div class="d-flex flex-wrap justify-content-center gap-3">
-            {% for cat in categories %}
-            <a href="{% url 'category_items' cat.id %}" class="btn btn-white shadow-sm rounded-pill px-4 py-2 fw-bold text-dark border">
-                {{ cat.name }} <span class="ms-2 badge bg-gold text-white">{{ cat.item_count }}</span>
-            </a>
-            {% endfor %}
-        </div>
+</div></section>
+{% if active_coupon %}<section class="py-5"><div class="container"><div class="coupon-card shadow-sm animate__animated animate__pulse animate__infinite">
+    <h5 class="text-warning fw-bold">SPECIAL GIFT FOR YOU</h5><h2 class="playfair fw-bold my-3">Get {{ active_coupon.discount }}% OFF Today!</h2>
+    <div class="d-inline-block bg-white border-2 border-dashed border-dark p-3 rounded-3 px-5"><h3 class="fw-bold text-danger mb-0" style="letter-spacing: 5px;">{{ active_coupon.code }}</h3></div>
+    <p class="mt-3 text-muted">Use this code at checkout to claim your discount.</p>
+</div></div></section>{% endif %}
+<section class="py-5 bg-white"><div class="container py-5"><div class="section-title"><h2>The Royal <span>Thali</span></h2></div><div class="row g-4">
+    {% for combo in combos|slice:":2" %}<div class="col-lg-6"><div class="thali-card shadow-lg">
+        <img src="{% if combo.image %}{{ combo.image.url }}{% else %}https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=600{% endif %}" class="thali-img">
+        <div class="thali-info"><h3 class="playfair fw-bold text-warning">{{ combo.name }}</h3><p class="small opacity-75 my-3">{{ combo.description|truncatechars:80 }}</p>
+        <div class="d-flex align-items-center gap-3"><span class="h4 fw-bold mb-0">৳{{ combo.discount_price }}</span><del class="small opacity-50">৳{{ combo.original_price }}</del></div>
+        <a href="{% url 'add_combo_to_cart' combo.id %}" class="btn btn-warning btn-sm rounded-pill mt-4">Order Now</a></div>
+    </div></div>{% endfor %}
+</div></div></section>
+<section class="py-5 bg-light"><div class="container py-5"><div class="section-title"><h2 style="color: var(--green);">Healthy <span>Bites</span></h2></div><div class="row g-4">
+    {% for item in healthy_items %}<div class="col-lg-3 col-md-6"><div class="healthy-card">
+        <img src="{% if item.image %}{{ item.image.url }}{% else %}https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500{% endif %}" class="healthy-img">
+        <h5 class="fw-bold">{{ item.name }}</h5><a href="{% url 'add_to_cart' item.id %}"><button class="btn btn-outline-success rounded-pill px-4">Order Now</button></a>
+        <p class="text-success fw-bold mt-2">৳ {{ item.get_dynamic_price|floatformat:0 }}</p>
+    </div></div>{% endfor %}
+</div></div></section>
+<section class="py-5 bg-white"><div class="container py-5"><div class="section-title"><h2>Chef's <span>Masterpieces</span></h2></div><div class="row g-4">
+    {% for item in top_selling %}<div class="col-lg-3 col-md-6"><div class="mp-card h-100">
+        <div class="mp-img-wrap"><img src="{% if item.image %}{{ item.image.url }}{% endif %}" class="w-100 h-100 object-fit-cover"><div class="badge-price">৳ {{ item.price }}</div></div>
+        <div class="p-3 text-center"><h6 class="fw-bold my-3">{{ item.name }}</h6><a href="{% url 'add_to_cart' item.id %}" class="btn btn-dark w-100 rounded-pill">Add to Cart</a></div>
+    </div></div>{% endfor %}
+</div></div></section>
+<section class="py-5"><div class="container py-5"><div class="flash-container shadow-2xl"><div class="row align-items-center">
+    <div class="col-lg-7"><span class="badge bg-danger px-3 py-2 rounded-pill mb-4">LIMITED TIME OFFER</span><h2 class="display-3 playfair fw-bold mb-4">Flash Deal of the Day!</h2>
+        <div class="d-flex gap-4 mb-5">
+            <div class="text-center"><div class="timer-circle" id="h-box">00</div><small class="text-warning">Hours</small></div>
+            <div class="text-center"><div class="timer-circle" id="m-box">00</div><small class="text-warning">Mins</small></div>
+            <div class="text-center"><div class="timer-circle" id="s-box">00</div><small class="text-warning">Secs</small></div>
+        </div>{% if flash_deal %}<a href="{% url 'add_deal_to_cart' flash_deal.id %}" class="btn btn-danger btn-lg rounded-pill px-5">Claim Now</a>{% endif %}
     </div>
-</section>
-
-{% if active_coupon %}
-<section class="py-5">
-    <div class="container">
-        <div class="coupon-card shadow-sm animate__animated animate__pulse animate__infinite">
-            <h5 class="text-warning fw-bold">SPECIAL GIFT FOR YOU</h5>
-            <h2 class="playfair fw-bold my-3">Get {{ active_coupon.discount }}% OFF Today!</h2>
-            <div class="d-inline-block bg-white border-2 border-dashed border-dark p-3 rounded-3 px-5">
-                <h3 class="fw-bold text-danger mb-0" style="letter-spacing: 5px;">{{ active_coupon.code }}</h3>
-            </div>
-            <p class="mt-3 text-muted">Use this code at checkout to claim your discount.</p>
-        </div>
-    </div>
-</section>
-{% endif %}
-
-<section class="py-5 bg-white">
-    <div class="container py-5">
-        <div class="section-title"><h2>The Royal <span>Thali</span></h2></div>
-        <div class="row g-4">
-            {% for combo in combos|slice:":2" %}<div class="col-lg-6">
-                <div class="thali-card shadow-lg">
-                    <img src="{% if combo.image %}{{ combo.image.url }}{% else %}https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=600{% endif %}" class="thali-img">
-                    <div class="thali-info">
-                        <h3 class="playfair fw-bold text-warning">{{ combo.name }}</h3>
-                        <p class="small opacity-75 my-3">{{ combo.description|truncatechars:80 }}</p>
-                        <div class="d-flex align-items-center gap-3">
-                            <span class="h4 fw-bold mb-0">৳{{ combo.discount_price }}</span>
-                            <del class="small opacity-50">৳{{ combo.original_price }}</del>
-                        </div>
-                        <a href="{% url 'add_combo_to_cart' combo.id %}" class="btn btn-warning btn-sm rounded-pill mt-4">Order Now</a>
-                    </div>
-                </div>
-            </div>{% endfor %}
-        </div>
-    </div>
-</section>
-
-<section class="py-5 bg-light">
-    <div class="container py-5">
-        <div class="section-title"><h2 style="color: var(--green);">Healthy <span>Bites</span></h2></div>
-        <div class="row g-4">
-            {% for item in healthy_items %}<div class="col-lg-3 col-md-6">
-                <div class="healthy-card">
-                    <img src="{% if item.image %}{{ item.image.url }}{% else %}https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500{% endif %}" class="healthy-img">
-                    <h5 class="fw-bold">{{ item.name }}</h5>
-                    <a href="{% url 'add_to_cart' item.id %}"><button class="btn btn-outline-success rounded-pill px-4">Order Now</button></a>
-                    <p class="text-success fw-bold mt-2">৳ {{ item.get_dynamic_price|floatformat:0 }}</p>
-                </div>
-            </div>{% endfor %}
-        </div>
-    </div>
-</section>
-
-<section class="py-5 bg-white">
-    <div class="container py-5">
-        <div class="section-title"><h2>Chef's <span>Masterpieces</span></h2></div>
-        <div class="row g-4">
-            {% for item in top_selling %}<div class="col-lg-3 col-md-6">
-                <div class="mp-card h-100">
-                    <div class="mp-img-wrap">
-                        <img src="{% if item.image %}{{ item.image.url }}{% endif %}" class="w-100 h-100 object-fit-cover">
-                        <div class="badge-price">৳ {{ item.price }}</div>
-                    </div>
-                    <div class="p-3 text-center">
-                        <h6 class="fw-bold my-3">{{ item.name }}</h6>
-                        <a href="{% url 'add_to_cart' item.id %}" class="btn btn-dark w-100 rounded-pill">Add to Cart</a>
-                    </div>
-                </div>
-            </div>{% endfor %}
-        </div>
-    </div>
-</section>
-
-<section class="py-5">
-    <div class="container py-5">
-        <div class="flash-container shadow-2xl">
-            <div class="row align-items-center">
-                <div class="col-lg-7">
-                    <span class="badge bg-danger px-3 py-2 rounded-pill mb-4">LIMITED TIME OFFER</span>
-                    <h2 class="display-3 playfair fw-bold mb-4">Flash Deal of the Day!</h2>
-                    <div class="d-flex gap-4 mb-5">
-                        <div class="text-center"><div class="timer-circle" id="h-box">00</div><small class="text-warning">Hours</small></div>
-                        <div class="text-center"><div class="timer-circle" id="m-box">00</div><small class="text-warning">Mins</small></div>
-                        <div class="text-center"><div class="timer-circle" id="s-box">00</div><small class="text-warning">Secs</small></div>
-                    </div>
-                    {% if flash_deal %}<a href="{% url 'add_deal_to_cart' flash_deal.id %}" class="btn btn-danger btn-lg rounded-pill px-5">Claim Now</a>{% endif %}
-                </div>
-                <div class="col-lg-5 mt-5 mt-lg-0 text-center">
-                    <img src="https://www.kailashparbat.com.sg/images/menu/super-saver-combo-2.jpg" class="img-fluid rounded-5 border border-warning p-2">
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="section-title"><h2>Today's <span>Specials</span></h2></div>
-        <div class="row g-4">
-            {% for food in today_specials %}<div class="col-lg-3 col-md-6">
-                <div class="special-box shadow-lg">
-                    <img src="{% if food.image %}{{ food.image.url }}{% endif %}" class="w-100 h-100 object-fit-cover">
-                    <div class="special-overlay">
-                        <h4 class="playfair fw-bold mb-1">{{ food.name }}</h4>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="text-warning fw-bold fs-5">৳ {{ food.price }}</span>
-                            <a href="{% url 'add_to_cart' food.id %}" class="btn btn-light btn-sm rounded-pill px-4">Order</a>
-                        </div>
-                    </div>
-                </div>
-            </div>{% endfor %}
-        </div>
-    </div>
-</section>
-
-<section class="py-5" style="background: linear-gradient(180deg, #fff 0%, #f9f9f9 100%);">
-    <div class="container py-4">
-        <div class="row mb-5 align-items-end">
-            <div class="col-lg-8">
-                <span class="text-primary fw-bold text-uppercase small letter-spacing-2 mb-2 d-block">
-                    <i class="fas fa-sparkles me-1"></i> Personalized For You
-                </span>
-                <h2 class="playfair display-5 fw-bold mb-0">
-                    Recommended for your <span class="text-danger italic" style="font-style: italic;">{{ user_mood }}</span> Mood
-                </h2>
-            </div>
-            <div class="col-lg-4 text-lg-end d-none d-lg-block">
-                <p class="text-muted small mb-0">স্মার্ট এআই আপনার পছন্দ অনুযায়ী খাবার সাজিয়েছে</p>
-            </div>
-        </div>
-
-        <div class="row g-4">
-            {% for item in smart_featured %}
-            <div class="col-lg-3 col-md-6">
-                <div class="ai-glass-card">
-                    <div class="ai-card-img-wrap">
-                        <img src="{{ item.image.url }}" class="ai-img" alt="{{ item.name }}">
-                        {% if item.is_low_stock %}
-                        <div class="ai-badge-hot">Selling Fast</div>
-                        {% endif %}
-                        <div class="ai-mood-tag">{{ item.mood_tag|title }}</div>
-                    </div>
-
-                    <div class="ai-card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <h6 class="fw-bold mb-0">{{ item.name }}</h6>
-                            <span class="text-muted small"><i class="fas fa-fire-alt text-orange me-1"></i>{{ item.calories }}</span>
-                        </div>
-                        
-                        <div class="ai-price-row mt-3 d-flex align-items-center justify-content-between">
-                            <div>
-                                <span class="text-dark fw-bold h5 mb-0">৳ {{ item.get_dynamic_price|floatformat:0 }}</span>
-                            </div>
-                            <a href="{% url 'add_to_cart' item.id %}" class="ai-btn-add">
-                                <i class="fas fa-plus"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% empty %}
-            <div class="col-12 text-center py-5">
-                <p class="text-muted">আপনার জন্য সেরা খাবারটি খুঁজে পেতে মেনু ব্রাউজ করুন।</p>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-
-<style>
-    /* AI কার্ডের এক্সক্লুসিভ স্টাইল */
-    .ai-glass-card {
-        background: #ffffff;
-        border-radius: 25px;
-        overflow: hidden;
-        border: 1px solid rgba(0,0,0,0.05);
-        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-        position: relative;
-        height: 100%;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-    }
-
-    .ai-glass-card:hover {
-        transform: translateY(-12px);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.08);
-        border-color: #ff4757;
-    }
-
-    .ai-card-img-wrap {
-        position: relative;
-        height: 200px;
-        overflow: hidden;
-        margin: 12px;
-        border-radius: 20px;
-    }
-
-    .ai-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.6s ease;
-    }
-
-    .ai-glass-card:hover .ai-img {
-        transform: scale(1.1);
-    }
-
-    .ai-badge-hot {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background: #ff4757;
-        color: white;
-        padding: 4px 12px;
-        border-radius: 50px;
-        font-size: 10px;
-        font-weight: bold;
-        text-transform: uppercase;
-    }
-
-    .ai-mood-tag {
-        position: absolute;
-        bottom: 10px;
-        left: 10px;
-        background: rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(5px);
-        padding: 4px 12px;
-        border-radius: 50px;
-        font-size: 11px;
-        font-weight: 600;
-        color: #333;
-    }
-
-    .ai-card-body {
-        padding: 0 20px 20px 20px;
-    }
-
-    .ai-btn-add {
-        width: 38px;
-        height: 38px;
-        background: #333;
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 12px;
-        text-decoration: none;
-        transition: 0.3s;
-    }
-
-    .ai-btn-add:hover {
-        background: #ff4757;
-        color: white;
-        transform: rotate(90deg);
-    }
-
-    .text-orange { color: #ff7f50; }
-    .letter-spacing-2 { letter-spacing: 2px; }
-</style>
-
-<section class="py-5 bg-white">
-    <div class="container py-5">
-        <div class="section-head text-center mb-5">
-            <span class="text-danger fw-bold text-uppercase small" style="letter-spacing: 2px;">Limited Time Only</span>
-            <h2 class="playfair display-5 fw-bold">Exclusive <span class="text-danger">Offers</span></h2>
-            <div class="mx-auto" style="width: 80px; height: 3px; background: #dc3545; border-radius: 10px;"></div>
-        </div>
-
-        <div class="row g-4">
-            {% for offer in offers %}
-            <div class="col-lg-3 col-md-6">
-                <div class="offer-card-premium h-100">
-                    <div class="offer-badge-glow">
-                        {{ offer.discount_percentage }}% <small>OFF</small>
-                    </div>
-
-                    <div class="offer-img-box">
-                        <img src="{% if offer.food.image %}{{ offer.food.image.url }}{% endif %}" class="offer-img" alt="{{ offer.title }}">
-                        <div class="offer-overlay-timer">
-                            <span class="small"><i class="far fa-clock me-1"></i> Expires Soon</span>
-                        </div>
-                    </div>
-
-                    <div class="offer-content p-4 text-center">
-                        <h6 class="fw-bold mb-2 playfair">{{ offer.title }}</h6>
-                        <div class="price-box mb-3">
-                            <span class="text-muted text-decoration-line-through me-2 small">৳{{ offer.food.price }}</span>
-                            <span class="text-danger fw-bold fs-4">৳{{ offer.discounted_price }}</span>
-                        </div>
-                        <a href="{% url 'add_to_cart' offer.food.id %}" class="btn btn-offer-claim w-100">
-                            Claim Offer <i class="fas fa-arrow-right ms-2"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-
-<style>
-    /* Offer Card Exclusive Styles */
-    .offer-card-premium {
-        background: #fff;
-        border-radius: 30px;
-        position: relative;
-        border: 1px solid #f0f0f0;
-        transition: all 0.4s ease;
-        overflow: visible; /* ব্যাজটি বাইরে রাখার জন্য */
-    }
-
-    .offer-card-premium:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 20px 40px rgba(220, 53, 69, 0.1);
-        border-color: #ff4757;
-    }
-
-    .offer-img-box {
-        height: 220px;
-        overflow: hidden;
-        border-radius: 30px 30px 0 0;
-        position: relative;
-    }
-
-    .offer-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: 0.6s;
-    }
-
-    .offer-card-premium:hover .offer-img {
-        transform: scale(1.1);
-    }
-
-    /* ডিসকাউন্ট ব্যাজ গ্লো ইফেক্ট */
-    .offer-badge-glow {
-        position: absolute;
-        top: -15px;
-        left: 20px;
-        background: #dc3545;
-        color: white;
-        padding: 10px 18px;
-        border-radius: 15px;
-        font-weight: 800;
-        z-index: 10;
-        box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
-        animation: pulse-red 2s infinite;
-    }
-
-    @keyframes pulse-red {
-        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
-        70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
-        100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
-    }
-
-    .offer-overlay-timer {
-        position: absolute;
-        bottom: 10px;
-        right: 15px;
-        background: rgba(0, 0, 0, 0.7);
-        color: white;
-        padding: 4px 12px;
-        border-radius: 50px;
-        font-size: 11px;
-    }
-
-    /* ক্লেইম বাটন */
-    .btn-offer-claim {
-        background: #1a1a1a;
-        color: white;
-        border-radius: 50px;
-        padding: 10px;
-        font-weight: 600;
-        transition: 0.3s;
-        border: none;
-    }
-
-    .btn-offer-claim:hover {
-        background: #dc3545;
-        color: white;
-        letter-spacing: 1px;
-    }
-
-    .playfair { font-family: 'Playfair Display', serif; }
-</style>
-
-<section id="reserve" class="py-5" style="background: url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1600') center/cover fixed; min-height: 600px; display: flex; align-items: center;">
-    <div class="container"><div class="row"><div class="col-lg-5">
-        <div class="bg-white p-5 rounded-5 shadow-2xl">
-            <span class="text-warning fw-bold text-uppercase">Private Dining</span>
-            <h2 class="playfair display-5 fw-bold my-4">Reserve Your <br>Royal Table</h2>
-            <p class="text-muted mb-5">আমাদের এক্সক্লুসিভ ডাইনিং এরিয়াতে আপনার আসনটি নিশ্চিত করুন।</p>
-            <a href="/reservations/reserve/" class="btn btn-dark btn-lg rounded-pill w-100 py-3 fw-bold">Book A Table</a>
-        </div>
-    </div></div></div>
-</section>
-
-<section class="py-5 bg-white overflow-hidden">
-    <div class="container py-5">
-        <div class="section-head text-center mb-5">
-            <h6 class="text-primary fw-bold text-uppercase mb-2" style="letter-spacing: 3px;">Social Proof</h6>
-            <h2 class="playfair display-4 fw-bold">Guest <span class="fst-italic">Reviews</span></h2>
-            <p class="text-muted">আমাদের অতিথিদের মূল্যবান কিছু মন্তব্য</p>
-        </div>
-
-        <div class="swiper testimonialSwiper pb-5 px-3">
-            <div class="swiper-wrapper">
-                {% for review in testimonials %}
-                <div class="swiper-slide h-auto">
-                    <div class="premium-review-card">
-                        <div class="quote-icon"><i class="fas fa-quote-right"></i></div>
-                        
-                        <div class="review-body">
-                            <p class="review-text">"{{ review.review_text|truncatechars:150 }}"</p>
-                        </div>
-
-                        <hr class="my-4 opacity-10">
-
-                        <div class="d-flex align-items-center justify-content-center flex-column">
-                            <div class="guest-avatar-wrap mb-3">
-                                <img src="{% if review.image %}{{ review.image.url }}{% else %}https://ui-avatars.com/api/?name={{ review.name }}&background=f8f9fa&color=333{% endif %}" alt="{{ review.name }}">
-                            </div>
-                            <h6 class="fw-bold mb-1 playfair fs-5">{{ review.name }}</h6>
-                            <div class="rating-stars mb-2">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-            <div class="swiper-pagination"></div>
-        </div>
-    </div>
-</section>
-
-<style>
-    /* Premium Review Card Style */
-    .premium-review-card {
-        background: #ffffff;
-        border-radius: 30px;
-        padding: 40px 30px;
-        position: relative;
-        box-shadow: 0 15px 45px rgba(0,0,0,0.05);
-        border: 1px solid rgba(0,0,0,0.03);
-        height: 100%;
-        transition: all 0.4s ease;
-        margin: 15px;
-    }
-
-    .premium-review-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 25px 60px rgba(0,0,0,0.08);
-    }
-
-    .quote-icon {
-        position: absolute;
-        top: 25px;
-        right: 30px;
-        font-size: 2rem;
-        color: rgba(0,0,0,0.05);
-    }
-
-    .review-text {
-        font-size: 1.05rem;
-        line-height: 1.8;
-        color: #555;
-        font-style: italic;
-        min-height: 100px;
-    }
-
-    .guest-avatar-wrap {
-        width: 70px;
-        height: 70px;
-        border-radius: 50%;
-        padding: 4px;
-        border: 2px solid #ff4757;
-        overflow: hidden;
-    }
-
-    .guest-avatar-wrap img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 50%;
-    }
-
-    .rating-stars {
-        color: #ffc107;
-        font-size: 0.8rem;
-    }
-
-    /* Swiper ডট কাস্টমাইজেশন */
-    .swiper-pagination-bullet-active {
-        background: #ff4757 !important;
-        width: 25px !important;
-        border-radius: 10px !important;
-    }
-</style>
-
-<script>
-    var swiper = new Swiper(".testimonialSwiper", {
-        slidesPerView: 1,
-        spaceBetween: 20,
-        pagination: {
-            el: ".swiper-pagination",
-            clickable: true,
-        },
-        breakpoints: {
-            768: { slidesPerView: 2 },
-            1024: { slidesPerView: 3 },
-        },
-        autoplay: {
-            delay: 4000,
-            disableOnInteraction: false,
-        },
-    });
-</script>
-
-<section class="py-5 bg-light">
-    <div class="container py-5">
-        <div class="d-flex justify-content-between align-items-end mb-5">
-            <div>
-                <h6 class="text-primary fw-bold text-uppercase mb-2" style="letter-spacing: 2px;">From Our Kitchen</h6>
-                <h2 class="playfair display-4 fw-bold mb-0">Our <span class="fst-italic">Stories</span></h2>
-            </div>
-            <a href="{% url 'blog_list' %}" class="btn-read-all">
-                Read All Posts <i class="fas fa-long-arrow-alt-right ms-2"></i>
-            </a>
-        </div>
-
-        <div class="row g-4">
-            {% for blog in blogs %}
-            <div class="col-lg-3 col-md-6">
-                <div class="blog-card-luxury h-100">
-                    <div class="blog-img-box">
-                        <img src="{% if blog.thumbnail %}{{ blog.thumbnail.url }}{% endif %}" class="blog-img" alt="{{ blog.title }}">
-                        <div class="blog-date-tag">
-                            {{ blog.created_at|date:"M d" }}
-                        </div>
-                    </div>
-
-                    <div class="blog-info p-4 bg-white">
-                        <div class="d-flex align-items-center mb-2">
-                            <span class="category-dot"></span>
-                            <span class="text-muted small fw-bold text-uppercase letter-spacing-1">Culinary</span>
-                        </div>
-                        <h5 class="playfair fw-bold">
-                            <a href="{% url 'blog_detail' blog.slug %}" class="text-dark text-decoration-none blog-title-link">
-                                {{ blog.title|truncatechars:45 }}
-                            </a>
-                        </h5>
-                        <p class="text-muted small mt-2 mb-0">By RoyalDine Editorial</p>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-
-<style>
-    /* Magazine Style Blog Card */
-    .blog-card-luxury {
-        border-radius: 20px;
-        overflow: hidden;
-        transition: all 0.4s ease;
-        background: #fff;
-        border: 1px solid rgba(0,0,0,0.05);
-    }
-
-    .blog-img-box {
-        height: 220px;
-        overflow: hidden;
-        position: relative;
-    }
-
-    .blog-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
-    }
-
-    .blog-card-luxury:hover .blog-img {
-        transform: scale(1.1);
-    }
-
-    .blog-date-tag {
-        position: absolute;
-        bottom: 15px;
-        left: 15px;
-        background: #fff;
-        color: #000;
-        padding: 5px 15px;
-        font-size: 11px;
-        font-weight: 700;
-        border-radius: 5px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
-
-    .blog-title-link {
-        transition: color 0.3s ease;
-    }
-
-    .blog-card-luxury:hover .blog-title-link {
-        color: #ff4757 !important;
-    }
-
-    /* ক্যাটাগরি ডট */
-    .category-dot {
-        width: 8px;
-        height: 8px;
-        background: #ff4757;
-        border-radius: 50%;
-        display: inline-block;
-        margin-right: 8px;
-    }
-
-    /* রিড অল বাটন স্টাইল */
-    .btn-read-all {
-        color: #1a1a1a;
-        font-weight: 700;
-        text-decoration: none;
-        border-bottom: 2px solid #1a1a1a;
-        padding-bottom: 5px;
-        transition: 0.3s;
-    }
-
-    .btn-read-all:hover {
-        color: #ff4757;
-        border-color: #ff4757;
-        padding-right: 10px;
-    }
-
-    .letter-spacing-1 { letter-spacing: 1px; }
-</style>
+    <div class="col-lg-5 mt-5 mt-lg-0 text-center"><img src="https://www.kailashparbat.com.sg/images/menu/super-saver-combo-2.jpg" class="img-fluid rounded-5 border border-warning p-2"></div>
+</div></div></div></section>
+<section class="py-5 bg-light"><div class="container"><div class="section-title"><h2>Today's <span>Specials</span></h2></div><div class="row g-4">
+    {% for food in today_specials %}<div class="col-lg-3 col-md-6"><div class="special-box shadow-lg"><img src="{% if food.image %}{{ food.image.url }}{% endif %}" class="w-100 h-100 object-fit-cover">
+        <div class="special-overlay"><h4 class="playfair fw-bold mb-1">{{ food.name }}</h4><div class="d-flex justify-content-between align-items-center"><span class="text-warning fw-bold fs-5">৳ {{ food.price }}</span><a href="{% url 'add_to_cart' food.id %}" class="btn btn-light btn-sm rounded-pill px-4">Order</a></div></div>
+    </div></div>{% endfor %}
+</div></div></section>
+<section class="py-5" style="background: linear-gradient(180deg, #fff 0%, #f9f9f9 100%);"><div class="container py-4"><div class="row mb-5 align-items-end">
+    <div class="col-lg-8"><span class="text-primary fw-bold text-uppercase small letter-spacing-2 mb-2 d-block"><i class="fas fa-sparkles me-1"></i> Personalized For You</span>
+        <h2 class="playfair display-5 fw-bold mb-0">Recommended for your <span class="text-danger italic" style="font-style: italic;">{{ user_mood }}</span> Mood</h2></div>
+    <div class="col-lg-4 text-lg-end d-none d-lg-block"><p class="text-muted small mb-0">স্মার্ট এআই আপনার পছন্দ অনুযায়ী খাবার সাজিয়েছে</p></div>
+</div><div class="row g-4">
+    {% for item in smart_featured %}<div class="col-lg-3 col-md-6"><div class="ai-glass-card"><div class="ai-card-img-wrap">
+        <img src="{{ item.image.url }}" class="ai-img" alt="{{ item.name }}">{% if item.is_low_stock %}<div class="ai-badge-hot">Selling Fast</div>{% endif %}<div class="ai-mood-tag">{{ item.mood_tag|title }}</div></div>
+        <div class="ai-card-body"><div class="d-flex justify-content-between align-items-start mb-2"><h6 class="fw-bold mb-0">{{ item.name }}</h6><span class="text-muted small"><i class="fas fa-fire-alt text-orange me-1"></i>{{ item.calories }}</span></div>
+        <div class="ai-price-row mt-3 d-flex align-items-center justify-content-between"><div><span class="text-dark fw-bold h5 mb-0">৳ {{ item.get_dynamic_price|floatformat:0 }}</span></div><a href="{% url 'add_to_cart' item.id %}" class="ai-btn-add"><i class="fas fa-plus"></i></a></div></div>
+    </div></div>{% empty %}<div class="col-12 text-center py-5"><p class="text-muted">আপনার জন্য সেরা খাবারটি খুঁজে পেতে মেনু ব্রাউজ করুন।</p></div>{% endfor %}
+</div></div></section>
+<section class="py-5 bg-white"><div class="container py-5"><div class="section-head text-center mb-5"><span class="text-danger fw-bold text-uppercase small" style="letter-spacing: 2px;">Limited Time Only</span><h2 class="playfair display-5 fw-bold">Exclusive <span class="text-danger">Offers</span></h2><div class="mx-auto" style="width: 80px; height: 3px; background: #dc3545; border-radius: 10px;"></div></div><div class="row g-4">
+    {% for offer in offers %}<div class="col-lg-3 col-md-6"><div class="offer-card-premium h-100"><div class="offer-badge-glow">{{ offer.discount_percentage }}% <small>OFF</small></div><div class="offer-img-box"><img src="{% if offer.food.image %}{{ offer.food.image.url }}{% endif %}" class="offer-img" alt="{{ offer.title }}"><div class="offer-overlay-timer"><span class="small"><i class="far fa-clock me-1"></i> Expires Soon</span></div></div>
+    <div class="offer-content p-4 text-center"><h6 class="fw-bold mb-2 playfair">{{ offer.title }}</h6><div class="price-box mb-3"><span class="text-muted text-decoration-line-through me-2 small">৳{{ offer.food.price }}</span><span class="text-danger fw-bold fs-4">৳{{ offer.discounted_price }}</span></div><a href="{% url 'add_to_cart' offer.food.id %}" class="btn btn-offer-claim w-100">Claim Offer <i class="fas fa-arrow-right ms-2"></i></a></div></div></div>{% endfor %}
+</div></div></section>
+<section id="reserve" class="py-5" style="background: url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1600') center/cover fixed; min-height: 600px; display: flex; align-items: center;"><div class="container"><div class="row"><div class="col-lg-5"><div class="bg-white p-5 rounded-5 shadow-2xl"><span class="text-warning fw-bold text-uppercase">Private Dining</span><h2 class="playfair display-5 fw-bold my-4">Reserve Your <br>Royal Table</h2><p class="text-muted mb-5">আমাদের এক্সক্লুসিভ ডাইনিং এরিয়াতে আপনার আসনটি নিশ্চিত করুন।</p><a href="/reservations/reserve/" class="btn btn-dark btn-lg rounded-pill w-100 py-3 fw-bold">Book A Table</a></div></div></div></div></section>
+<section class="py-5 bg-white overflow-hidden"><div class="container py-5"><div class="section-head text-center mb-5"><h6 class="text-primary fw-bold text-uppercase mb-2" style="letter-spacing: 3px;">Social Proof</h6><h2 class="playfair display-4 fw-bold">Guest <span class="fst-italic">Reviews</span></h2><p class="text-muted">আমাদের অতিথিদের মূল্যবান কিছু মন্তব্য</p></div><div class="swiper testimonialSwiper pb-5 px-3"><div class="swiper-wrapper">
+    {% for review in testimonials %}<div class="swiper-slide h-auto"><div class="premium-review-card"><div class="quote-icon"><i class="fas fa-quote-right"></i></div><div class="review-body"><p class="review-text">"{{ review.review_text|truncatechars:150 }}"</p></div><hr class="my-4 opacity-10"><div class="d-flex align-items-center justify-content-center flex-column"><div class="guest-avatar-wrap mb-3"><img src="{% if review.image %}{{ review.image.url }}{% else %}https://ui-avatars.com/api/?name={{ review.name }}&background=f8f9fa&color=333{% endif %}" alt="{{ review.name }}"></div><h6 class="fw-bold mb-1 playfair fs-5">{{ review.name }}</h6><div class="rating-stars mb-2"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div></div></div></div>{% endfor %}
+</div><div class="swiper-pagination"></div></div></div></section>
+<section class="py-5 bg-light"><div class="container py-5"><div class="d-flex justify-content-between align-items-end mb-5"><div><h6 class="text-primary fw-bold text-uppercase mb-2" style="letter-spacing: 2px;">From Our Kitchen</h6><h2 class="playfair display-4 fw-bold mb-0">Our <span class="fst-italic">Stories</span></h2></div><a href="{% url 'blog_list' %}" class="btn-read-all">Read All Posts <i class="fas fa-long-arrow-alt-right ms-2"></i></a></div><div class="row g-4">
+    {% for blog in blogs %}<div class="col-lg-3 col-md-6"><div class="blog-card-luxury h-100"><div class="blog-img-box"><img src="{% if blog.thumbnail %}{{ blog.thumbnail.url }}{% endif %}" class="blog-img" alt="{{ blog.title }}"><div class="blog-date-tag">{{ blog.created_at|date:"M d" }}</div></div>
+    <div class="blog-info p-4 bg-white"><div class="d-flex align-items-center mb-2"><span class="category-dot"></span><span class="text-muted small fw-bold text-uppercase letter-spacing-1">Culinary</span></div><h5 class="playfair fw-bold"><a href="{% url 'blog_detail' blog.slug %}" class="text-dark text-decoration-none blog-title-link">{{ blog.title|truncatechars:45 }}</a></h5><p class="text-muted small mt-2 mb-0">By RoyalDine Editorial</p></div></div></div>{% endfor %}
+</div></div></section>
 {% include 'includes/footer.html' %}
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
-    let h=14, m=22, s=10;
-    setInterval(() => {
-        if(s>0) s--; else { if(m>0){ m--; s=59; } else if(h>0){ h--; m=59; s=59; } }
-        if(document.getElementById("h-box")){
-            document.getElementById("h-box").innerText = h.toString().padStart(2, '0');
-            document.getElementById("m-box").innerText = m.toString().padStart(2, '0');
-            document.getElementById("s-box").innerText = s.toString().padStart(2, '0');
-        }
-    }, 1000);
-    document.addEventListener('DOMContentLoaded', () => {
-        new Swiper(".testimonialSwiper", {
-            slidesPerView: 1, spaceBetween: 30, loop: true, autoplay: { delay: 4000 },
-            pagination: { el: ".swiper-pagination", clickable: true },
-            breakpoints: { 768: { slidesPerView: 2 }, 1024: { slidesPerView: 3 } }
-        });
-    });
+    let h=14, m=22, s=10; setInterval(() => { if(s>0) s--; else { if(m>0){ m--; s=59; } else if(h>0){ h--; m=59; s=59; } } if(document.getElementById("h-box")){ document.getElementById("h-box").innerText = h.toString().padStart(2, '0'); document.getElementById("m-box").innerText = m.toString().padStart(2, '0'); document.getElementById("s-box").innerText = s.toString().padStart(2, '0'); } }, 1000);
+    document.addEventListener('DOMContentLoaded', () => { new Swiper(".testimonialSwiper", { slidesPerView: 1, spaceBetween: 30, loop: true, autoplay: { delay: 4000 }, pagination: { el: ".swiper-pagination", clickable: true }, breakpoints: { 768: { slidesPerView: 2 }, 1024: { slidesPerView: 3 } } }); });
 </script>
 {% endblock %}

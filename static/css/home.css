@@ -48,6 +48,8 @@
     .feature-box:hover { background: var(--deep-dark); color: white; transform: translateY(-10px); }
     .feature-box i { color: var(--primary); transition: 0.4s; }
     .feature-box:hover i { color: var(--gold); transform: scale(1.2); }
+     .feature-card { background: white; border: none; border-radius: 30px; padding: 40px; transition: 0.4s; box-shadow: 0 10px 40px rgba(0,0,0,0.05); }
+    .feature-card:hover { transform: translateY(-15px); background: var(--dark); color: white; }
 
     /* --- Buttons --- */
     .btn-posh {
