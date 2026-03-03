@@ -1,3 +1,5 @@
+from decimal import Decimal
+from django.utils.html import format_html
 from django.contrib import admin
 from .models import Coupon, OperatingHours, Order, OrderItem
 
@@ -8,35 +10,80 @@ class OrderItemInline(admin.TabularInline):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    # list_display-তে 'is_paid' এবং 'delivery_man' যোগ করা হয়েছে
-    list_display = ['id', 'user', 'full_name', 'total_price', 'is_paid', 'status', 'created_at']
+    # আপনার আগের এবং নতুন সব কলামের লিস্ট
+    list_display = [
+        'id', 'user', 'full_name', 'total_price', 'is_paid', 'status', 
+        'customer_loyalty', 'fraud_risk', 'net_profit', 'created_at'
+    ]
     
-    # ফিল্টার করার সুবিধা বাড়ানো হয়েছে
     list_filter = ['is_paid', 'status', 'created_at', 'delivery_man']
-    
-    # অ্যাডমিন প্যানেল থেকে সরাসরি পেইড বা স্ট্যাটাস চেঞ্জ করার জন্য list_editable
     list_editable = ['is_paid', 'status']
-    
+    search_fields = ['id', 'full_name', 'phone', 'transaction_id']
     inlines = [OrderItemInline]
-    
-    # কুইক সার্চ করার অপশন (নাম বা আইডি দিয়ে)
-    search_fields = ['id', 'full_name', 'phone']
 
-    # পাইথন লজিক: অ্যাডমিন প্যানেল থেকে সেভ করার সময় ডাটা ক্লিন করা
+    # --- ১. স্মার্ট লয়্যালটি ক্যালকুলেশন (CLV) ---
+    def customer_loyalty(self, obj):
+        from django.db.models import Sum, Avg
+        # কাস্টমারের লাইফটাইম ডাটা এনালাইসিস
+        data = Order.objects.filter(user=obj.user, is_paid=True).aggregate(
+            total=Sum('total_price'), 
+            avg=Avg('total_price')
+        )
+        total = data['total'] or 0
+        avg = data['avg'] or 0
+        
+        # ফরম্যাটিং আগে পাইথনে করে নিচ্ছি যাতে format_html এ এরর না আসে
+        total_text = f"৳{total}"
+        avg_text = f"৳{avg:.2f}"
+        
+        return format_html('<b>{}</b><br><small style="color:gray;">Avg: {}</small>', total_text, avg_text)
+    customer_loyalty.short_description = "Customer Value (CLV)"
+
+    # --- ২. ফ্রড প্রোটেকশন লজিক (Fraud Guard) ---
+    def fraud_risk(self, obj):
+        from datetime import timedelta
+        # ১ ঘণ্টার মধ্যে একই ফোন থেকে ৩টির বেশি অর্ডার আসলে ওয়ার্নিং
+        recent_count = Order.objects.filter(
+            phone=obj.phone, 
+            created_at__gte=obj.created_at - timedelta(hours=1)
+        ).count()
+        
+        if recent_count > 3:
+            return format_html('<span style="color: #d32f2f; font-weight:bold;">⚠️ High Risk</span>')
+        return format_html('<span style="color: #388e3c;">✅ Safe</span>')
+    fraud_risk.short_description = "Fraud Guard"
+
+    # --- ৩. রিয়েল-টাইম প্রফিট ট্র্যাকার ---
+    def net_profit(self, obj):
+        try:
+            tax = obj.calculate_tax()
+        except:
+            tax = Decimal('0.00')
+        
+        # বিজনেস কস্ট লজিক (৪৫% ম্যাটেরিয়াল + ডেলিভারি)
+        estimated_cost = (obj.total_price * Decimal('0.45')) + Decimal('50.00')
+        discount = getattr(obj, 'discount_amount', Decimal('0.00'))
+        
+        profit = obj.total_price - tax - estimated_cost - discount
+        
+        profit_text = f"৳{profit:.2f}"
+        color = "#2e7d32" if profit > 0 else "#c62828"
+        
+        return format_html('<span style="color: {}; font-weight:bold;">{}</span>', color, profit_text)
+    net_profit.short_description = "Net Profit"
+
+    # --- ৪. অটোমেশন ও সেভ লজিক ---
     def save_model(self, request, obj, form, change):
-        if change: # যদি অর্ডার আগে থেকেই থাকে এবং এখন এডিট করা হয়
+        if change:
             old_obj = Order.objects.get(pk=obj.pk)
-            
-            # লজিক ১: যদি একবার ডেলিভারি হয়ে যায়, তবে স্ট্যাটাস আর পেন্ডিং এ নেওয়া যাবে না
+            # একবার ডেলিভারি হয়ে গেলে স্ট্যাটাস ব্যাক করা যাবে না
             if old_obj.status == 'DELIVERED' and obj.status != 'DELIVERED':
                 obj.status = 'DELIVERED'
             
-            # লজিক ২: পেমেন্ট ট্র্যাকিং (আপনি চাইলে এখানেও কাস্টম লজিক দিতে পারেন)
-            # যেমন: যদি স্ট্যাটাস DELIVERED হয়, অটোমেটিক is_paid = True হয়ে যাবে
+            # ডেলিভারি হলে পেমেন্ট অটোমেটিক ট্রু হয়ে যাবে
             if obj.status == 'DELIVERED':
-                obj.status = 'DELIVERED'
                 obj.is_paid = True 
-
+        
         super().save_model(request, obj, form, change)
 
 
