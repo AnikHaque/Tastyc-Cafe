@@ -1,0 +1,20 @@
+<section class="py-5"><div class="container py-5"><div class="flash-container shadow-2xl"><div class="row align-items-center">
+    <div class="col-lg-7"><span class="badge bg-danger px-3 py-2 rounded-pill mb-4">LIMITED TIME OFFER</span><h2 class="display-3 playfair fw-bold mb-4">Flash Deal of the Day!</h2>
+        <div class="d-flex gap-4 mb-5">
+            <div class="text-center"><div class="timer-circle" id="h-box">00</div><small class="text-warning">Hours</small></div>
+            <div class="text-center"><div class="timer-circle" id="m-box">00</div><small class="text-warning">Mins</small></div>
+            <div class="text-center"><div class="timer-circle" id="s-box">00</div><small class="text-warning">Secs</small></div>
+        </div>{% if flash_deal %}{% if IS_RESTAURANT_OPEN %}
+    {# রেস্টুরেন্ট খোলা থাকলে ফ্ল্যাশ ডিল ক্লেইম করা যাবে #}
+    <a href="{% url 'add_deal_to_cart' flash_deal.id %}" class="btn btn-danger btn-lg rounded-pill px-5">
+        Claim Now
+    </a>
+{% else %}
+    {# রেস্টুরেন্ট বন্ধ থাকলে বাটন ডিসেবল হবে #}
+    <button class="btn btn-secondary btn-lg rounded-pill px-5" disabled style="opacity: 0.7;">
+        <i class="fa-solid fa-hourglass-end me-2"></i> Deal Paused
+    </button>
+{% endif %}{% endif %}
+    </div>
+    <div class="col-lg-5 mt-5 mt-lg-0 text-center"><img src="https://www.kailashparbat.com.sg/images/menu/super-saver-combo-2.jpg" class="img-fluid rounded-5 border border-warning p-2"></div>
+</div></div></div></section>

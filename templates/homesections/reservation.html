@@ -1,0 +1,11 @@
+<section id="reserve" class="py-5" style="background: url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1600') center/cover fixed; min-height: 600px; display: flex; align-items: center;"><div class="container"><div class="row"><div class="col-lg-5"><div class="bg-white p-5 rounded-5 shadow-2xl"><span class="text-warning fw-bold text-uppercase">Private Dining</span><h2 class="playfair display-5 fw-bold my-4">Reserve Your <br>Royal Table</h2><p class="text-muted mb-5">আমাদের এক্সক্লুসিভ ডাইনিং এরিয়াতে আপনার আসনটি নিশ্চিত করুন।</p>{% if IS_RESTAURANT_OPEN %}
+    {# রেস্টুরেন্ট খোলা থাকলে বুকিং দেওয়া যাবে #}
+    <a href="/reservations/reserve/" class="btn btn-dark btn-lg rounded-pill w-100 py-3 fw-bold">
+        Book A Table
+    </a>
+{% else %}
+    {# রেস্টুরেন্ট বন্ধ থাকলে বাটনটি লক হয়ে যাবে #}
+    <button class="btn btn-secondary btn-lg rounded-pill w-100 py-3 fw-bold" disabled style="opacity: 0.8;">
+        <i class="fa-solid fa-calendar-xmark me-2"></i> Booking Unavailable Now
+    </button>
+{% endif %}</div></div></div></div></section>

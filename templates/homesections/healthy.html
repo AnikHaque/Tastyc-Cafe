@@ -1,0 +1,17 @@
+<section class="py-5 bg-light"><div class="container py-5"><div class="section-title"><h2 style="color: var(--green);">Healthy <span>Bites</span></h2></div><div class="row g-4">
+    {% for item in healthy_items %}<div class="col-lg-3 col-md-6"><div class="healthy-card">
+        <img src="{% if item.image %}{{ item.image.url }}{% else %}https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500{% endif %}" class="healthy-img">
+        <h5 class="fw-bold">{{ item.name }}</h5>{% if IS_RESTAURANT_OPEN %}
+    {# রেস্টুরেন্ট খোলা থাকলে সাধারণ লিঙ্ক এবং বাটন #}
+    <a href="{% url 'add_to_cart' item.id %}">
+        <button class="btn btn-outline-success rounded-pill px-4">Order Now</button>
+    </a>
+{% else %}
+    {# রেস্টুরেন্ট বন্ধ থাকলে লিঙ্ক ছাড়াই শুধু ডিসেবল বাটন #}
+    <button class="btn btn-outline-secondary rounded-pill px-4" disabled>
+        <i class="fa-solid fa-lock me-1"></i> Closed
+    </button>
+{% endif %}
+        <p class="text-success fw-bold mt-2">৳ {{ item.get_dynamic_price|floatformat:0 }}</p>
+    </div></div>{% endfor %}
+</div></div></section>

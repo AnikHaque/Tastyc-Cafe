@@ -1,0 +1,3 @@
+<section class="py-5 bg-white"><div class="container py-5"><div class="row g-4 text-center">
+    {% for feature in features %}<div class="col-md-3"><div class="feature-card h-100"><i class="{{ feature.icon_class }} feature-icon"></i><h5 class="fw-bold">{{ feature.title }}</h5><p class="small opacity-75">{{ feature.description }}</p></div></div>{% endfor %}
+</div></div></section>

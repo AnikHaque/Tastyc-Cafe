@@ -1,0 +1,5 @@
+{% if active_coupon %}<section class="py-5"><div class="container"><div class="coupon-card shadow-sm animate__animated animate__pulse animate__infinite">
+    <h5 class="text-warning fw-bold">SPECIAL GIFT FOR YOU</h5><h2 class="playfair fw-bold my-3">Get {{ active_coupon.discount }}% OFF Today!</h2>
+    <div class="d-inline-block bg-white border-2 border-dashed border-dark p-3 rounded-3 px-5"><h3 class="fw-bold text-danger mb-0" style="letter-spacing: 5px;">{{ active_coupon.code }}</h3></div>
+    <p class="mt-3 text-muted">Use this code at checkout to claim your discount.</p>
+</div></div></section>{% endif %}

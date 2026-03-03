@@ -1,0 +1,21 @@
+<section class="py-5" style="background: linear-gradient(180deg, #fff 0%, #f9f9f9 100%);"><div class="container py-4"><div class="row mb-5 align-items-end">
+    <div class="col-lg-8"><span class="text-primary fw-bold text-uppercase small letter-spacing-2 mb-2 d-block"><i class="fas fa-sparkles me-1"></i> Personalized For You</span>
+        <h2 class="playfair display-5 fw-bold mb-0">Recommended for your <span class="text-danger italic" style="font-style: italic;">{{ user_mood }}</span> Mood</h2></div>
+    <div class="col-lg-4 text-lg-end d-none d-lg-block"><p class="text-muted small mb-0">স্মার্ট এআই আপনার পছন্দ অনুযায়ী খাবার সাজিয়েছে</p></div>
+</div><div class="row g-4">
+    {% for item in smart_featured %}<div class="col-lg-3 col-md-6"><div class="ai-glass-card"><div class="ai-card-img-wrap">
+        <img src="{{ item.image.url }}" class="ai-img" alt="{{ item.name }}">{% if item.is_low_stock %}<div class="ai-badge-hot">Selling Fast</div>{% endif %}<div class="ai-mood-tag">{{ item.mood_tag|title }}</div></div>
+        <div class="ai-card-body"><div class="d-flex justify-content-between align-items-start mb-2"><h6 class="fw-bold mb-0">{{ item.name }}</h6><span class="text-muted small"><i class="fas fa-fire-alt text-orange me-1"></i>{{ item.calories }}</span></div>
+        <div class="ai-price-row mt-3 d-flex align-items-center justify-content-between"><div><span class="text-dark fw-bold h5 mb-0">৳ {{ item.get_dynamic_price|floatformat:0 }}</span></div>{% if IS_RESTAURANT_OPEN %}
+    {# রেস্টুরেন্ট খোলা থাকলে প্লাস বাটন কাজ করবে #}
+    <a href="{% url 'add_to_cart' item.id %}" class="ai-btn-add">
+        <i class="fas fa-plus"></i>
+    </a>
+{% else %}
+    {# রেস্টুরেন্ট বন্ধ থাকলে বাটনটি ধূসর হয়ে যাবে এবং ক্লিক করা যাবে না #}
+    <span class="ai-btn-add" style="background-color: #ccc; cursor: not-allowed; opacity: 0.6;">
+        <i class="fas fa-ban"></i>
+    </a>
+{% endif %}</div></div>
+    </div></div>{% empty %}<div class="col-12 text-center py-5"><p class="text-muted">আপনার জন্য সেরা খাবারটি খুঁজে পেতে মেনু ব্রাউজ করুন।</p></div>{% endfor %}
+</div></div></section>

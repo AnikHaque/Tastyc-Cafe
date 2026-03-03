@@ -1,0 +1,10 @@
+<section class="hero" style="{% if hero.background_image %}background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('{{ hero.background_image.url }}');{% endif %}">
+    <div class="container animate__animated animate__fadeIn">
+        <p class="text-uppercase letter-spacing-3 mb-3 fw-bold opacity-75">{{ hero.sub_title|default:"Est. 2025 • Fine Dining" }}</p>
+        <h1>{{ hero.main_title_white|default:"Crafting" }} <span>{{ hero.main_title_span|default:"Moments" }}</span> <br> {{ hero.main_title_bottom|default:"Beyond Taste" }}</h1>
+        <div class="mt-5">
+            <a href="{% url 'menu' %}" class="btn-posh">{{ hero.menu_button_text|default:"View Our Menu" }}</a>
+            <a href="#about" class="btn btn-outline-light rounded-pill px-5 py-3 ms-md-3 mt-3 mt-md-0">{{ hero.story_button_text|default:"Our Story" }}</a>
+        </div>
+    </div>
+</section>

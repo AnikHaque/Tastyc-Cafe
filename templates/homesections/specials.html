@@ -1,0 +1,15 @@
+<section class="py-5 bg-light"><div class="container"><div class="section-title"><h2>Today's <span>Specials</span></h2></div><div class="row g-4">
+    {% for food in today_specials %}<div class="col-lg-3 col-md-6"><div class="special-box shadow-lg"><img src="{% if food.image %}{{ food.image.url }}{% endif %}" class="w-100 h-100 object-fit-cover">
+        <div class="special-overlay"><h4 class="playfair fw-bold mb-1">{{ food.name }}</h4><div class="d-flex justify-content-between align-items-center"><span class="text-warning fw-bold fs-5">৳ {{ food.price }}</span>{% if IS_RESTAURANT_OPEN %}
+    {# রেস্টুরেন্ট খোলা থাকলে সাদা বাটনটি দেখাবে #}
+    <a href="{% url 'add_to_cart' food.id %}" class="btn btn-light btn-sm rounded-pill px-4">
+        Order
+    </a>
+{% else %}
+    {# রেস্টুরেন্ট বন্ধ থাকলে বাটনটি ইন-অ্যাক্টিভ হয়ে যাবে #}
+    <button class="btn btn-outline-secondary btn-sm rounded-pill px-4" disabled>
+        Closed
+    </button>
+{% endif %}</div></div>
+    </div></div>{% endfor %}
+</div></div></section>
