@@ -119,6 +119,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'support_widget.context_processors.smart_widget_processor',
+                'orders.context_processors.restaurant_status',
             ],
         },
     },

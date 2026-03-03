@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Coupon, Order, OrderItem
+from .models import Coupon, OperatingHours, Order, OrderItem
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
@@ -45,3 +45,7 @@ class CouponAdmin(admin.ModelAdmin):
     list_display = ['code', 'discount', 'valid_to', 'active']
     list_filter = ['active', 'valid_to']
     search_fields = ['code']
+
+@admin.register(OperatingHours)
+class OperatingHoursAdmin(admin.ModelAdmin):
+    list_display = ('get_day_display', 'opening_time', 'closing_time', 'is_closed')

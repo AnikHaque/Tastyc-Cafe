@@ -92,6 +92,24 @@ class OrderItem(models.Model):
             return 0
         return self.price * self.quantity
 
+# ... আপনার বিদ্যমান কোডগুলোর নিচে এটি বসান ...
 
+class OperatingHours(models.Model):
+    DAYS = (
+        (0, 'Monday'), (1, 'Tuesday'), (2, 'Wednesday'),
+        (3, 'Thursday'), (4, 'Friday'), (5, 'Saturday'), (6, 'Sunday'),
+    )
+    day = models.IntegerField(choices=DAYS, unique=True)
+    opening_time = models.TimeField()
+    closing_time = models.TimeField()
+    is_closed = models.BooleanField(default=False, verbose_name="সাপ্তাহিক বন্ধ?")
+
+    class Meta:
+        verbose_name = "Operating Hour"
+        verbose_name_plural = "Operating Hours"
+        ordering = ['day']
+
+    def __str__(self):
+        return f"{self.get_day_display()}: {self.opening_time} - {self.closing_time}"
 
 
