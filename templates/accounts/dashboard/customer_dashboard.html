@@ -1,152 +1,58 @@
-{% extends 'accounts/dashboard/base_dashboard.html' %}
-{% block title %}Dashboard | Welcome {{ request.user.username }}{% endblock %}
-
+{% extends 'accounts/dashboard/base_dashboard.html' %}{% block title %}Dashboard | Welcome {{ request.user.username }}{% endblock %}
 {% block sidebar %}
-    {% url 'customer_dashboard' as dash %}{% url 'my_orders' as orders %}
-    {% url 'create_reservation' as book %}{% url 'reservation_list' as res_list %}
-    {% url 'add_review' as add_rev %}{% url 'my_testimonials' as my_testi %}
+    {% url 'customer_dashboard' as dash %}{% url 'my_orders' as orders %}{% url 'create_reservation' as book %}{% url 'reservation_list' as res_list %}{% url 'add_review' as add_rev %}{% url 'my_testimonials' as my_testi %}{% url 'surprise_box' as surprise %}
     <a href="{{ dash }}" class="{% if request.path == dash %}active{% endif %}"><i class="fa-solid fa-chart-line"></i> Analytics</a>
     <a href="{{ orders }}" class="{% if request.path == orders %}active{% endif %}"><i class="fa-solid fa-shopping-bag"></i> My Orders</a>
     <a href="{{ book }}" class="{% if request.path == book %}active{% endif %}"><i class="fa-solid fa-calendar-plus"></i> Book Table</a>
     <a href="{{ res_list }}" class="{% if request.path == res_list %}active{% endif %}"><i class="fa-solid fa-list-ul"></i> My Reservations</a>
-    <a href="{% url 'my_payments' %}" class="{% if request.path == '/accounts/dashboard/payments/' %}active{% endif %}">
-    <i class="fa-solid fa-credit-card"></i> My Payments
-</a>
-{% url 'surprise_box' as surprise %}
-<a href="{{ surprise }}" class="{% if request.path == surprise %}active{% endif %}">
-    <i class="fas fa-gift"></i> Surprise Box
-</a>
+    <a href="{% url 'my_payments' %}" class="{% if '/payments/' in request.path %}active{% endif %}"><i class="fa-solid fa-credit-card"></i> My Payments</a>
+    <a href="{{ surprise }}" class="{% if request.path == surprise %}active{% endif %}"><i class="fas fa-gift"></i> Surprise Box</a>
     <a href="{{ add_rev }}" class="{% if request.path == add_rev %}active{% endif %}"><i class="fa-solid fa-pen-fancy"></i> Create Review</a>
     <a href="{{ my_testi }}" class="{% if request.path == my_testi %}active{% endif %}"><i class="fa-solid fa-star"></i> My Reviews</a>
-    <a href="{% url 'profile_settings' %}" class="{% if request.path == '/profile/' %}active{% endif %}">
-    <i class="fa-solid fa-user-gear"></i> Profile Settings
-</a>
-<a href="{% url 'support_page' %}" class="{% if request.path == '/accounts/dashboard/support/' %}active{% endif %}">
-    <i class="fa-solid fa-headset"></i> Support
-</a>
-
-{% url 'chat:index' as chat_url %} {# chat name-space thakle evabe, nahoy shudhu 'chat' #}
-<a href="/chat/" class="{% if '/chat/' in request.path %}active{% endif %}">
-    <i class="fa-solid fa-comments fa-shake"></i> Make Conversation
-    <span class="badge rounded-pill bg-success ms-1" style="font-size: 9px;">LIVE</span>
-</a>
-
+    <a href="{% url 'profile_settings' %}" class="{% if '/profile/' in request.path %}active{% endif %}"><i class="fa-solid fa-user-gear"></i> Profile Settings</a>
+    <a href="{% url 'support_page' %}" class="{% if '/support/' in request.path %}active{% endif %}"><i class="fa-solid fa-headset"></i> Support</a>
+    <a href="/chat/" class="{% if '/chat/' in request.path %}active{% endif %}"><i class="fa-solid fa-comments fa-shake"></i> Make Conversation <span class="badge rounded-pill bg-success ms-1" style="font-size: 9px;">LIVE</span></a>
 {% endblock %}
 
 {% block content %}
 <div class="container-fluid px-4 py-4">
     <div class="mb-4 d-flex justify-content-between align-items-center">
-        <div><h2 class="fw-bold">Welcome, {{ request.user.first_name|default:request.user.username }}!</h2>
-            <p class="text-muted small">Explore your food journey and activity history.</p></div>
+        <div><h2 class="fw-bold">Welcome, {{ request.user.first_name|default:request.user.username }}!</h2><p class="text-muted small">Explore your food journey and activity history.</p></div>
         <a href="{% url 'menu' %}" class="btn btn-primary rounded-pill px-4 shadow-sm"><i class="fa-solid fa-utensils me-2"></i>Order Now</a>
     </div>
-
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card border-0 shadow-sm rounded-4 position-relative overflow-hidden" 
-                 style="background: linear-gradient(135deg, #1e1e2f 0%, #3a3a52 100%); color: white;">
-                <div class="card-body p-4">
-                    <div class="row align-items-center">
-                        <div class="col-md-8">
-                            <div class="d-flex align-items-center mb-3">
-                                <span class="display-5 me-3">{{ loyalty.tier_badge }}</span>
-                                <div>
-                                    <h4 class="mb-0 fw-bold">{{ loyalty.tier_name }} Member</h4>
-                                    <p class="small mb-0 opacity-75">Enjoying {{ loyalty.discount }}% exclusive discount on every order</p>
-                                </div>
-                            </div>
-                            
-                            <div class="mt-3">
-                                <div class="d-flex justify-content-between mb-1 small">
-                                    <span>Progress to next tier</span>
-                                    <span>{{ loyalty.completed_count }} Orders completed</span>
-                                </div>
-                                <div class="progress" style="height: 8px; background: rgba(255,255,255,0.1);">
-                                    <div class="progress-bar bg-warning" role="progressbar" 
-                                         style="width: {{ loyalty.progress }}%" aria-valuenow="{{ loyalty.progress }}" 
-                                         aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                {% if loyalty.remaining > 0 %}
-                                    <p class="small mt-2 mb-0"><i class="fa-solid fa-circle-info me-1 text-warning"></i> Order <strong>{{ loyalty.remaining }}</strong> more times to unlock the next level!</p>
-                                {% else %}
-                                    <p class="small mt-2 mb-0 text-warning"><i class="fa-solid fa-crown me-1"></i> You are at the top tier!</p>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="col-md-4 text-md-end d-none d-md-block">
-                            <i class="fa-solid fa-medal opacity-25" style="font-size: 100px; position: absolute; right: 20px; top: 10px;"></i>
-                        </div>
-                    </div>
+    <div class="row mb-4"><div class="col-12"><div class="card border-0 shadow-sm rounded-4 position-relative overflow-hidden" style="background: linear-gradient(135deg, #1e1e2f 0%, #3a3a52 100%); color: white;"><div class="card-body p-4">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <div class="d-flex align-items-center mb-3"><span class="display-5 me-3">{{ loyalty.tier_badge }}</span><div><h4 class="mb-0 fw-bold">{{ loyalty.tier_name }} Member</h4><p class="small mb-0 opacity-75">Enjoying {{ loyalty.discount }}% exclusive discount</p></div></div>
+                <div class="mt-3"><div class="d-flex justify-content-between mb-1 small"><span>Progress to next tier</span><span>{{ loyalty.completed_count }} Orders</span></div>
+                    <div class="progress" style="height: 8px; background: rgba(255,255,255,0.1);"><div class="progress-bar bg-warning" role="progressbar" style="width: {{ loyalty.progress }}%"></div></div>
+                    {% if loyalty.remaining > 0 %}<p class="small mt-2 mb-0 text-warning">Order <strong>{{ loyalty.remaining }}</strong> more times for next level!</p>{% else %}<p class="small mt-2 mb-0 text-warning"><i class="fa-solid fa-crown me-1"></i> Top Tier!</p>{% endif %}
                 </div>
             </div>
+            <div class="col-md-4 text-md-end d-none d-md-block"><i class="fa-solid fa-medal opacity-25" style="font-size: 100px; position: absolute; right: 20px; top: 10px;"></i></div>
         </div>
-    </div>
-
+    </div></div></div></div>
     <div class="row mb-4 g-3">
         {% with t_o=total_orders|default:0 t_s=total_spent|default:0 t_res=total_reservations|default:0 t_rev=total_reviews|default:0 %}
-        <div class="col-md-3">
-            <div class="card border-0 shadow-sm border-start border-primary border-5 rounded-3"><div class="card-body">
-                <div class="small fw-bold text-primary text-uppercase">Total Orders</div><div class="h4 mb-0 fw-bold">{{ t_o }}</div>
-            </div></div>
-        </div>
-        <div class="col-md-3">
-            <div class="card border-0 shadow-sm border-start border-success border-5 rounded-3"><div class="card-body">
-                <div class="small fw-bold text-success text-uppercase">Total Spent</div><div class="h4 mb-0 fw-bold">৳{{ t_s }}</div>
-            </div></div>
-        </div>
-        <div class="col-md-3">
-            <div class="card border-0 shadow-sm border-start border-info border-5 rounded-3"><div class="card-body">
-                <div class="small fw-bold text-info text-uppercase">Reservations</div><div class="h4 mb-0 fw-bold">{{ t_res }}</div>
-            </div></div>
-        </div>
-        <div class="col-md-3">
-            <div class="card border-0 shadow-sm border-start border-warning border-5 rounded-3"><div class="card-body">
-                <div class="small fw-bold text-warning text-uppercase">My Reviews</div><div class="h4 mb-0 fw-bold">{{ t_rev }}</div>
-            </div></div>
-        </div>
+        <div class="col-md-3"><div class="card border-0 shadow-sm border-start border-primary border-5 rounded-3"><div class="card-body"><div class="small fw-bold text-primary">Total Orders</div><div class="h4 mb-0 fw-bold">{{ t_o }}</div></div></div></div>
+        <div class="col-md-3"><div class="card border-0 shadow-sm border-start border-success border-5 rounded-3"><div class="card-body"><div class="small fw-bold text-success">Total Spent</div><div class="h4 mb-0 fw-bold">৳{{ t_s }}</div></div></div></div>
+        <div class="col-md-3"><div class="card border-0 shadow-sm border-start border-info border-5 rounded-3"><div class="card-body"><div class="small fw-bold text-info">Reservations</div><div class="h4 mb-0 fw-bold">{{ t_res }}</div></div></div></div>
+        <div class="col-md-3"><div class="card border-0 shadow-sm border-start border-warning border-5 rounded-3"><div class="card-body"><div class="small fw-bold text-warning">My Reviews</div><div class="h4 mb-0 fw-bold">{{ t_rev }}</div></div></div></div>
         {% endwith %}
     </div>
-
     <div class="row g-4">
-        <div class="col-lg-8"><div class="card border-0 shadow-sm rounded-4 h-100">
-            <div class="card-header bg-white border-0 py-3 fw-bold">Spending Trends (Last 4 Weeks)</div>
-            <div class="card-body"><div style="height: 300px;"><canvas id="spendingChart"></canvas></div></div>
-        </div></div>
-        <div class="col-lg-4"><div class="card border-0 shadow-sm rounded-4 h-100">
-            <div class="card-header bg-white border-0 py-3 fw-bold">Delivery Status</div>
-            <div class="card-body"><div style="height: 300px;"><canvas id="orderStatusChart"></canvas></div></div>
-        </div></div>
+        <div class="col-lg-8"><div class="card border-0 shadow-sm rounded-4 h-100"><div class="card-header bg-white border-0 py-3 fw-bold">Spending Trends</div><div class="card-body"><div style="height: 300px;"><canvas id="spendingChart"></canvas></div></div></div></div>
+        <div class="col-lg-4"><div class="card border-0 shadow-sm rounded-4 h-100"><div class="card-header bg-white border-0 py-3 fw-bold">Status</div><div class="card-body"><div style="height: 300px;"><canvas id="orderStatusChart"></canvas></div></div></div></div>
     </div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const orderValues = {{ chart_data|default:"[0, 0, 0]"|safe }};
         const totalSpentValue = {{ total_spent|default:0 }};
-
-        new Chart(document.getElementById('orderStatusChart'), {
-            type: 'doughnut',
-            data: { labels: ['Delivered', 'Processing', 'Cancelled'],
-                datasets: [{ data: orderValues, backgroundColor: ['#10b981', '#f59e0b', '#ef4444'], borderWidth: 0 }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }}}
-        });
-
-        new Chart(document.getElementById('spendingChart'), {
-            type: 'line',
-            data: { labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-                datasets: [{ label: 'Spent (৳)', data: [totalSpentValue*0.1, totalSpentValue*0.3, totalSpentValue*0.2, totalSpentValue],
-                    borderColor: '#6366f1', backgroundColor: 'rgba(99, 102, 241, 0.1)', fill: true, tension: 0.4, pointRadius: 5 }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { display: false }}, x: { grid: { display: false }}}}
-        });
+        new Chart(document.getElementById('orderStatusChart'), { type: 'doughnut', data: { labels: ['Delivered', 'Processing', 'Cancelled'], datasets: [{ data: orderValues, backgroundColor: ['#10b981', '#f59e0b', '#ef4444'], borderWidth: 0 }]}, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }}}});
+        new Chart(document.getElementById('spendingChart'), { type: 'line', data: { labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'], datasets: [{ label: 'Spent (৳)', data: [totalSpentValue*0.1, totalSpentValue*0.3, totalSpentValue*0.2, totalSpentValue], borderColor: '#6366f1', backgroundColor: 'rgba(99, 102, 241, 0.1)', fill: true, tension: 0.4, pointRadius: 5 }]}, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { display: false }}, x: { grid: { display: false }}} }});
     });
 </script>
-
-<style>
-    .card { transition: transform 0.2s; }
-    .card:hover { transform: translateY(-3px); }
-    .progress-bar { transition: width 1.5s ease-in-out; }
-</style>
+<style>.card { transition: 0.2s; }.card:hover { transform: translateY(-3px); }.progress-bar { transition: width 1.5s ease-in-out; }</style>
 {% endblock %}

@@ -1,144 +1,61 @@
-{% extends "accounts/dashboard/base_dashboard.html" %}
-{% load static %}
+{% extends "accounts/dashboard/base_dashboard.html" %}{% load static %}
 {% block sidebar %}
-    {% url 'staff_analytics' as a %}{% url 'staff_inventory' as i %}{% url 'staff_top_selling' as t %}{% url 'staff_dashboard' as d %}{% url 'staff_blog_list' as bl %}{% url 'staff_create_blog' as bc %}
+    {% url 'staff_analytics' as a %}{% url 'staff_inventory' as i %}{% url 'staff_top_selling' as t %}{% url 'staff_dashboard' as d %}{% url 'staff_blog_list' as bl %}{% url 'staff_create_blog' as bc %}{% url 'all_reservations' as res_list %}{% url 'admin_intelligence' as intel %}{% url 'staff_operation_pulse' as pulse %}
     
-    <a href="{{ a }}" class="nav-link-custom {% if request.path == a %}active{% endif %}" style="--clr: #FF4757;">
-        <i class="fa-solid fa-chart-pie me-2"></i> Analytics
-    </a>
-    <a href="{{ i }}" class="nav-link-custom {% if request.path == i %}active{% endif %}" style="--clr: #2ED573;">
-        <i class="fa-solid fa-boxes-stacked me-2"></i> Inventory
-    </a>
-    <a href="{{ t }}" class="nav-link-custom {% if request.path == t %}active{% endif %}" style="--clr: #FFA502;">
-        <i class="fa-solid fa-fire me-2 fa-beat-low"></i> Top Selling
-    </a>
-      {% url 'all_reservations' as res_list %}
-    <a href="{{ res_list }}" class="nav-link-custom {% if request.path == res_list %}active{% endif %}" style="--clr: #8e44ad;">
-        <i class="fa-solid fa-calendar-check me-2"></i> All Reservations
-    </a>
-
+    <a href="{{ a }}" class="nav-link-custom {% if request.path == a %}active{% endif %}" style="--clr: #FF4757;"><i class="fa-solid fa-chart-pie me-2"></i> Analytics</a>
+    <a href="{{ i }}" class="nav-link-custom {% if request.path == i %}active{% endif %}" style="--clr: #2ED573;"><i class="fa-solid fa-boxes-stacked me-2"></i> Inventory</a>
+    <a href="{{ t }}" class="nav-link-custom {% if request.path == t %}active{% endif %}" style="--clr: #FFA502;"><i class="fa-solid fa-fire me-2 fa-beat-low"></i> Top Selling</a>
+    <a href="{{ res_list }}" class="nav-link-custom {% if request.path == res_list %}active{% endif %}" style="--clr: #8e44ad;"><i class="fa-solid fa-calendar-check me-2"></i> All Reservations</a>
     <hr class="opacity-10 mx-3">
-    
-    <a href="{{ d }}" class="nav-link-custom {% if request.path == d and not request.GET.payment and not request.GET.status %}active{% endif %}" style="--clr: #1E90FF;">
-        <i class="fa-solid fa-receipt me-2"></i> All Orders
-    </a>
-    <a href="{{ d }}?payment=PAID" class="nav-link-custom {% if request.GET.payment == 'PAID' %}active{% endif %}" style="--clr: #00D2D3;">
-        <i class="fa-solid fa-circle-check me-2"></i> Paid Orders
-    </a>
-    <a href="{{ d }}?status=PENDING" class="nav-link-custom {% if request.GET.status == 'PENDING' %}active{% endif %}" style="--clr: #FF9F43;">
-        <i class="fa-solid fa-clock me-2 fa-spin-hover"></i> New Orders 
-        <span class="badge rounded-pill bg-danger ms-auto">New</span>
-    </a>
-
+    <a href="{{ d }}" class="nav-link-custom {% if request.path == d and not request.GET.payment and not request.GET.status %}active{% endif %}" style="--clr: #1E90FF;"><i class="fa-solid fa-receipt me-2"></i> All Orders</a>
+    <a href="{{ d }}?payment=PAID" class="nav-link-custom {% if request.GET.payment == 'PAID' %}active{% endif %}" style="--clr: #00D2D3;"><i class="fa-solid fa-circle-check me-2"></i> Paid Orders</a>
+    <a href="{{ d }}?status=PENDING" class="nav-link-custom {% if request.GET.status == 'PENDING' %}active{% endif %}" style="--clr: #FF9F43;"><i class="fa-solid fa-clock me-2 fa-spin-hover"></i> New Orders <span class="badge rounded-pill bg-danger ms-auto">New</span></a>
     <hr class="opacity-10 mx-3">
-
-    {% url 'admin_intelligence' as intel %}
-    <a href="{{ intel }}" class="nav-link-custom {% if request.path == intel %}active{% endif %}" style="--clr: #6C5CE7;">
-        <i class="fa-solid fa-brain me-2"></i> AI Intelligence
-    </a>
-
-    {% url 'staff_operation_pulse' as pulse %}
-    <a href="{{ pulse }}" class="nav-link-custom {% if request.path == pulse %}active{% endif %}" style="--clr: #10B981;">
-        <i class="fa-solid fa-bolt-lightning me-2 fa-pulse"></i> Operation Pulse
-        <span class="pulse-dot"></span>
-    </a>
-
+    <a href="{{ intel }}" class="nav-link-custom {% if request.path == intel %}active{% endif %}" style="--clr: #6C5CE7;"><i class="fa-solid fa-brain me-2"></i> AI Intelligence</a>
+    <a href="{{ pulse }}" class="nav-link-custom {% if request.path == pulse %}active{% endif %}" style="--clr: #10B981;"><i class="fa-solid fa-bolt-lightning me-2 fa-pulse"></i> Operation Pulse<span class="pulse-dot"></span></a>
     <hr class="opacity-10 mx-3">
-
-    <a href="{{ bl }}" class="nav-link-custom {% if request.path == bl %}active{% endif %}" style="--clr: #A29BFE;">
-        <i class="fa-solid fa-newspaper me-2"></i> Blogs
-    </a>
-    <a href="{{ bc }}" class="nav-link-custom {% if request.path == bc %}active{% endif %}" style="--clr: #FF6B81; font-weight: bold;">
-        <i class="fa-solid fa-plus-circle me-2"></i> Create Blog
-    </a>
-
+    <a href="{{ bl }}" class="nav-link-custom {% if request.path == bl %}active{% endif %}" style="--clr: #A29BFE;"><i class="fa-solid fa-newspaper me-2"></i> Blogs</a>
+    <a href="{{ bc }}" class="nav-link-custom {% if request.path == bc %}active{% endif %}" style="--clr: #FF6B81; font-weight: bold;"><i class="fa-solid fa-plus-circle me-2"></i> Create Blog</a>
 {% endblock %}
+
 {% block content %}
-<div class="container-fluid py-5 bg-light" style="min-height: 100vh;">
-    <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div><h2 class="fw-bold text-dark m-0">Business Intelligence</h2><p class="text-muted small mb-0"><i class="fa-solid fa-calendar-day me-2"></i>Real-time insights for your restaurant</p></div>
-            <span class="badge bg-success rounded-pill px-3 py-2"><i class="fa-solid fa-circle-dot me-2 small"></i>Live Active</span>
-        </div>
-
-        <div class="row g-3 mb-4">
-            <div class="col-md-3">
-                <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
-                    <div class="card-body p-4 bg-primary text-white">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <div class="bg-white bg-opacity-25 rounded-3 p-2"><i class="fa-solid fa-bangladeshi-taka-sign"></i></div>
-                            {% if report.growth_index %}<span class="badge bg-white text-primary rounded-pill small">Trending</span>{% endif %}
-                        </div>
-                        <h6 class="text-white-50 small fw-bold text-uppercase">Daily Revenue</h6>
-                        <h3 class="fw-bold mb-0">৳{{ report.daily_revenue }}</h3>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card border-0 shadow-sm rounded-4 h-100 p-4">
-                    <div class="bg-warning bg-opacity-10 text-warning rounded-3 p-2 mb-2" style="width:fit-content;"><i class="fa-solid fa-bolt-lightning"></i></div>
-                    <h6 class="text-muted small fw-bold text-uppercase">Velocity</h6>
-                    <h3 class="fw-bold mb-0">{{ report.velocity_per_hour }} <small class="fs-6 text-muted fw-normal">Ord/Hr</small></h3>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card border-0 shadow-sm rounded-4 h-100 p-4 border-start border-info border-5">
-                    <div class="bg-info bg-opacity-10 text-info rounded-3 p-2 mb-2" style="width:fit-content;"><i class="fa-solid fa-users"></i></div>
-                    <h6 class="text-muted small fw-bold text-uppercase">Loyalty</h6>
-                    <h3 class="fw-bold mb-0">{{ report.loyalty_index }}%</h3>
-                    <div class="progress mt-2" style="height:4px;"><div class="progress-bar bg-info" style="width: {{ report.loyalty_index }}%"></div></div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card border-0 shadow-sm rounded-4 h-100 p-4 {% if low_stock_count > 0 %}border border-danger{% endif %}">
-                    <div class="{% if low_stock_count > 0 %}bg-danger{% else %}bg-success{% endif %} bg-opacity-10 {% if low_stock_count > 0 %}text-danger{% else %}text-success{% endif %} rounded-3 p-2 mb-2" style="width:fit-content;"><i class="fa-solid fa-box-open"></i></div>
-                    <h6 class="text-muted small fw-bold text-uppercase">Stock Risk</h6>
-                    <h3 class="fw-bold mb-0 {% if low_stock_count > 0 %}text-danger{% endif %}">{{ low_stock_count }} <small class="fs-6 text-muted fw-normal">Low</small></h3>
-                </div>
-            </div>
-        </div>
-
-        <div class="row g-4">
-            <div class="col-lg-8">
-                <div class="card border-0 shadow-sm rounded-4">
-                    <div class="card-header bg-white border-0 p-4 d-flex justify-content-between align-items-center">
-                        <h5 class="fw-bold mb-0"><i class="fa-solid fa-fire text-danger me-2"></i>Fastest Moving</h5>
-                        <a href="{% url 'staff_top_selling' %}" class="btn btn-sm btn-outline-primary rounded-pill">View All</a>
-                    </div>
-                    <div class="table-responsive px-4 pb-4">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="table-light"><tr class="text-muted small text-uppercase"><th>Food</th><th class="text-center">Sold</th><th class="text-end">Trend</th></tr></thead>
-                            <tbody class="small">
-                                {% for item in top_items %}
-                                <tr>
-                                    <td class="fw-bold text-dark py-3">{{ item.food__name }}</td>
-                                    <td class="text-center">{{ item.sold_qty }} units</td>
-                                    <td class="text-end text-success"><i class="fa-solid fa-chart-line me-1"></i> High</td>
-                                </tr>
-                                {% empty %}
-                                <tr><td colspan="3" class="text-center py-5 text-muted">No data available.</td></tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="card border-0 shadow-sm rounded-4 bg-dark text-white h-100 p-4">
-                    <h5 class="fw-bold mb-3"><i class="fa-solid fa-lightbulb text-warning me-2"></i>Smart AI</h5>
-                    <p class="text-white-50 small">Performing <b>{{ report.growth_index|yesno:"above,below" }}</b> weekly average.</p>
-                    <div class="mt-auto bg-white bg-opacity-10 p-3 rounded-4">
-                        <small class="text-warning fw-bold">Action:</small>
-                        <p class="small mb-0">{% if low_stock_count > 0 %}Critical stock items. Restock ASAP!{% else %}Levels healthy. Focus on promotions.{% endif %}</p>
-                    </div>
-                    <button class="btn btn-warning w-100 rounded-pill fw-bold mt-3 py-2" onclick="location.reload();"><i class="fa-solid fa-rotate me-2"></i>Refresh</button>
-                </div>
-            </div>
-        </div>
+<div class="container-fluid py-5 bg-light" style="min-height: 100vh;"><div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div><h2 class="fw-bold text-dark m-0">Business Intelligence</h2><p class="text-muted small mb-0"><i class="fa-solid fa-calendar-day me-2"></i>Real-time insights</p></div>
+        <span class="badge bg-success rounded-pill px-3 py-2"><i class="fa-solid fa-circle-dot me-2 small"></i>Live Active</span>
     </div>
-</div>
-<style>
-    .rounded-4 { border-radius: 1rem !important; }
-    .card { transition: 0.3s; } .card:hover { transform: translateY(-3px); }
-</style>
+    <div class="row g-3 mb-4">
+        <div class="col-md-3"><div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden"><div class="card-body p-4 bg-primary text-white">
+            <div class="d-flex justify-content-between align-items-start mb-2"><div class="bg-white bg-opacity-25 rounded-3 p-2"><i class="fa-solid fa-bangladeshi-taka-sign"></i></div>{% if report.growth_index %}<span class="badge bg-white text-primary rounded-pill small">Trending</span>{% endif %}</div>
+            <h6 class="text-white-50 small fw-bold text-uppercase">Daily Revenue</h6><h3 class="fw-bold mb-0">৳{{ report.daily_revenue }}</h3>
+        </div></div></div>
+        <div class="col-md-3"><div class="card border-0 shadow-sm rounded-4 h-100 p-4">
+            <div class="bg-warning bg-opacity-10 text-warning rounded-3 p-2 mb-2" style="width:fit-content;"><i class="fa-solid fa-bolt-lightning"></i></div>
+            <h6 class="text-muted small fw-bold text-uppercase">Velocity</h6><h3 class="fw-bold mb-0">{{ report.velocity_per_hour }} <small class="fs-6 text-muted fw-normal">Ord/Hr</small></h3>
+        </div></div>
+        <div class="col-md-3"><div class="card border-0 shadow-sm rounded-4 h-100 p-4 border-start border-info border-5">
+            <div class="bg-info bg-opacity-10 text-info rounded-3 p-2 mb-2" style="width:fit-content;"><i class="fa-solid fa-users"></i></div>
+            <h6 class="text-muted small fw-bold text-uppercase">Loyalty</h6><h3 class="fw-bold mb-0">{{ report.loyalty_index }}%</h3>
+            <div class="progress mt-2" style="height:4px;"><div class="progress-bar bg-info" style="width: {{ report.loyalty_index }}%"></div></div>
+        </div></div>
+        <div class="col-md-3"><div class="card border-0 shadow-sm rounded-4 h-100 p-4 {% if low_stock_count > 0 %}border border-danger{% endif %}">
+            <div class="{% if low_stock_count > 0 %}bg-danger{% else %}bg-success{% endif %} bg-opacity-10 {% if low_stock_count > 0 %}text-danger{% else %}text-success{% endif %} rounded-3 p-2 mb-2" style="width:fit-content;"><i class="fa-solid fa-box-open"></i></div>
+            <h6 class="text-muted small fw-bold text-uppercase">Stock Risk</h6><h3 class="fw-bold mb-0 {% if low_stock_count > 0 %}text-danger{% endif %}">{{ low_stock_count }} <small class="fs-6 text-muted fw-normal">Low</small></h3>
+        </div></div>
+    </div>
+    <div class="row g-4">
+        <div class="col-lg-8"><div class="card border-0 shadow-sm rounded-4">
+            <div class="card-header bg-white border-0 p-4 d-flex justify-content-between align-items-center"><h5 class="fw-bold mb-0"><i class="fa-solid fa-fire text-danger me-2"></i>Fastest Moving</h5><a href="{% url 'staff_top_selling' %}" class="btn btn-sm btn-outline-primary rounded-pill">View All</a></div>
+            <div class="table-responsive px-4 pb-4"><table class="table table-hover align-middle mb-0"><thead class="table-light"><tr class="text-muted small text-uppercase"><th>Food</th><th class="text-center">Sold</th><th class="text-end">Trend</th></tr></thead>
+                <tbody class="small">{% for item in top_items %}<tr><td class="fw-bold text-dark py-3">{{ item.food__name }}</td><td class="text-center">{{ item.sold_qty }} units</td><td class="text-end text-success"><i class="fa-solid fa-chart-line me-1"></i> High</td></tr>{% empty %}<tr><td colspan="3" class="text-center py-5 text-muted">No data available.</td></tr>{% endfor %}</tbody>
+            </table></div>
+        </div></div>
+        <div class="col-lg-4"><div class="card border-0 shadow-sm rounded-4 bg-dark text-white h-100 p-4">
+            <h5 class="fw-bold mb-3"><i class="fa-solid fa-lightbulb text-warning me-2"></i>Smart AI</h5><p class="text-white-50 small">Performing <b>{{ report.growth_index|yesno:"above,below" }}</b> weekly average.</p>
+            <div class="mt-auto bg-white bg-opacity-10 p-3 rounded-4"><small class="text-warning fw-bold">Action:</small><p class="small mb-0">{% if low_stock_count > 0 %}Critical stock. Restock ASAP!{% else %}Healthy levels. Focus on promotions.{% endif %}</p></div>
+            <button class="btn btn-warning w-100 rounded-pill fw-bold mt-3 py-2" onclick="location.reload();"><i class="fa-solid fa-rotate me-2"></i>Refresh</button>
+        </div></div>
+    </div>
+</div></div>
+<style>.rounded-4 { border-radius: 1rem !important; }.card { transition: 0.3s; }.card:hover { transform: translateY(-3px); }</style>
 {% endblock %}

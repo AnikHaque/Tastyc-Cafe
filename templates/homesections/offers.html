@@ -1,14 +1,6 @@
 <section class="py-5 bg-white"><div class="container py-5"><div class="section-head text-center mb-5"><span class="text-danger fw-bold text-uppercase small" style="letter-spacing: 2px;">Limited Time Only</span><h2 class="playfair display-5 fw-bold">Exclusive <span class="text-danger">Offers</span></h2><div class="mx-auto" style="width: 80px; height: 3px; background: #dc3545; border-radius: 10px;"></div></div><div class="row g-4">
     {% for offer in offers %}<div class="col-lg-3 col-md-6"><div class="offer-card-premium h-100"><div class="offer-badge-glow">{{ offer.discount_percentage }}% <small>OFF</small></div><div class="offer-img-box"><img src="{% if offer.food.image %}{{ offer.food.image.url }}{% endif %}" class="offer-img" alt="{{ offer.title }}"><div class="offer-overlay-timer"><span class="small"><i class="far fa-clock me-1"></i> Expires Soon</span></div></div>
-    <div class="offer-content p-4 text-center"><h6 class="fw-bold mb-2 playfair">{{ offer.title }}</h6><div class="price-box mb-3"><span class="text-muted text-decoration-line-through me-2 small">৳{{ offer.food.price }}</span><span class="text-danger fw-bold fs-4">৳{{ offer.discounted_price }}</span></div>{% if IS_RESTAURANT_OPEN %}
-    {# রেস্টুরেন্ট খোলা থাকলে অফার ক্লেইম করা যাবে #}
-    <a href="{% url 'add_to_cart' offer.food.id %}" class="btn btn-offer-claim w-100">
-        Claim Offer <i class="fas fa-arrow-right ms-2"></i>
-    </a>
-{% else %}
-    {# রেস্টুরেন্ট বন্ধ থাকলে বাটনটি লক থাকবে #}
-    <button class="btn btn-secondary w-100" disabled style="cursor: not-allowed; background-color: #6c757d; border: none;">
-        <i class="fas fa-lock me-2"></i> Restaurant Closed (Try Tomorrow)
-    </button>
-{% endif %}</div></div></div>{% endfor %}
+    <div class="offer-content p-4 text-center"><h6 class="fw-bold mb-2 playfair">{{ offer.title }}</h6><div class="price-box mb-3"><span class="text-muted text-decoration-line-through me-2 small">৳{{ offer.food.price }}</span><span class="text-danger fw-bold fs-4">৳{{ offer.discounted_price }}</span></div>
+    {% if IS_RESTAURANT_OPEN %}<a href="{% url 'add_to_cart' offer.food.id %}" class="btn btn-offer-claim w-100">Claim Offer <i class="fas fa-arrow-right ms-2"></i></a>
+    {% else %}<button class="btn btn-secondary w-100" disabled style="cursor: not-allowed; background-color: #6c757d; border: none;"><i class="fas fa-lock me-2"></i> Restaurant Closed</button>{% endif %}</div></div></div>{% endfor %}
 </div></div></section>

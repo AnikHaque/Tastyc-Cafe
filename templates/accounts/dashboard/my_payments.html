@@ -1,70 +1,33 @@
-{% extends 'accounts/dashboard/base_dashboard.html' %}
-{% block title %}Dashboard | Welcome {{ request.user.username }}{% endblock %}
-
+{% extends 'accounts/dashboard/base_dashboard.html' %}{% block title %}Dashboard | Welcome {{ request.user.username }}{% endblock %}
 {% block sidebar %}
-    {% url 'customer_dashboard' as dash %}{% url 'my_orders' as orders %}
-    {% url 'create_reservation' as book %}{% url 'reservation_list' as res_list %}
-    {% url 'add_review' as add_rev %}{% url 'my_testimonials' as my_testi %}
+    {% url 'customer_dashboard' as dash %}{% url 'my_orders' as orders %}{% url 'create_reservation' as book %}{% url 'reservation_list' as res_list %}{% url 'add_review' as add_rev %}{% url 'my_testimonials' as my_testi %}
     <a href="{{ dash }}" class="{% if request.path == dash %}active{% endif %}"><i class="fa-solid fa-chart-line"></i> Analytics</a>
     <a href="{{ orders }}" class="{% if request.path == orders %}active{% endif %}"><i class="fa-solid fa-shopping-bag"></i> My Orders</a>
     <a href="{{ book }}" class="{% if request.path == book %}active{% endif %}"><i class="fa-solid fa-calendar-plus"></i> Book Table</a>
     <a href="{{ res_list }}" class="{% if request.path == res_list %}active{% endif %}"><i class="fa-solid fa-list-ul"></i> My Reservations</a>
-    <a href="{% url 'my_payments' %}" class="{% if request.path == '/accounts/dashboard/payments/' %}active{% endif %}">
-    <i class="fa-solid fa-credit-card"></i> My Payments
-</a>
+    <a href="{% url 'my_payments' %}" class="{% if '/payments/' in request.path %}active{% endif %}"><i class="fa-solid fa-credit-card"></i> My Payments</a>
     <a href="{{ add_rev }}" class="{% if request.path == add_rev %}active{% endif %}"><i class="fa-solid fa-pen-fancy"></i> Create Review</a>
     <a href="{{ my_testi }}" class="{% if request.path == my_testi %}active{% endif %}"><i class="fa-solid fa-star"></i> My Reviews</a>
-    <a href="{% url 'profile_settings' %}" class="{% if request.path == '/profile/' %}active{% endif %}">
-    <i class="fa-solid fa-user-gear"></i> Profile Settings
-</a>
-<a href="{% url 'support_page' %}" class="{% if request.path == '/accounts/dashboard/support/' %}active{% endif %}">
-    <i class="fa-solid fa-headset"></i> Support
-</a>
+    <a href="{% url 'profile_settings' %}" class="{% if '/profile/' in request.path %}active{% endif %}"><i class="fa-solid fa-user-gear"></i> Profile Settings</a>
+    <a href="{% url 'support_page' %}" class="{% if '/support/' in request.path %}active{% endif %}"><i class="fa-solid fa-headset"></i> Support</a>
 {% endblock %}
 
 {% block content %}
 <div class="container-fluid px-4 py-4">
-    <div class="mb-4">
-        <h2 class="fw-bold">Payment History</h2>
-        <p class="text-muted small">আপনার সকল ট্রানজেকশন এবং পেমেন্ট ডিটেইলস এখানে দেখুন।</p>
-    </div>
-
-    <div class="card border-0 shadow-sm rounded-4">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-    <thead class="bg-light">
-        <tr>
-            <th class="ps-4 py-3">Payment ID</th> <th class="py-3">Date</th>
-            <th class="py-3">Amount</th>
-            <th class="py-3">Method</th>
-            <th class="py-3 pe-4">Status</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for payment in payments %}
-        <tr>
-            <td class="ps-4">
-                <span class="text-muted small">PAY-{{ payment.id }}{{ payment.created_at|date:"is" }}</span>
-            </td>
-            <td>{{ payment.created_at|date:"d M, Y" }}</td>
-            <td class="fw-bold">৳{{ payment.total_price }}</td>
-            <td>
-                <span class="badge bg-light text-dark border rounded-pill px-3">
-                    Online Payment
-                </span>
-            </td>
-            <td class="pe-4">
-                <span class="badge bg-success-subtle text-success border border-success px-3">
-                    <i class="fa-solid fa-check-circle me-1"></i> Paid
-                </span>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-            </div>
-        </div>
-    </div>
+    <div class="mb-4"><h2 class="fw-bold">Payment History</h2><p class="text-muted small">আপনার সকল ট্রানজেকশন এবং পেমেন্ট ডিটেইলস এখানে দেখুন।</p></div>
+    <div class="card border-0 shadow-sm rounded-4"><div class="card-body p-0"><div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="bg-light"><tr><th class="ps-4 py-3">Payment ID</th><th class="py-3">Date</th><th class="py-3">Amount</th><th class="py-3">Method</th><th class="py-3 pe-4">Status</th></tr></thead>
+            <tbody>
+                {% for payment in payments %}<tr>
+                    <td class="ps-4"><span class="text-muted small">PAY-{{ payment.id }}{{ payment.created_at|date:"is" }}</span></td>
+                    <td>{{ payment.created_at|date:"d M, Y" }}</td>
+                    <td class="fw-bold">৳{{ payment.total_price }}</td>
+                    <td><span class="badge bg-light text-dark border rounded-pill px-3">Online Payment</span></td>
+                    <td class="pe-4"><span class="badge bg-success-subtle text-success border border-success px-3"><i class="fa-solid fa-check-circle me-1"></i> Paid</span></td>
+                </tr>{% empty %}<tr><td colspan="5" class="text-center py-5 text-muted">No payments found.</td></tr>{% endfor %}
+            </tbody>
+        </table>
+    </div></div></div>
 </div>
 {% endblock %}

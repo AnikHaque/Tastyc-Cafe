@@ -164,9 +164,12 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
+# settings.py
+
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# 'UTC' পরিবর্তন করে 'Asia/Dhaka' করে দিন
+TIME_ZONE = 'Asia/Dhaka' 
 
 USE_I18N = True
 

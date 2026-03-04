@@ -7,15 +7,6 @@
         <img src="{{ item.image.url }}" class="ai-img" alt="{{ item.name }}">{% if item.is_low_stock %}<div class="ai-badge-hot">Selling Fast</div>{% endif %}<div class="ai-mood-tag">{{ item.mood_tag|title }}</div></div>
         <div class="ai-card-body"><div class="d-flex justify-content-between align-items-start mb-2"><h6 class="fw-bold mb-0">{{ item.name }}</h6><span class="text-muted small"><i class="fas fa-fire-alt text-orange me-1"></i>{{ item.calories }}</span></div>
         <div class="ai-price-row mt-3 d-flex align-items-center justify-content-between"><div><span class="text-dark fw-bold h5 mb-0">৳ {{ item.get_dynamic_price|floatformat:0 }}</span></div>{% if IS_RESTAURANT_OPEN %}
-    {# রেস্টুরেন্ট খোলা থাকলে প্লাস বাটন কাজ করবে #}
-    <a href="{% url 'add_to_cart' item.id %}" class="ai-btn-add">
-        <i class="fas fa-plus"></i>
-    </a>
-{% else %}
-    {# রেস্টুরেন্ট বন্ধ থাকলে বাটনটি ধূসর হয়ে যাবে এবং ক্লিক করা যাবে না #}
-    <span class="ai-btn-add" style="background-color: #ccc; cursor: not-allowed; opacity: 0.6;">
-        <i class="fas fa-ban"></i>
-    </a>
-{% endif %}</div></div>
+        <a href="{% url 'add_to_cart' item.id %}" class="ai-btn-add"><i class="fas fa-plus"></i></a>{% else %}<span class="ai-btn-add" style="background-color: #ccc; cursor: not-allowed; opacity: 0.6;"><i class="fas fa-ban"></i></span>{% endif %}</div></div>
     </div></div>{% empty %}<div class="col-12 text-center py-5"><p class="text-muted">আপনার জন্য সেরা খাবারটি খুঁজে পেতে মেনু ব্রাউজ করুন।</p></div>{% endfor %}
 </div></div></section>

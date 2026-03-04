@@ -1,17 +1,8 @@
-
 <section class="py-5 bg-white"><div class="container py-5"><div class="section-title"><h2>Chef's <span>Masterpieces</span></h2></div><div class="row g-4">
     {% for item in top_selling %}<div class="col-lg-3 col-md-6"><div class="mp-card h-100">
         <div class="mp-img-wrap"><img src="{% if item.image %}{{ item.image.url }}{% endif %}" class="w-100 h-100 object-fit-cover"><div class="badge-price">৳ {{ item.price }}</div></div>
-        <div class="p-3 text-center"><h6 class="fw-bold my-3">{{ item.name }}</h6>{% if IS_RESTAURANT_OPEN %}
-    {# রেস্টুরেন্ট খোলা থাকলে বাটন কাজ করবে #}
-    <a href="{% url 'add_to_cart' item.id %}" class="btn btn-dark w-100 rounded-pill">
-        Add to Cart
-    </a>
-{% else %}
-    {# রেস্টুরেন্ট বন্ধ থাকলে ক্লিক করা যাবে না এবং টেক্সট পরিবর্তন হবে #}
-    <button class="btn btn-secondary w-100 rounded-pill" disabled style="cursor: not-allowed;">
-        <i class="fa-solid fa-clock-rotate-left me-2"></i> Currently Closed
-    </button>
-{% endif %}</div>
+        <div class="p-3 text-center"><h6 class="fw-bold my-3">{{ item.name }}</h6>
+        {% if IS_RESTAURANT_OPEN %}<a href="{% url 'add_to_cart' item.id %}" class="btn btn-dark w-100 rounded-pill">Add to Cart</a>
+        {% else %}<button class="btn btn-secondary w-100 rounded-pill" disabled style="cursor: not-allowed;"><i class="fa-solid fa-clock-rotate-left me-2"></i> Currently Closed</button>{% endif %}</div>
     </div></div>{% endfor %}
 </div></div></section>
