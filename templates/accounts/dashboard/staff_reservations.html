@@ -1,132 +1,44 @@
 {% extends "accounts/dashboard/base_dashboard.html" %}
-
 {% block sidebar %}
-    {% url 'staff_analytics' as a %}{% url 'staff_inventory' as i %}{% url 'staff_top_selling' as t %}{% url 'staff_dashboard' as d %}{% url 'staff_blog_list' as bl %}{% url 'staff_create_blog' as bc %}
-    
-    <a href="{{ a }}" class="nav-link-custom {% if request.path == a %}active{% endif %}" style="--clr: #FF4757;">
-        <i class="fa-solid fa-chart-pie me-2"></i> Analytics
-    </a>
-    <a href="{{ i }}" class="nav-link-custom {% if request.path == i %}active{% endif %}" style="--clr: #2ED573;">
-        <i class="fa-solid fa-boxes-stacked me-2"></i> Inventory
-    </a>
-    <a href="{{ t }}" class="nav-link-custom {% if request.path == t %}active{% endif %}" style="--clr: #FFA502;">
-        <i class="fa-solid fa-fire me-2 fa-beat-low"></i> Top Selling
-    </a>
-      {% url 'all_reservations' as res_list %}
-    <a href="{{ res_list }}" class="nav-link-custom {% if request.path == res_list %}active{% endif %}" style="--clr: #8e44ad;">
-        <i class="fa-solid fa-calendar-check me-2"></i> All Reservations
-    </a>
-
-    <hr class="opacity-10 mx-3">
-    
-    <a href="{{ d }}" class="nav-link-custom {% if request.path == d and not request.GET.payment and not request.GET.status %}active{% endif %}" style="--clr: #1E90FF;">
-        <i class="fa-solid fa-receipt me-2"></i> All Orders
-    </a>
-    <a href="{{ d }}?payment=PAID" class="nav-link-custom {% if request.GET.payment == 'PAID' %}active{% endif %}" style="--clr: #00D2D3;">
-        <i class="fa-solid fa-circle-check me-2"></i> Paid Orders
-    </a>
-    <a href="{{ d }}?status=PENDING" class="nav-link-custom {% if request.GET.status == 'PENDING' %}active{% endif %}" style="--clr: #FF9F43;">
-        <i class="fa-solid fa-clock me-2 fa-spin-hover"></i> New Orders 
-        <span class="badge rounded-pill bg-danger ms-auto">New</span>
-    </a>
-
-    <hr class="opacity-10 mx-3">
-
-    {% url 'admin_intelligence' as intel %}
-    <a href="{{ intel }}" class="nav-link-custom {% if request.path == intel %}active{% endif %}" style="--clr: #6C5CE7;">
-        <i class="fa-solid fa-brain me-2"></i> AI Intelligence
-    </a>
-
-    {% url 'staff_operation_pulse' as pulse %}
-    <a href="{{ pulse }}" class="nav-link-custom {% if request.path == pulse %}active{% endif %}" style="--clr: #10B981;">
-        <i class="fa-solid fa-bolt-lightning me-2 fa-pulse"></i> Operation Pulse
-        <span class="pulse-dot"></span>
-    </a>
-
-    <hr class="opacity-10 mx-3">
-
-    <a href="{{ bl }}" class="nav-link-custom {% if request.path == bl %}active{% endif %}" style="--clr: #A29BFE;">
-        <i class="fa-solid fa-newspaper me-2"></i> Blogs
-    </a>
-    <a href="{{ bc }}" class="nav-link-custom {% if request.path == bc %}active{% endif %}" style="--clr: #FF6B81; font-weight: bold;">
-        <i class="fa-solid fa-plus-circle me-2"></i> Create Blog
-    </a>
-
+{% url 'staff_analytics' as a %}{% url 'staff_inventory' as i %}{% url 'staff_top_selling' as t %}{% url 'staff_dashboard' as d %}{% url 'staff_blog_list' as bl %}{% url 'staff_create_blog' as bc %}{% url 'all_reservations' as res_list %}{% url 'admin_intelligence' as intel %}{% url 'staff_operation_pulse' as pulse %}
+<a href="{{ a }}" class="nav-link-custom {% if request.path == a %}active{% endif %}" style="--clr: #FF4757;"><i class="fa-solid fa-chart-pie me-2"></i> Analytics</a>
+<a href="{{ i }}" class="nav-link-custom {% if request.path == i %}active{% endif %}" style="--clr: #2ED573;"><i class="fa-solid fa-boxes-stacked me-2"></i> Inventory</a>
+<a href="{{ t }}" class="nav-link-custom {% if request.path == t %}active{% endif %}" style="--clr: #FFA502;"><i class="fa-solid fa-fire me-2 fa-beat-low"></i> Top Selling</a>
+<a href="{{ res_list }}" class="nav-link-custom {% if request.path == res_list %}active{% endif %}" style="--clr: #8e44ad;"><i class="fa-solid fa-calendar-check me-2"></i> All Reservations</a>
+<hr class="opacity-10 mx-3">
+<a href="{{ d }}" class="nav-link-custom {% if request.path == d and not request.GET.payment and not request.GET.status %}active{% endif %}" style="--clr: #1E90FF;"><i class="fa-solid fa-receipt me-2"></i> All Orders</a>
+<a href="{{ d }}?payment=PAID" class="nav-link-custom {% if request.GET.payment == 'PAID' %}active{% endif %}" style="--clr: #00D2D3;"><i class="fa-solid fa-circle-check me-2"></i> Paid Orders</a>
+<a href="{{ d }}?status=PENDING" class="nav-link-custom {% if request.GET.status == 'PENDING' %}active{% endif %}" style="--clr: #FF9F43;"><i class="fa-solid fa-clock me-2 fa-spin-hover"></i> New Orders <span class="badge rounded-pill bg-danger ms-auto">New</span></a>
+<hr class="opacity-10 mx-3">
+<a href="{{ intel }}" class="nav-link-custom {% if request.path == intel %}active{% endif %}" style="--clr: #6C5CE7;"><i class="fa-solid fa-brain me-2"></i> AI Intelligence</a>
+<a href="{{ pulse }}" class="nav-link-custom {% if request.path == pulse %}active{% endif %}" style="--clr: #10B981;"><i class="fa-solid fa-bolt-lightning me-2 fa-pulse"></i> Operation Pulse<span class="pulse-dot"></span></a>
+<hr class="opacity-10 mx-3">
+<a href="{{ bl }}" class="nav-link-custom {% if request.path == bl %}active{% endif %}" style="--clr: #A29BFE;"><i class="fa-solid fa-newspaper me-2"></i> Blogs</a>
+<a href="{{ bc }}" class="nav-link-custom {% if request.path == bc %}active{% endif %}" style="--clr: #FF6B81; font-weight: bold;"><i class="fa-solid fa-plus-circle me-2"></i> Create Blog</a>
 {% endblock %}
-
 {% block content %}
 <div class="container-fluid py-4 animate__animated animate__fadeIn">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h3 class="fw-bold m-0"><i class="fa-solid fa-calendar-check me-2 text-primary"></i>All Table Reservations</h3>
-        <span class="badge bg-primary rounded-pill px-3 py-2">Total: {{ reservations.count }}</span>
-    </div>
-
-    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="bg-light">
-                    <tr class="small text-uppercase text-muted">
-                        <th class="ps-4 py-3">Booking ID</th>
-                        <th class="py-3">Customer</th>
-                        <th class="py-3">Date & Shift</th>
-                        <th class="py-3 text-center">Guests</th>
-                        <th class="py-3 text-end pe-4">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for res in reservations %}
-                    <tr class="border-bottom">
-                        <td class="ps-4">
-                            <span class="fw-bold text-primary">#{{ res.booking_id }}</span><br>
-                            <small class="text-muted">{{ res.created_at|date:"d M, H:i" }}</small>
-                        </td>
-                        <td>
-                            <div class="fw-bold">{{ res.name }}</div>
-                            <small class="text-muted"><i class="fa-solid fa-phone fa-xs"></i> {{ res.phone }}</small>
-                        </td>
-                        <td>
-                            <div class="badge bg-soft-info text-info border border-info rounded-pill px-2 mb-1">
-                                {{ res.date|date:"D, d M Y" }}
-                            </div><br>
-                            <small class="fw-bold text-uppercase"><i class="fa-regular fa-clock me-1"></i>{{ res.shift }}</small>
-                        </td>
-                        <td class="text-center">
-                            <span class="badge bg-dark rounded-circle" style="width: 30px; height: 30px; line-height: 22px;">
-                                {{ res.guest_count }}
-                            </span>
-                        </td>
-                        <td class="text-end pe-4">
-                            <a href="{% url 'reservation_success' res.booking_id %}" class="btn btn-sm btn-light rounded-pill border shadow-sm">
-                                <i class="fa-solid fa-qrcode"></i>
-                            </a>
-                            <button class="btn btn-sm btn-outline-danger rounded-pill px-3 ms-1" 
-                                    onclick="confirmDelete('{{ res.booking_id }}')">
-                                <i class="fa-solid fa-trash-can"></i> Cancel
-                            </button>
-                            <form id="delete-form-{{ res.booking_id }}" action="{% url 'delete_reservation' res.booking_id %}" method="POST" style="display:none;">
-                                {% csrf_token %}
-                            </form>
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="5" class="text-center py-5">
-                            <i class="fa-solid fa-calendar-xmark fa-3x text-muted opacity-25 mb-3"></i>
-                            <p class="text-muted">No reservations found.</p>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+    <div class="d-flex justify-content-between align-items-center mb-4"><h3 class="fw-bold m-0"><i class="fa-solid fa-calendar-check me-2 text-primary"></i>All Table Reservations</h3><span class="badge bg-primary rounded-pill px-3 py-2">Total: {{ reservations.count }}</span></div>
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden"><div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="bg-light"><tr class="small text-uppercase text-muted"><th class="ps-4 py-3">Booking ID</th><th class="py-3">Customer</th><th class="py-3">Date & Shift</th><th class="py-3 text-center">Guests</th><th class="py-3 text-end pe-4">Actions</th></tr></thead>
+            <tbody>
+                {% for res in reservations %}<tr class="border-bottom">
+                    <td class="ps-4"><span class="fw-bold text-primary">#{{ res.booking_id }}</span><br><small class="text-muted">{{ res.created_at|date:"d M, H:i" }}</small></td>
+                    <td><div class="fw-bold">{{ res.name }}</div><small class="text-muted"><i class="fa-solid fa-phone fa-xs"></i> {{ res.phone }}</small></td>
+                    <td><div class="badge bg-soft-info text-info border border-info rounded-pill px-2 mb-1">{{ res.date|date:"D, d M Y" }}</div><br><small class="fw-bold text-uppercase"><i class="fa-regular fa-clock me-1"></i>{{ res.shift }}</small></td>
+                    <td class="text-center"><span class="badge bg-dark rounded-circle" style="width: 30px; height: 30px; line-height: 22px;">{{ res.guest_count }}</span></td>
+                    <td class="text-end pe-4">
+                        <a href="{% url 'reservation_success' res.booking_id %}" class="btn btn-sm btn-light rounded-pill border shadow-sm"><i class="fa-solid fa-qrcode"></i></a>
+                        <button class="btn btn-sm btn-outline-danger rounded-pill px-3 ms-1" onclick="confirmDelete('{{ res.booking_id }}')"><i class="fa-solid fa-trash-can"></i> Cancel</button>
+                        <form id="delete-form-{{ res.booking_id }}" action="{% url 'delete_reservation' res.booking_id %}" method="POST" style="display:none;">{% csrf_token %}</form>
+                    </td>
+                </tr>{% empty %}<tr><td colspan="5" class="text-center py-5"><i class="fa-solid fa-calendar-xmark fa-3x text-muted opacity-25 mb-3"></i><p class="text-muted">No reservations found.</p></td></tr>{% endfor %}
+            </tbody>
+        </table>
+    </div></div>
 </div>
-
-<style>
-    .bg-soft-info { background-color: rgba(13, 202, 240, 0.1); }
-    .table tbody tr:hover { background-color: #f8faff !important; }
-</style>
-
+<style>.bg-soft-info { background-color: rgba(13, 202, 240, 0.1); } .table tbody tr:hover { background-color: #f8faff !important; }</style>
 <script>
     function confirmDelete(bookingId) {
         if (confirm('Are you sure you want to cancel this reservation? This will restore 1 table to capacity.')) {

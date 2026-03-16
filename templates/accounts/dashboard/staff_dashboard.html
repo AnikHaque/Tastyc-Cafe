@@ -1,229 +1,80 @@
-{% extends "accounts/dashboard/base_dashboard.html" %}
-{% load static %}
+{% extends "accounts/dashboard/base_dashboard.html" %}{% load static %}
 {% block sidebar %}
-    {% url 'staff_analytics' as a %}{% url 'staff_inventory' as i %}{% url 'staff_top_selling' as t %}{% url 'staff_dashboard' as d %}{% url 'staff_blog_list' as bl %}{% url 'staff_create_blog' as bc %}
-    
-    <a href="{{ a }}" class="nav-link-custom {% if request.path == a %}active{% endif %}" style="--clr: #FF4757;">
-        <i class="fa-solid fa-chart-pie me-2"></i> Analytics
-    </a>
-    <a href="{{ i }}" class="nav-link-custom {% if request.path == i %}active{% endif %}" style="--clr: #2ED573;">
-        <i class="fa-solid fa-boxes-stacked me-2"></i> Inventory
-    </a>
-    <a href="{{ t }}" class="nav-link-custom {% if request.path == t %}active{% endif %}" style="--clr: #FFA502;">
-        <i class="fa-solid fa-fire me-2 fa-beat-low"></i> Top Selling
-    </a>
-      {% url 'all_reservations' as res_list %}
-    <a href="{{ res_list }}" class="nav-link-custom {% if request.path == res_list %}active{% endif %}" style="--clr: #8e44ad;">
-        <i class="fa-solid fa-calendar-check me-2"></i> All Reservations
-    </a>
-
-    <hr class="opacity-10 mx-3">
-    
-    <a href="{{ d }}" class="nav-link-custom {% if request.path == d and not request.GET.payment and not request.GET.status %}active{% endif %}" style="--clr: #1E90FF;">
-        <i class="fa-solid fa-receipt me-2"></i> All Orders
-    </a>
-    <a href="{{ d }}?payment=PAID" class="nav-link-custom {% if request.GET.payment == 'PAID' %}active{% endif %}" style="--clr: #00D2D3;">
-        <i class="fa-solid fa-circle-check me-2"></i> Paid Orders
-    </a>
-    <a href="{{ d }}?status=PENDING" class="nav-link-custom {% if request.GET.status == 'PENDING' %}active{% endif %}" style="--clr: #FF9F43;">
-        <i class="fa-solid fa-clock me-2 fa-spin-hover"></i> New Orders 
-        <span class="badge rounded-pill bg-danger ms-auto">New</span>
-    </a>
-
-    <hr class="opacity-10 mx-3">
-
-    {% url 'admin_intelligence' as intel %}
-    <a href="{{ intel }}" class="nav-link-custom {% if request.path == intel %}active{% endif %}" style="--clr: #6C5CE7;">
-        <i class="fa-solid fa-brain me-2"></i> AI Intelligence
-    </a>
-
-    {% url 'staff_operation_pulse' as pulse %}
-    <a href="{{ pulse }}" class="nav-link-custom {% if request.path == pulse %}active{% endif %}" style="--clr: #10B981;">
-        <i class="fa-solid fa-bolt-lightning me-2 fa-pulse"></i> Operation Pulse
-        <span class="pulse-dot"></span>
-    </a>
-
-    <hr class="opacity-10 mx-3">
-
-    <a href="{{ bl }}" class="nav-link-custom {% if request.path == bl %}active{% endif %}" style="--clr: #A29BFE;">
-        <i class="fa-solid fa-newspaper me-2"></i> Blogs
-    </a>
-    <a href="{{ bc }}" class="nav-link-custom {% if request.path == bc %}active{% endif %}" style="--clr: #FF6B81; font-weight: bold;">
-        <i class="fa-solid fa-plus-circle me-2"></i> Create Blog
-    </a>
-
+{% url 'staff_analytics' as a %}{% url 'staff_inventory' as i %}{% url 'staff_top_selling' as t %}{% url 'staff_dashboard' as d %}{% url 'staff_blog_list' as bl %}{% url 'staff_create_blog' as bc %}{% url 'all_reservations' as res_list %}{% url 'admin_intelligence' as intel %}{% url 'staff_operation_pulse' as pulse %}
+<a href="{{ a }}" class="nav-link-custom {% if request.path == a %}active{% endif %}" style="--clr: #FF4757;"><i class="fa-solid fa-chart-pie me-2"></i> Analytics</a>
+<a href="{{ i }}" class="nav-link-custom {% if request.path == i %}active{% endif %}" style="--clr: #2ED573;"><i class="fa-solid fa-boxes-stacked me-2"></i> Inventory</a>
+<a href="{{ t }}" class="nav-link-custom {% if request.path == t %}active{% endif %}" style="--clr: #FFA502;"><i class="fa-solid fa-fire me-2 fa-beat-low"></i> Top Selling</a>
+<a href="{{ res_list }}" class="nav-link-custom {% if request.path == res_list %}active{% endif %}" style="--clr: #8e44ad;"><i class="fa-solid fa-calendar-check me-2"></i> All Reservations</a>
+<hr class="opacity-10 mx-3">
+<a href="{{ d }}" class="nav-link-custom {% if request.path == d and not request.GET.payment and not request.GET.status %}active{% endif %}" style="--clr: #1E90FF;"><i class="fa-solid fa-receipt me-2"></i> All Orders</a>
+<a href="{{ d }}?payment=PAID" class="nav-link-custom {% if request.GET.payment == 'PAID' %}active{% endif %}" style="--clr: #00D2D3;"><i class="fa-solid fa-circle-check me-2"></i> Paid Orders</a>
+<a href="{{ d }}?status=PENDING" class="nav-link-custom {% if request.GET.status == 'PENDING' %}active{% endif %}" style="--clr: #FF9F43;"><i class="fa-solid fa-clock me-2 fa-spin-hover"></i> New Orders <span class="badge rounded-pill bg-danger ms-auto">New</span></a>
+<hr class="opacity-10 mx-3">
+<a href="{{ intel }}" class="nav-link-custom {% if request.path == intel %}active{% endif %}" style="--clr: #6C5CE7;"><i class="fa-solid fa-brain me-2"></i> AI Intelligence</a>
+<a href="{{ pulse }}" class="nav-link-custom {% if request.path == pulse %}active{% endif %}" style="--clr: #10B981;"><i class="fa-solid fa-bolt-lightning me-2 fa-pulse"></i> Operation Pulse<span class="pulse-dot"></span></a>
+<hr class="opacity-10 mx-3">
+<a href="{{ bl }}" class="nav-link-custom {% if request.path == bl %}active{% endif %}" style="--clr: #A29BFE;"><i class="fa-solid fa-newspaper me-2"></i> Blogs</a>
+<a href="{{ bc }}" class="nav-link-custom {% if request.path == bc %}active{% endif %}" style="--clr: #FF6B81; font-weight: bold;"><i class="fa-solid fa-plus-circle me-2"></i> Create Blog</a>
 {% endblock %}
-
 {% block content %}
 <div class="container-fluid p-0 animate__animated animate__fadeIn">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3 class="fw-bold m-0">
-            {% if request.resolver_match.url_name == 'staff_analytics' %}
-                <span class="title-gradient"><i class="fa-solid fa-chart-line me-2"></i> Analytics Dashboard</span>
-            {% else %}
-                <span class="title-gradient"><i class="fa-solid fa-list-check me-2"></i> Order Management</span>
-                <small class="text-muted fs-6">{% if request.GET.payment %}({{ request.GET.payment }}){% endif %} {% if request.GET.status %}({{ request.GET.status }}){% endif %}</small>
-            {% endif %}
+            {% if request.resolver_match.url_name == 'staff_analytics' %}<span class="title-gradient"><i class="fa-solid fa-chart-line me-2"></i> Analytics Dashboard</span>
+            {% else %}<span class="title-gradient"><i class="fa-solid fa-list-check me-2"></i> Order Management</span><small class="text-muted fs-6">{% if request.GET.payment %}({{ request.GET.payment }}){% endif %} {% if request.GET.status %}({{ request.GET.status }}){% endif %}</small>{% endif %}
         </h3>
         <div id="live-clock" class="badge bg-dark rounded-pill px-3 py-2"></div>
     </div>
-
     <div class="row g-3 mb-4">
-        <div class="col-md-3">
-            <div class="card p-3 border-0 shadow-sm text-center stat-card border-bottom border-primary border-4">
-                <h6 class="text-muted small text-uppercase">Total</h6>
-                <h3 class="fw-bold mb-0">{{ total_orders }}</h3>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card p-3 border-0 shadow-sm text-center stat-card bg-success text-white">
-                <h6 class="opacity-75 small text-uppercase">Paid</h6>
-                <h3 class="fw-bold mb-0">{{ total_paid }}</h3>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card p-3 border-0 shadow-sm text-center stat-card bg-warning">
-                <h6 class="opacity-75 small text-uppercase">Unpaid</h6>
-                <h3 class="fw-bold mb-0">{{ total_pending }}</h3>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card p-3 border-0 shadow-sm text-center stat-card bg-info text-white">
-                <h6 class="opacity-75 small text-uppercase">Revenue</h6>
-                <h3 class="fw-bold mb-0">৳{{ total_revenue|floatformat:0 }}</h3>
-            </div>
-        </div>
+        <div class="col-md-3"><div class="card p-3 border-0 shadow-sm text-center stat-card border-bottom border-primary border-4"><h6 class="text-muted small text-uppercase">Total</h6><h3 class="fw-bold mb-0">{{ total_orders }}</h3></div></div>
+        <div class="col-md-3"><div class="card p-3 border-0 shadow-sm text-center stat-card bg-success text-white"><h6 class="opacity-75 small text-uppercase">Paid</h6><h3 class="fw-bold mb-0">{{ total_paid }}</h3></div></div>
+        <div class="col-md-3"><div class="card p-3 border-0 shadow-sm text-center stat-card bg-warning"><h6 class="opacity-75 small text-uppercase">Unpaid</h6><h3 class="fw-bold mb-0">{{ total_pending }}</h3></div></div>
+        <div class="col-md-3"><div class="card p-3 border-0 shadow-sm text-center stat-card bg-info text-white"><h6 class="opacity-75 small text-uppercase">Revenue</h6><h3 class="fw-bold mb-0">৳{{ total_revenue|floatformat:0 }}</h3></div></div>
     </div>
-
-    {% if request.resolver_match.url_name == 'staff_analytics' %}
-        {% include "accounts/dashboard/includes/charts.html" %}
+    {% if request.resolver_match.url_name == 'staff_analytics' %}{% include "accounts/dashboard/includes/charts.html" %}
     {% else %}
-    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="bg-light small text-uppercase">
-                    <tr><th class="ps-4">ID</th><th>Customer</th><th>Amount</th><th>Status</th><th>Date</th><th class="text-end pe-4">Action</th></tr>
-                </thead>
-                <tbody class="small">
-                    {% for order in orders %}
-                    <tr class="order-row">
-                        <td class="ps-4 fw-bold text-primary">#{{ order.id }}</td>
-                        <td><div class="fw-bold text-dark">{{ order.full_name }}</div><small class="text-muted">{{ order.phone }}</small></td>
-                        <td class="fw-bold text-dark">৳{{ order.total_price }}</td>
-                        <td>
-                            <span class="badge {% if order.is_paid %}bg-success-light text-success{% else %}bg-danger-light text-danger{% endif %} border">
-                                <i class="fa-solid fa-circle{% if order.is_paid %}-check{% endif %} me-1"></i>{{ order.is_paid|yesno:"Paid,Unpaid" }}
-                            </span>
-                            <span class="badge bg-warning-light text-dark ms-1 border border-warning">
-                                <i class="fa-solid fa-truck-fast me-1"></i>{{ order.get_status_display }}
-                            </span>
-                        </td>
-                        <td class="text-muted">{{ order.created_at|date:"d M, Y" }}</td>
-                        <td class="text-end pe-4">
-                            {% if not order.is_paid or order.status == 'PENDING' %}
-                                <a href="{% url 'mark_paid' order.id %}" class="btn btn-sm btn-success rounded-pill px-3 shadow-sm btn-grow">
-                                    <i class="fa-solid fa-fire-burner me-1"></i> Cook
-                                </a>
-                            {% endif %}
-                            <a href="{% url 'track_order' order.id %}" class="btn btn-sm btn-outline-dark rounded-pill px-3 ms-1 btn-grow">
-                                Details
-                            </a>
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr><td colspan="6" class="text-center py-5 text-muted">No orders available.</td></tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    {% endif %}
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden"><div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="bg-light small text-uppercase"><tr><th class="ps-4">ID</th><th>Customer</th><th>Amount</th><th>Status</th><th>Date</th><th class="text-end pe-4">Action</th></tr></thead>
+            <tbody class="small">
+                {% for order in orders %}<tr class="order-row">
+                    <td class="ps-4 fw-bold text-primary">#{{ order.id }}</td>
+                    <td><div class="fw-bold text-dark">{{ order.full_name }}</div><small class="text-muted">{{ order.phone }}</small></td>
+                    <td class="fw-bold text-dark">৳{{ order.total_price }}</td>
+                    <td>
+                        <span class="badge {% if order.is_paid %}bg-success-light text-success{% else %}bg-danger-light text-danger{% endif %} border"><i class="fa-solid fa-circle{% if order.is_paid %}-check{% endif %} me-1"></i>{{ order.is_paid|yesno:"Paid,Unpaid" }}</span>
+                        <span class="badge bg-warning-light text-dark ms-1 border border-warning"><i class="fa-solid fa-truck-fast me-1"></i>{{ order.get_status_display }}</span>
+                    </td>
+                    <td class="text-muted">{{ order.created_at|date:"d M, Y" }}</td>
+                    <td class="text-end pe-4">
+                        {% if not order.is_paid or order.status == 'PENDING' %}<a href="{% url 'mark_paid' order.id %}" class="btn btn-sm btn-success rounded-pill px-3 shadow-sm btn-grow"><i class="fa-solid fa-fire-burner me-1"></i> Cook</a>{% endif %}
+                        <a href="{% url 'track_order' order.id %}" class="btn btn-sm btn-outline-dark rounded-pill px-3 ms-1 btn-grow">Details</a>
+                    </td>
+                </tr>{% empty %}<tr><td colspan="6" class="text-center py-5 text-muted">No orders available.</td></tr>{% endfor %}
+            </tbody>
+        </table>
+    </div></div>{% endif %}
 </div>
-
 <style>
-    /* Live Colors & Sidebar Styling */
-    .nav-link-custom {
-        display: flex;
-        align-items: center;
-        padding: 12px 20px;
-        text-decoration: none;
-        color: #636e72;
-        font-size: 0.95rem;
-        transition: all 0.3s ease;
-        border-radius: 10px;
-        margin: 4px 12px;
-        position: relative;
-    }
-
-    .nav-link-custom i {
-        font-size: 1.1rem;
-        transition: transform 0.3s;
-    }
-
-    .nav-link-custom:hover {
-        background: rgba(0,0,0,0.03);
-        color: var(--clr);
-    }
-
-    .nav-link-custom:hover i {
-        transform: translateX(3px) scale(1.1);
-        color: var(--clr) !important;
-    }
-
-    .nav-link-custom.active {
-        background-color: var(--clr);
-        color: white !important;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-
-    .nav-link-custom.active i {
-        color: white !important;
-    }
-
-    /* Live Pulse Dot */
-    .pulse-dot {
-        width: 8px;
-        height: 8px;
-        background: #FF4757;
-        border-radius: 50%;
-        margin-left: auto;
-        box-shadow: 0 0 0 rgba(255, 71, 87, 0.4);
-        animation: pulse-red 2s infinite;
-    }
-
-    @keyframes pulse-red {
-        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7); }
-        70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 71, 87, 0); }
-        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); }
-    }
-
-    /* Title Gradient */
-    .title-gradient {
-        background: linear-gradient(45deg, #2d3436, #636e72);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-
-    /* Table & Cards */
+    .nav-link-custom { display: flex; align-items: center; padding: 12px 20px; text-decoration: none; color: #636e72; font-size: 0.95rem; transition: all 0.3s ease; border-radius: 10px; margin: 4px 12px; position: relative; }
+    .nav-link-custom i { font-size: 1.1rem; transition: transform 0.3s; }
+    .nav-link-custom:hover { background: rgba(0,0,0,0.03); color: var(--clr); }
+    .nav-link-custom:hover i { transform: translateX(3px) scale(1.1); color: var(--clr) !important; }
+    .nav-link-custom.active { background-color: var(--clr); color: white !important; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    .nav-link-custom.active i { color: white !important; }
+    .pulse-dot { width: 8px; height: 8px; background: #FF4757; border-radius: 50%; margin-left: auto; box-shadow: 0 0 0 rgba(255, 71, 87, 0.4); animation: pulse-red 2s infinite; }
+    @keyframes pulse-red { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 71, 87, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); } }
+    .title-gradient { background: linear-gradient(45deg, #2d3436, #636e72); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .bg-success-light{background:#e6fcf5}.bg-warning-light{background:#fff9db}.bg-danger-light{background:#fff5f5}
     .stat-card { transition: all 0.3s ease; cursor: default; }
     .stat-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; }
-    
     .order-row { transition: background 0.2s; }
     .order-row:hover { background-color: #f8f9ff !important; }
-    
     .btn-grow:hover { transform: scale(1.05); }
     .fa-beat-low { animation: fa-beat 3s infinite; }
 </style>
-
 <script>
-    // Live Clock for Staff
-    function updateClock() {
-        const now = new Date();
-        document.getElementById('live-clock').innerHTML = '<i class="fa-regular fa-clock me-2"></i>' + now.toLocaleTimeString();
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
+    function updateClock() { const now = new Date(); document.getElementById('live-clock').innerHTML = '<i class="fa-regular fa-clock me-2"></i>' + now.toLocaleTimeString(); }
+    setInterval(updateClock, 1000); updateClock();
 </script>
-
 {% endblock %}

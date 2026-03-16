@@ -1,23 +1,21 @@
 {% extends "accounts/dashboard/base_dashboard.html" %}{% load static %}
 {% block sidebar %}
-    {% url 'staff_analytics' as a %}{% url 'staff_inventory' as i %}{% url 'staff_top_selling' as t %}{% url 'staff_dashboard' as d %}{% url 'staff_blog_list' as bl %}{% url 'staff_create_blog' as bc %}{% url 'all_reservations' as res_list %}{% url 'admin_intelligence' as intel %}{% url 'staff_operation_pulse' as pulse %}
-    
-    <a href="{{ a }}" class="nav-link-custom {% if request.path == a %}active{% endif %}" style="--clr: #FF4757;"><i class="fa-solid fa-chart-pie me-2"></i> Analytics</a>
-    <a href="{{ i }}" class="nav-link-custom {% if request.path == i %}active{% endif %}" style="--clr: #2ED573;"><i class="fa-solid fa-boxes-stacked me-2"></i> Inventory</a>
-    <a href="{{ t }}" class="nav-link-custom {% if request.path == t %}active{% endif %}" style="--clr: #FFA502;"><i class="fa-solid fa-fire me-2 fa-beat-low"></i> Top Selling</a>
-    <a href="{{ res_list }}" class="nav-link-custom {% if request.path == res_list %}active{% endif %}" style="--clr: #8e44ad;"><i class="fa-solid fa-calendar-check me-2"></i> All Reservations</a>
-    <hr class="opacity-10 mx-3">
-    <a href="{{ d }}" class="nav-link-custom {% if request.path == d and not request.GET.payment and not request.GET.status %}active{% endif %}" style="--clr: #1E90FF;"><i class="fa-solid fa-receipt me-2"></i> All Orders</a>
-    <a href="{{ d }}?payment=PAID" class="nav-link-custom {% if request.GET.payment == 'PAID' %}active{% endif %}" style="--clr: #00D2D3;"><i class="fa-solid fa-circle-check me-2"></i> Paid Orders</a>
-    <a href="{{ d }}?status=PENDING" class="nav-link-custom {% if request.GET.status == 'PENDING' %}active{% endif %}" style="--clr: #FF9F43;"><i class="fa-solid fa-clock me-2 fa-spin-hover"></i> New Orders <span class="badge rounded-pill bg-danger ms-auto">New</span></a>
-    <hr class="opacity-10 mx-3">
-    <a href="{{ intel }}" class="nav-link-custom {% if request.path == intel %}active{% endif %}" style="--clr: #6C5CE7;"><i class="fa-solid fa-brain me-2"></i> AI Intelligence</a>
-    <a href="{{ pulse }}" class="nav-link-custom {% if request.path == pulse %}active{% endif %}" style="--clr: #10B981;"><i class="fa-solid fa-bolt-lightning me-2 fa-pulse"></i> Operation Pulse<span class="pulse-dot"></span></a>
-    <hr class="opacity-10 mx-3">
-    <a href="{{ bl }}" class="nav-link-custom {% if request.path == bl %}active{% endif %}" style="--clr: #A29BFE;"><i class="fa-solid fa-newspaper me-2"></i> Blogs</a>
-    <a href="{{ bc }}" class="nav-link-custom {% if request.path == bc %}active{% endif %}" style="--clr: #FF6B81; font-weight: bold;"><i class="fa-solid fa-plus-circle me-2"></i> Create Blog</a>
+{% url 'staff_analytics' as a %}{% url 'staff_inventory' as i %}{% url 'staff_top_selling' as t %}{% url 'staff_dashboard' as d %}{% url 'staff_blog_list' as bl %}{% url 'staff_create_blog' as bc %}{% url 'all_reservations' as res_list %}{% url 'admin_intelligence' as intel %}{% url 'staff_operation_pulse' as pulse %}
+<a href="{{ a }}" class="nav-link-custom {% if request.path == a %}active{% endif %}" style="--clr: #FF4757;"><i class="fa-solid fa-chart-pie me-2"></i> Analytics</a>
+<a href="{{ i }}" class="nav-link-custom {% if request.path == i %}active{% endif %}" style="--clr: #2ED573;"><i class="fa-solid fa-boxes-stacked me-2"></i> Inventory</a>
+<a href="{{ t }}" class="nav-link-custom {% if request.path == t %}active{% endif %}" style="--clr: #FFA502;"><i class="fa-solid fa-fire me-2 fa-beat-low"></i> Top Selling</a>
+<a href="{{ res_list }}" class="nav-link-custom {% if request.path == res_list %}active{% endif %}" style="--clr: #8e44ad;"><i class="fa-solid fa-calendar-check me-2"></i> All Reservations</a>
+<hr class="opacity-10 mx-3">
+<a href="{{ d }}" class="nav-link-custom {% if request.path == d and not request.GET.payment and not request.GET.status %}active{% endif %}" style="--clr: #1E90FF;"><i class="fa-solid fa-receipt me-2"></i> All Orders</a>
+<a href="{{ d }}?payment=PAID" class="nav-link-custom {% if request.GET.payment == 'PAID' %}active{% endif %}" style="--clr: #00D2D3;"><i class="fa-solid fa-circle-check me-2"></i> Paid Orders</a>
+<a href="{{ d }}?status=PENDING" class="nav-link-custom {% if request.GET.status == 'PENDING' %}active{% endif %}" style="--clr: #FF9F43;"><i class="fa-solid fa-clock me-2 fa-spin-hover"></i> New Orders <span class="badge rounded-pill bg-danger ms-auto">New</span></a>
+<hr class="opacity-10 mx-3">
+<a href="{{ intel }}" class="nav-link-custom {% if request.path == intel %}active{% endif %}" style="--clr: #6C5CE7;"><i class="fa-solid fa-brain me-2"></i> AI Intelligence</a>
+<a href="{{ pulse }}" class="nav-link-custom {% if request.path == pulse %}active{% endif %}" style="--clr: #10B981;"><i class="fa-solid fa-bolt-lightning me-2 fa-pulse"></i> Operation Pulse<span class="pulse-dot"></span></a>
+<hr class="opacity-10 mx-3">
+<a href="{{ bl }}" class="nav-link-custom {% if request.path == bl %}active{% endif %}" style="--clr: #A29BFE;"><i class="fa-solid fa-newspaper me-2"></i> Blogs</a>
+<a href="{{ bc }}" class="nav-link-custom {% if request.path == bc %}active{% endif %}" style="--clr: #FF6B81; font-weight: bold;"><i class="fa-solid fa-plus-circle me-2"></i> Create Blog</a>
 {% endblock %}
-
 {% block content %}
 <div class="container-fluid py-5 bg-light" style="min-height: 100vh;"><div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
