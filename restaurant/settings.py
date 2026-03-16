@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 import os
 from pathlib import Path
-
+from django.utils.translation import gettext_lazy as _
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'blog',
     'core',
     'chat',
+    'chatbot',
     'support_widget',
     'django.contrib.sites',
     'allauth',
@@ -56,6 +57,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     
 ]
+
+GEMINI_API_KEY = "AIzaSyB4tBHGPFDuYzWFPRBWyy5Vir5XZs8bU3I"
 
 # Cloudinary এর সেটিংস (আপনার Cloudinary ড্যাশবোর্ড থেকে এই মানগুলো নিন)
 CLOUDINARY_STORAGE = {
@@ -97,6 +100,7 @@ LOGIN_REDIRECT_URL = '/' # লগইন শেষে হোম পেজে য�
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware', 
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -174,7 +178,18 @@ TIME_ZONE = 'Asia/Dhaka'
 USE_I18N = True
 
 USE_TZ = True
+USE_I18N = True
+USE_L10N = True
 
+LANGUAGES = [
+    ('en', _('English')),
+    ('bn', _('Bengali')),
+]
+
+# ট্রান্সলেশন ফাইলগুলো কোথায় থাকবে
+LOCALE_PATHS = [
+    BASE_DIR / 'locale/',
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
