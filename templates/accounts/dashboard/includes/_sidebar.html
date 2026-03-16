@@ -1,0 +1,56 @@
+{% with request.path as current_path %}
+{% with request.GET.payment as p_status %}{% with request.GET.status as o_status %}
+    
+    <a href="{% url 'staff_analytics' %}" class="nav-link-custom {% if current_path == '/staff/analytics/' %}active{% endif %}" style="--clr: #FF4757;">
+        <i class="fa-solid fa-chart-pie me-2"></i> Analytics
+    </a>
+    
+    <a href="{% url 'staff_inventory' %}" class="nav-link-custom {% if current_path == '/staff/inventory/' %}active{% endif %}" style="--clr: #2ED573;">
+        <i class="fa-solid fa-boxes-stacked me-2"></i> Inventory
+    </a>
+    
+    <a href="{% url 'staff_top_selling' %}" class="nav-link-custom {% if current_path == '/staff/top-selling/' %}active{% endif %}" style="--clr: #FFA502;">
+        <i class="fa-solid fa-fire me-2 fa-beat-low"></i> Top Selling
+    </a>
+    
+    <a href="{% url 'all_reservations' %}" class="nav-link-custom {% if current_path == '/staff/reservations/' %}active{% endif %}" style="--clr: #8e44ad;">
+        <i class="fa-solid fa-calendar-check me-2"></i> All Reservations
+    </a>
+
+    <hr class="opacity-10 mx-3">
+
+    <a href="{% url 'staff_dashboard' %}" class="nav-link-custom {% if current_path == '/staff/dashboard/' and not p_status and not o_status %}active{% endif %}" style="--clr: #1E90FF;">
+        <i class="fa-solid fa-receipt me-2"></i> All Orders
+    </a>
+    
+    <a href="{% url 'staff_dashboard' %}?payment=PAID" class="nav-link-custom {% if p_status == 'PAID' %}active{% endif %}" style="--clr: #00D2D3;">
+        <i class="fa-solid fa-circle-check me-2"></i> Paid Orders
+    </a>
+    
+    <a href="{% url 'staff_dashboard' %}?status=PENDING" class="nav-link-custom {% if o_status == 'PENDING' %}active{% endif %}" style="--clr: #FF9F43;">
+        <i class="fa-solid fa-clock me-2 fa-spin-hover"></i> New Orders 
+        <span class="badge rounded-pill bg-danger ms-auto">New</span>
+    </a>
+
+    <hr class="opacity-10 mx-3">
+
+    <a href="{% url 'admin_intelligence' %}" class="nav-link-custom {% if current_path == '/staff/ai/' %}active{% endif %}" style="--clr: #6C5CE7;">
+        <i class="fa-solid fa-brain me-2"></i> AI Intelligence
+    </a>
+    
+    <a href="{% url 'staff_operation_pulse' %}" class="nav-link-custom {% if current_path == '/staff/pulse/' %}active{% endif %}" style="--clr: #10B981;">
+        <i class="fa-solid fa-bolt-lightning me-2 fa-pulse"></i> Operation Pulse
+        <span class="pulse-dot"></span>
+    </a>
+
+    <hr class="opacity-10 mx-3">
+
+    <a href="{% url 'staff_blog_list' %}" class="nav-link-custom {% if current_path == '/staff/blogs/' %}active{% endif %}" style="--clr: #A29BFE;">
+        <i class="fa-solid fa-newspaper me-2"></i> Blogs
+    </a>
+    
+    <a href="{% url 'staff_create_blog' %}" class="nav-link-custom {% if current_path == '/staff/blogs/create/' %}active{% endif %}" style="--clr: #FF6B81; font-weight: bold;">
+        <i class="fa-solid fa-plus-circle me-2"></i> Create Blog
+    </a>
+
+{% endwith %}{% endwith %}{% endwith %}
